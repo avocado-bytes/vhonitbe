@@ -1,0 +1,3 @@
+Make only changes that are asked for. For further updates make suggestions, but don't do any assumed changes.
+
+For angular application always use ngrx for state management, bootstrap (plain css no components) for styling and @ngx-translate for internationalization. For internationalization please generate all translations for english, and czech by default, other languages as specified. For styling always use scss.
