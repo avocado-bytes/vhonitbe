@@ -1,0 +1,9 @@
+@if (position()) {
+  <div #map class="map"></div>
+}
+
+@if (status() === 'locating') {
+  <div class="map-status" role="status">{{ 'MAP.LOCATING' | translate }}</div>
+} @else if (status() === 'error') {
+  <div class="map-status" role="alert">{{ 'MAP.ERRORS.' + error() | translate }}</div>
+}

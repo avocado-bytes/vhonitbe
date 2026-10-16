@@ -1,1 +1,104 @@
 /* You can add global styles to this file, and also import other style files */
+
+// Bootstrap 5.3 does not support the Sass module system yet, so it is loaded with @import.
+// Order follows https://getbootstrap.com/docs/5.3/customize/sass/#importing
+
+// 1. Functions first, so the palette can use tint-color()/shade-color()
+@import 'bootstrap/scss/functions';
+
+// 2. Hunter green palette
+$hunter-green-900: #1a2e1d;
+$hunter-green-800: #22392a;
+$hunter-green-700: #2a4b2f;
+$hunter-green-600: #355e3b; // hunter green
+$hunter-green-500: #4a7a50;
+$hunter-green-300: #8fae8f;
+$hunter-green-200: #b5cbb2;
+$hunter-green-100: #dbe6d8;
+$hunter-green-50: #eef3ec;
+
+$sage-600: #6b8f71;
+
+$forest-night-900: #121a14;
+$forest-night-800: #16201a;
+$forest-night-700: #1a251c;
+$forest-night-500: #2f3f32;
+
+// 3. Bootstrap overrides — light mode
+$primary: $hunter-green-600;
+$secondary: $sage-600;
+
+$body-bg: #f4f6f1;
+$body-color: #1f2a20;
+$emphasis-color: $hunter-green-900;
+
+$link-color: $hunter-green-600;
+$link-hover-color: $hunter-green-800;
+
+$input-btn-focus-color-opacity: 0.25;
+$input-focus-border-color: $hunter-green-300;
+
+// Dark mode is switched via the data-bs-theme attribute on <html> (set from the settings state)
+$enable-dark-mode: true;
+$color-mode-type: data;
+
+// 4. Bootstrap overrides — dark mode
+$body-bg-dark: $forest-night-900;
+$body-secondary-bg-dark: $forest-night-700;
+$body-tertiary-bg-dark: $forest-night-800;
+$body-color-dark: #d9e2d6;
+$body-emphasis-color-dark: #f0f4ee;
+$border-color-dark: $forest-night-500;
+
+$link-color-dark: $hunter-green-300;
+$link-hover-color-dark: $hunter-green-200;
+
+$primary-text-emphasis-dark: $hunter-green-300;
+$primary-bg-subtle-dark: shade-color($hunter-green-600, 60%);
+$primary-border-subtle-dark: $hunter-green-700;
+
+// 5. Bootstrap configuration
+@import 'bootstrap/scss/variables';
+@import 'bootstrap/scss/variables-dark';
+@import 'bootstrap/scss/maps';
+@import 'bootstrap/scss/mixins';
+@import 'bootstrap/scss/utilities';
+
+// 6. Bootstrap layout & content
+@import 'bootstrap/scss/root';
+@import 'bootstrap/scss/reboot';
+@import 'bootstrap/scss/type';
+@import 'bootstrap/scss/images';
+@import 'bootstrap/scss/containers';
+@import 'bootstrap/scss/grid';
+@import 'bootstrap/scss/helpers';
+
+// 7. Bootstrap components — uncomment as they are needed
+// @import 'bootstrap/scss/tables';
+@import 'bootstrap/scss/forms';
+// @import 'bootstrap/scss/buttons';
+// @import 'bootstrap/scss/transitions';
+@import 'bootstrap/scss/dropdown';
+// @import 'bootstrap/scss/button-group';
+@import 'bootstrap/scss/nav';
+// @import 'bootstrap/scss/navbar';
+// @import 'bootstrap/scss/card';
+// @import 'bootstrap/scss/accordion';
+// @import 'bootstrap/scss/breadcrumb';
+// @import 'bootstrap/scss/pagination';
+// @import 'bootstrap/scss/badge';
+// @import 'bootstrap/scss/alert';
+// @import 'bootstrap/scss/progress';
+// @import 'bootstrap/scss/list-group';
+@import 'bootstrap/scss/close';
+// @import 'bootstrap/scss/toasts';
+// @import 'bootstrap/scss/modal';
+// @import 'bootstrap/scss/tooltip';
+// @import 'bootstrap/scss/popover';
+// @import 'bootstrap/scss/carousel';
+// @import 'bootstrap/scss/spinners';
+@import 'bootstrap/scss/offcanvas';
+// @import 'bootstrap/scss/placeholders';
+
+// 8. Utility classes (last, so they override component styles)
+@import 'bootstrap/scss/utilities/api';

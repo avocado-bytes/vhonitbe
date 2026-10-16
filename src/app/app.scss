@@ -1,0 +1,59 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  height: 100dvh;
+}
+
+.toolbar-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  color: inherit;
+  background: transparent;
+  border: 0;
+  border-radius: var(--bs-border-radius);
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+
+  &:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: -2px;
+  }
+}
+
+.settings-menu {
+  min-width: 18rem;
+}
+
+.fab {
+  position: fixed;
+  right: 1.5rem;
+  bottom: 1.5rem;
+  z-index: 1030;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  border: 0;
+
+  &:hover {
+    filter: brightness(0.9);
+  }
+
+  &:focus-visible {
+    outline: 3px solid var(--bs-focus-ring-color);
+    outline-offset: 2px;
+  }
+}
+
+// On phones the side navigation covers the whole page
+@media (max-width: 575.98px) {
+  .side-nav {
+    --bs-offcanvas-width: 100%;
+  }
+}

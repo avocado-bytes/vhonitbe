@@ -1,0 +1,37 @@
+{
+  "APP": {
+    "TITLE": "vHonitbe",
+    "ADD": "Add"
+  },
+  "HEADER": {
+    "MENU": "Open menu",
+    "SETTINGS": "Settings"
+  },
+  "SETTINGS": {
+    "TITLE": "Settings",
+    "THEME": "Appearance",
+    "THEMES": {
+      "light": "Light",
+      "dark": "Dark"
+    },
+    "LANGUAGE": "Language",
+    "LANGUAGES": {
+      "en": "English",
+      "cs": "Čeština"
+    }
+  },
+  "NAV": {
+    "HOME": "Home",
+    "MAP": "Map",
+    "CLOSE": "Close navigation"
+  },
+  "MAP": {
+    "LOCATING": "Finding your location…",
+    "ERRORS": {
+      "unsupported": "Your browser does not support location services.",
+      "denied": "Location access was denied. Allow it in your browser to see your area.",
+      "unavailable": "Your location could not be determined.",
+      "timeout": "Finding your location took too long. Please try again."
+    }
+  }
+}

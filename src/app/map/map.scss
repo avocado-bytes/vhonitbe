@@ -1,0 +1,26 @@
+:host {
+  position: relative;
+  display: block;
+  height: 100%;
+  // Keep Leaflet's z-indexes (up to 1000) from covering the header menus
+  isolation: isolate;
+}
+
+.map {
+  height: 100%;
+}
+
+.map-status {
+  position: absolute;
+  top: 1rem;
+  left: 50%;
+  z-index: 1001;
+  max-width: calc(100% - 2rem);
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  color: var(--bs-body-color);
+  background-color: var(--bs-body-bg);
+  border-radius: var(--bs-border-radius);
+  box-shadow: var(--bs-box-shadow);
+  transform: translateX(-50%);
+}

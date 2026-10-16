@@ -1,0 +1,37 @@
+{
+  "APP": {
+    "TITLE": "vHonitbe",
+    "ADD": "Přidat"
+  },
+  "HEADER": {
+    "MENU": "Otevřít menu",
+    "SETTINGS": "Nastavení"
+  },
+  "SETTINGS": {
+    "TITLE": "Nastavení",
+    "THEME": "Vzhled",
+    "THEMES": {
+      "light": "Světlý",
+      "dark": "Tmavý"
+    },
+    "LANGUAGE": "Jazyk",
+    "LANGUAGES": {
+      "en": "English",
+      "cs": "Čeština"
+    }
+  },
+  "NAV": {
+    "HOME": "Domů",
+    "MAP": "Mapa",
+    "CLOSE": "Zavřít navigaci"
+  },
+  "MAP": {
+    "LOCATING": "Zjišťuji vaši polohu…",
+    "ERRORS": {
+      "unsupported": "Váš prohlížeč nepodporuje zjišťování polohy.",
+      "denied": "Přístup k poloze byl zamítnut. Povolte ho v prohlížeči, abyste viděli své okolí.",
+      "unavailable": "Vaši polohu se nepodařilo zjistit.",
+      "timeout": "Zjišťování polohy trvalo příliš dlouho. Zkuste to prosím znovu."
+    }
+  }
+}
