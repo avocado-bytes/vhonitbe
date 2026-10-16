@@ -1,0 +1,25 @@
+:host {
+  display: block;
+}
+
+.picker {
+  position: relative;
+  // Keep Leaflet's z-indexes (up to 1000) contained in the picker
+  isolation: isolate;
+  overflow: hidden;
+  border: var(--bs-border-width) solid var(--bs-border-color);
+  border-radius: var(--bs-border-radius);
+}
+
+.picker-map {
+  height: 12rem;
+}
+
+.crosshair {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 1001;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+}

@@ -51,6 +51,20 @@
   }
 }
 
+.add-item-dialog {
+  width: min(32rem, calc(100% - 2rem));
+  padding: 0;
+  color: var(--bs-body-color);
+  background-color: var(--bs-body-bg);
+  border: 0;
+  border-radius: var(--bs-border-radius-lg);
+  box-shadow: var(--bs-box-shadow-lg);
+
+  &::backdrop {
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+}
+
 // On phones the side navigation covers the whole page
 @media (max-width: 575.98px) {
   .side-nav {

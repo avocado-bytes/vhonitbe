@@ -6,6 +6,7 @@ import { provideTranslateService } from '@ngx-translate/core';
 import { routes } from './app.routes';
 import { MapView } from './map/map';
 import { Overview } from './overview/overview';
+import { initialState as eventsInitialState } from './state/events/events.reducer';
 import { initialState as locationInitialState } from './state/location/location.reducer';
 
 describe('routes', () => {
@@ -14,7 +15,13 @@ describe('routes', () => {
       providers: [
         provideRouter(routes),
         provideTranslateService(),
-        provideMockStore({ initialState: { location: locationInitialState } }),
+        provideMockStore({
+          initialState: {
+            location: locationInitialState,
+            events: eventsInitialState,
+            settings: { theme: 'light', language: 'en' },
+          },
+        }),
       ],
     });
   });

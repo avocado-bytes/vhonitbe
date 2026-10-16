@@ -1,6 +1,12 @@
 import { TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
-import { provideMockStore } from '@ngrx/store/testing';
+import { provideRouter, Router } from '@angular/router';
+import { provideMockActions } from '@ngrx/effects/testing';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import { EMPTY } from 'rxjs';
+import { HuntingEvent } from './model/event';
+import { EventsActions } from './state/events/events.actions';
+import { initialState as eventsInitialState } from './state/events/events.reducer';
+import { initialState as locationInitialState } from './state/location/location.reducer';
 import { provideTranslateService, TranslateService } from '@ngx-translate/core';
 import { App } from './app';
 
@@ -11,14 +17,22 @@ describe('App', () => {
       providers: [
         provideRouter([{ path: 'map', children: [] }]),
         provideTranslateService({ lang: 'en' }),
-        provideMockStore({ initialState: { settings: { theme: 'light', language: 'en' } } }),
+        provideMockStore({
+          initialState: {
+            settings: { theme: 'light', language: 'en' },
+            events: eventsInitialState,
+            location: locationInitialState,
+          },
+        }),
+        provideMockActions(() => EMPTY),
       ],
     }).compileComponents();
 
     TestBed.inject(TranslateService).setTranslation('en', {
-      APP: { TITLE: 'vHonitbe', ADD: 'Add' },
+      APP: { TITLE: 'vHonitbě', ADD: 'Add' },
       HEADER: { MENU: 'Open menu', SETTINGS: 'Settings' },
       NAV: { HOME: 'Home', MAP: 'Map', CLOSE: 'Close navigation' },
+      ADD_ITEM: { TITLE: 'Add item', EDIT_TITLE: 'Edit event', CLOSE: 'Close' },
     });
   });
 
@@ -43,7 +57,7 @@ describe('App', () => {
 
   it('should render the application name in the toolbar', async () => {
     const { element } = await createApp();
-    expect(element.querySelector('header')?.textContent).toContain('vHonitbe');
+    expect(element.querySelector('header')?.textContent).toContain('vHonitbě');
   });
 
   it('should render the floating add button', async () => {
@@ -174,6 +188,121 @@ describe('App', () => {
 
       expect(sideNav.classList).not.toContain('show');
       expect(document.activeElement).toBe(burger);
+    });
+  });
+
+  describe('add item dialog', () => {
+    // jsdom does not implement HTMLDialogElement.showModal()/close()
+    beforeAll(() => {
+      HTMLDialogElement.prototype.showModal ??= function (this: HTMLDialogElement) {
+        this.setAttribute('open', '');
+      };
+      HTMLDialogElement.prototype.close ??= function (this: HTMLDialogElement) {
+        this.removeAttribute('open');
+        this.dispatchEvent(new Event('close'));
+      };
+    });
+
+    async function createAppWithDialog() {
+      const app = await createApp();
+      const fab = app.element.querySelector('button.fab') as HTMLButtonElement;
+      const dialog = app.element.querySelector('dialog.add-item-dialog') as HTMLDialogElement;
+      const clickFab = async () => {
+        fab.click();
+        await app.fixture.whenStable();
+      };
+      return { ...app, fab, dialog, clickFab };
+    }
+
+    it('should open as a modal with the add item component on the root url', async () => {
+      const { dialog, clickFab } = await createAppWithDialog();
+      expect(dialog.open).toBe(false);
+      expect(dialog.querySelector('app-add-item')).toBeNull();
+
+      await clickFab();
+
+      expect(dialog.open).toBe(true);
+      expect(dialog.querySelector('app-add-item')).not.toBeNull();
+      expect(dialog.querySelector('#add-item-title')?.textContent).toContain('Add item');
+    });
+
+    it('should not open on other urls', async () => {
+      const { fixture, dialog, clickFab } = await createAppWithDialog();
+      await TestBed.inject(Router).navigateByUrl('/map');
+      await fixture.whenStable();
+
+      await clickFab();
+
+      expect(dialog.open).toBe(false);
+    });
+
+    it('should close with the close button', async () => {
+      const { fixture, dialog, clickFab } = await createAppWithDialog();
+      await clickFab();
+
+      (dialog.querySelector('.btn-close') as HTMLButtonElement).click();
+      await fixture.whenStable();
+
+      expect(dialog.open).toBe(false);
+      expect(dialog.querySelector('app-add-item')).toBeNull();
+    });
+  });
+
+  describe('editing an event', () => {
+    const existing: HuntingEvent = {
+    id: 'id-1',
+    type: 'harvest',
+    animal: 'wild-boar',
+    location: { latitude: 49, longitude: 13.5 },
+    note: 'Clean shot',
+    occurredAt: '2026-10-01T06:30:00.000Z',
+    createdAt: '2026-10-01T06:31:00.000Z',
+    updatedAt: '2026-10-01T06:31:00.000Z',
+  };
+
+    async function startEditing() {
+      const app = await createApp();
+      const store = TestBed.inject(MockStore);
+      const dispatch = vi.spyOn(store, 'dispatch');
+      const dialog = app.element.querySelector('dialog.add-item-dialog') as HTMLDialogElement;
+      store.setState({
+        settings: { theme: 'light', language: 'en' },
+        events: { ...eventsInitialState, editing: existing },
+        location: locationInitialState,
+      });
+      await app.fixture.whenStable();
+      return { ...app, store, dispatch, dialog };
+    }
+
+    it('should open the add item dialog with the event to edit', async () => {
+      const { dialog } = await startEditing();
+
+      expect(dialog.open).toBe(true);
+      expect(dialog.querySelector('#add-item-title')?.textContent).toContain('Edit event');
+      expect((dialog.querySelector('#add-item-type') as HTMLSelectElement).value).toBe('harvest');
+    });
+
+    it('should cancel editing when the dialog is closed', async () => {
+      const { fixture, dialog, dispatch } = await startEditing();
+
+      (dialog.querySelector('.btn-close') as HTMLButtonElement).click();
+      await fixture.whenStable();
+
+      expect(dialog.open).toBe(false);
+      expect(dispatch).toHaveBeenCalledWith(EventsActions.cancelEdit());
+    });
+
+    it('should not dispatch cancelEdit when closing the add dialog', async () => {
+      const { fixture, element } = await createApp();
+      const dispatch = vi.spyOn(TestBed.inject(MockStore), 'dispatch');
+      const dialog = element.querySelector('dialog.add-item-dialog') as HTMLDialogElement;
+      (element.querySelector('button.fab') as HTMLButtonElement).click();
+      await fixture.whenStable();
+
+      (dialog.querySelector('.btn-close') as HTMLButtonElement).click();
+      await fixture.whenStable();
+
+      expect(dispatch).not.toHaveBeenCalledWith(EventsActions.cancelEdit());
     });
   });
 });

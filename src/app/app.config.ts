@@ -7,10 +7,13 @@ import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { routes } from './app.routes';
+import * as eventsEffects from './state/events/events.effects';
+import { eventsFeature } from './state/events/events.reducer';
 import * as locationEffects from './state/location/location.effects';
 import { locationFeature } from './state/location/location.reducer';
 import * as settingsEffects from './state/settings/settings.effects';
 import { settingsFeature } from './state/settings/settings.reducer';
+import { provideServiceWorker } from '@angular/service-worker';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -20,12 +23,17 @@ export const appConfig: ApplicationConfig = {
     provideStore(),
     provideState(settingsFeature),
     provideState(locationFeature),
-    provideEffects(settingsEffects, locationEffects),
+    provideState(eventsFeature),
+    provideEffects(settingsEffects, locationEffects, eventsEffects),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
     provideTranslateService({
       loader: provideTranslateHttpLoader({ prefix: '/i18n/', suffix: '.json' }),
       fallbackLang: 'en',
       lang: 'en',
+    }),
+    provideServiceWorker('ngsw-worker.js', {
+      enabled: !isDevMode(),
+      registrationStrategy: 'registerWhenStable:30000',
     }),
   ],
 };

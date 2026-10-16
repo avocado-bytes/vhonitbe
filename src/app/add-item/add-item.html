@@ -1,0 +1,76 @@
+<form (submit)="submit($event)">
+  <div class="mb-3">
+    <label for="add-item-type" class="form-label fw-semibold">{{ 'ADD_ITEM.TYPE' | translate }}</label>
+    <select id="add-item-type" class="form-select" #typeSelect (change)="selectType(typeSelect.value)">
+      <option value="" disabled [selected]="type() === null">{{ 'ADD_ITEM.TYPE_PLACEHOLDER' | translate }}</option>
+      @for (item of items; track item) {
+        <option [value]="item" [selected]="type() === item">{{ 'ITEMS.' + item | translate }}</option>
+      }
+    </select>
+  </div>
+
+  <div class="mb-3">
+    <label for="add-item-animal" class="form-label fw-semibold">{{ 'ADD_ITEM.ANIMAL' | translate }}</label>
+    <select id="add-item-animal" class="form-select" #animalSelect (change)="selectAnimal(animalSelect.value)">
+      <option value="" disabled [selected]="animal() === null">{{ 'ADD_ITEM.ANIMAL_PLACEHOLDER' | translate }}</option>
+      @for (group of animalGroups | keyvalue: keepOrder; track group.key) {
+        <optgroup [label]="'ANIMAL_GROUPS.' + group.key | translate">
+          @for (option of group.value; track option) {
+            <option [value]="option" [selected]="animal() === option">{{ 'ANIMALS.' + option | translate }}</option>
+          }
+        </optgroup>
+      }
+    </select>
+  </div>
+
+  <div>
+    <label for="add-item-occurred-at" class="form-label fw-semibold">{{ 'ADD_ITEM.OCCURRED_AT' | translate }}</label>
+    <input
+      id="add-item-occurred-at"
+      type="datetime-local"
+      class="form-control"
+      required
+      aria-describedby="add-item-occurred-at-error"
+      #occurredAtInput
+      [max]="maxOccurredAt"
+      [value]="occurredAt()"
+      [class.is-invalid]="isFuture()"
+      [attr.aria-invalid]="isFuture()"
+      (input)="occurredAt.set(occurredAtInput.value)"
+    />
+    <div id="add-item-occurred-at-error" class="invalid-feedback">{{ 'ADD_ITEM.FUTURE_DATE' | translate }}</div>
+  </div>
+
+  <div class="mt-3" role="group" aria-labelledby="add-item-location-label">
+    <div id="add-item-location-label" class="form-label fw-semibold">{{ 'ADD_ITEM.LOCATION' | translate }}</div>
+    @if (location(); as current) {
+      <app-location-picker [location]="current" (locationChange)="location.set($event)" />
+    } @else if (event()) {
+      <p class="form-text mb-0">{{ 'ADD_ITEM.NO_LOCATION' | translate }}</p>
+    } @else if (locationStatus() === 'error') {
+      <p class="form-text mb-0">{{ 'ADD_ITEM.LOCATION_UNAVAILABLE' | translate }}</p>
+    } @else {
+      <p class="form-text mb-0" role="status">{{ 'MAP.LOCATING' | translate }}</p>
+    }
+  </div>
+
+  <div class="mt-3">
+    <label for="add-item-note" class="form-label fw-semibold">{{ 'ADD_ITEM.NOTE' | translate }}</label>
+    <textarea
+      id="add-item-note"
+      class="form-control"
+      rows="3"
+      #noteInput
+      [value]="note()"
+      (input)="note.set(noteInput.value)"
+    ></textarea>
+  </div>
+
+  @if (error()) {
+    <p class="text-danger small mt-3 mb-0" role="alert">{{ 'ADD_ITEM.SAVE_FAILED' | translate }}</p>
+  }
+
+  <div class="d-flex justify-content-end mt-4">
+    <button type="submit" class="btn btn-primary" [disabled]="!canSubmit()">{{ 'ADD_ITEM.SUBMIT' | translate }}</button>
+  </div>
+</form>

@@ -2,3 +2,40 @@
   display: block;
   height: 100%;
 }
+
+// Keep the last event and the pagination clear of the floating add button
+.overview {
+  padding-bottom: 6rem !important;
+}
+
+.item-action {
+  display: inline-flex;
+  padding: 0.375rem;
+  margin: -0.375rem 0;
+  color: var(--bs-secondary-color);
+  background: transparent;
+  border: 0;
+  border-radius: var(--bs-border-radius);
+
+  &:last-child {
+    margin-right: -0.375rem;
+  }
+
+  &:hover:not(:disabled) {
+    color: var(--bs-primary-text-emphasis);
+    background-color: rgba(var(--bs-primary-rgb), 0.1);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--bs-focus-ring-color);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+  }
+}
+
+.item-action-danger:hover:not(:disabled) {
+  color: var(--bs-danger);
+  background-color: rgba(var(--bs-danger-rgb), 0.1);
+}

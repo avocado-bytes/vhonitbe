@@ -1,6 +1,6 @@
 {
   "APP": {
-    "TITLE": "vHonitbe",
+    "TITLE": "vHonitbě",
     "ADD": "Přidat"
   },
   "HEADER": {
@@ -33,5 +33,101 @@
       "unavailable": "Vaši polohu se nepodařilo zjistit.",
       "timeout": "Zjišťování polohy trvalo příliš dlouho. Zkuste to prosím znovu."
     }
+  },
+  "ADD_ITEM": {
+    "TITLE": "Přidat položku",
+    "CLOSE": "Zavřít",
+    "TYPE": "Typ události",
+    "TYPE_PLACEHOLDER": "Vyberte typ události",
+    "ANIMAL": "Zvíře",
+    "ANIMAL_PLACEHOLDER": "Vyberte zvíře",
+    "SUBMIT": "Uložit",
+    "SAVE_FAILED": "Událost se nepodařilo uložit. Zkuste to prosím znovu.",
+    "EDIT_TITLE": "Upravit událost",
+    "OCCURRED_AT": "Datum a čas",
+    "FUTURE_DATE": "Datum a čas nemohou být v budoucnosti.",
+    "LOCATION": "Poloha",
+    "NOTE": "Poznámka",
+    "NO_LOCATION": "U této události nebyla zaznamenána poloha.",
+    "LOCATION_UNAVAILABLE": "Vaše poloha není k dispozici. Událost bude uložena bez polohy."
+  },
+  "ITEMS": {
+    "spotting": "Pozorování",
+    "tracks": "Stopy",
+    "droppings": "Trus",
+    "rub-scrape": "Vytloukání / hrabání",
+    "wallow": "Kaliště",
+    "rut-call": "Troubení",
+    "harvest": "Úlovek",
+    "wounded-game": "Nástřel / dohledávka",
+    "found-dead": "Uhynulá / sražená zvěř",
+    "game-damage": "Škody zvěří",
+    "feeding": "Přikrmování",
+    "salt-lick": "Slanisko",
+    "hunting-stand": "Posed / kazatelna",
+    "trail-camera": "Fotopast",
+    "poaching": "Pytláctví"
+  },
+  "ANIMAL_GROUPS": {
+    "game-mammals": "Srstnatá zvěř",
+    "game-birds": "Pernatá zvěř",
+    "regulated-species": "Druhy vyžadující regulaci"
+  },
+  "ANIMALS": {
+    "fallow-deer": "Daněk skvrnitý",
+    "red-deer": "Jelen evropský",
+    "white-tailed-deer": "Jelenec běloocasý",
+    "badger": "Jezevec lesní",
+    "chamois": "Kamzík horský",
+    "wild-goat": "Koza bezoárová",
+    "wild-rabbit": "Králík divoký",
+    "pine-marten": "Kuna lesní",
+    "stone-marten": "Kuna skalní",
+    "red-fox": "Liška obecná",
+    "mouflon": "Muflon",
+    "wild-boar": "Prase divoké",
+    "dybowski-sika-deer": "Sika Dybowského",
+    "japanese-sika-deer": "Sika japonský",
+    "roe-deer": "Srnec obecný",
+    "brown-hare": "Zajíc polní",
+    "reeves-pheasant": "Bažant královský",
+    "common-pheasant": "Bažant obecný",
+    "collared-dove": "Hrdlička zahradní",
+    "wood-pigeon": "Holub hřivnáč",
+    "white-fronted-goose": "Husa běločelá",
+    "bean-goose": "Husa polní",
+    "greylag-goose": "Husa velká",
+    "mallard": "Kachna divoká",
+    "wild-turkey": "Krocan divoký",
+    "helmeted-guineafowl": "Perlička obecná",
+    "magpie": "Straka obecná",
+    "carrion-crow": "Vrána obecná",
+    "red-legged-partridge": "Orebice rudá",
+    "egyptian-goose": "Husice nilská",
+    "raccoon": "Mýval severní",
+    "american-mink": "Norek americký",
+    "coypu": "Nutrie říční",
+    "raccoon-dog": "Psík mývalovitý",
+    "muskrat": "Ondatra pižmová"
+  },
+  "OVERVIEW": {
+    "TITLE": "Události",
+    "LOADING": "Načítám události…",
+    "EMPTY": "Zatím žádné události. Přidejte první tlačítkem +.",
+    "LOAD_FAILED": "Události se nepodařilo načíst.",
+    "PAGINATION": "Stránky událostí",
+    "PREVIOUS": "Předchozí",
+    "NEXT": "Další",
+    "PAGE": "Strana {{page}} z {{pages}}",
+    "DELETE": "Smazat událost",
+    "DELETE_CONFIRM": "Smazat tuto událost? Tuto akci nelze vrátit.",
+    "DELETE_FAILED": "Událost se nepodařilo smazat. Zkuste to prosím znovu.",
+    "EDIT": "Upravit událost"
+  },
+  "LOCATION_PICKER": {
+    "MAP": "Mapa pro výběr polohy",
+    "HINT": "Posuňte mapu tak, aby byl zaměřovač na místě události.",
+    "LATITUDE": "Zeměpisná šířka",
+    "LONGITUDE": "Zeměpisná délka"
   }
 }

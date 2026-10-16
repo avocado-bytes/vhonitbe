@@ -104,8 +104,26 @@
   <router-outlet />
 </main>
 
-<button type="button" class="fab rounded-circle bg-primary text-white shadow" [attr.aria-label]="'APP.ADD' | translate">
+<button
+  type="button"
+  class="fab rounded-circle bg-primary text-white shadow"
+  aria-haspopup="dialog"
+  [attr.aria-label]="'APP.ADD' | translate"
+  (click)="openAddItem()"
+>
   <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
     <path d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2" />
   </svg>
 </button>
+
+<dialog #addItemDialog class="add-item-dialog" aria-labelledby="add-item-title" (close)="onAddItemClosed()">
+  @if (addItemOpen()) {
+    <div class="d-flex align-items-center justify-content-between p-3 border-bottom">
+      <h2 id="add-item-title" class="h5 mb-0">{{ (editing() ? 'ADD_ITEM.EDIT_TITLE' : 'ADD_ITEM.TITLE') | translate }}</h2>
+      <button type="button" class="btn-close" [attr.aria-label]="'ADD_ITEM.CLOSE' | translate" (click)="closeAddItem()"></button>
+    </div>
+    <div class="p-3">
+      <app-add-item [event]="editing()" (saved)="closeAddItem()" />
+    </div>
+  }
+</dialog>

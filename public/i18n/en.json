@@ -1,6 +1,6 @@
 {
   "APP": {
-    "TITLE": "vHonitbe",
+    "TITLE": "vHonitbě",
     "ADD": "Add"
   },
   "HEADER": {
@@ -33,5 +33,101 @@
       "unavailable": "Your location could not be determined.",
       "timeout": "Finding your location took too long. Please try again."
     }
+  },
+  "ADD_ITEM": {
+    "TITLE": "Add item",
+    "CLOSE": "Close",
+    "TYPE": "Event type",
+    "TYPE_PLACEHOLDER": "Select event type",
+    "ANIMAL": "Animal",
+    "ANIMAL_PLACEHOLDER": "Select animal",
+    "SUBMIT": "Save",
+    "SAVE_FAILED": "The event could not be saved. Please try again.",
+    "EDIT_TITLE": "Edit event",
+    "OCCURRED_AT": "Date and time",
+    "FUTURE_DATE": "The date and time can’t be in the future.",
+    "LOCATION": "Location",
+    "NOTE": "Note",
+    "NO_LOCATION": "No location was recorded for this event.",
+    "LOCATION_UNAVAILABLE": "Your location is not available. The event will be saved without a position."
+  },
+  "ITEMS": {
+    "spotting": "Sighting",
+    "tracks": "Tracks",
+    "droppings": "Droppings",
+    "rub-scrape": "Rub / scrape",
+    "wallow": "Wallow",
+    "rut-call": "Rut call",
+    "harvest": "Harvest",
+    "wounded-game": "Wounded game",
+    "found-dead": "Found dead / roadkill",
+    "game-damage": "Game damage",
+    "feeding": "Feeding",
+    "salt-lick": "Salt lick",
+    "hunting-stand": "Hunting stand",
+    "trail-camera": "Trail camera",
+    "poaching": "Poaching"
+  },
+  "ANIMAL_GROUPS": {
+    "game-mammals": "Game mammals",
+    "game-birds": "Game birds",
+    "regulated-species": "Species requiring regulation"
+  },
+  "ANIMALS": {
+    "fallow-deer": "Fallow deer",
+    "red-deer": "Red deer",
+    "white-tailed-deer": "White-tailed deer",
+    "badger": "European badger",
+    "chamois": "Chamois",
+    "wild-goat": "Wild goat",
+    "wild-rabbit": "European rabbit",
+    "pine-marten": "Pine marten",
+    "stone-marten": "Stone marten",
+    "red-fox": "Red fox",
+    "mouflon": "Mouflon",
+    "wild-boar": "Wild boar",
+    "dybowski-sika-deer": "Dybowski’s sika deer",
+    "japanese-sika-deer": "Japanese sika deer",
+    "roe-deer": "Roe deer",
+    "brown-hare": "Brown hare",
+    "reeves-pheasant": "Reeves’s pheasant",
+    "common-pheasant": "Common pheasant",
+    "collared-dove": "Eurasian collared dove",
+    "wood-pigeon": "Common wood pigeon",
+    "white-fronted-goose": "Greater white-fronted goose",
+    "bean-goose": "Bean goose",
+    "greylag-goose": "Greylag goose",
+    "mallard": "Mallard",
+    "wild-turkey": "Wild turkey",
+    "helmeted-guineafowl": "Helmeted guineafowl",
+    "magpie": "Eurasian magpie",
+    "carrion-crow": "Carrion crow",
+    "red-legged-partridge": "Red-legged partridge",
+    "egyptian-goose": "Egyptian goose",
+    "raccoon": "Raccoon",
+    "american-mink": "American mink",
+    "coypu": "Coypu (nutria)",
+    "raccoon-dog": "Raccoon dog",
+    "muskrat": "Muskrat"
+  },
+  "OVERVIEW": {
+    "TITLE": "Events",
+    "LOADING": "Loading events…",
+    "EMPTY": "No events yet. Use the + button to add one.",
+    "LOAD_FAILED": "The events could not be loaded.",
+    "PAGINATION": "Event pages",
+    "PREVIOUS": "Previous",
+    "NEXT": "Next",
+    "PAGE": "Page {{page}} of {{pages}}",
+    "DELETE": "Delete event",
+    "DELETE_CONFIRM": "Delete this event? This cannot be undone.",
+    "DELETE_FAILED": "The event could not be deleted. Please try again.",
+    "EDIT": "Edit event"
+  },
+  "LOCATION_PICKER": {
+    "MAP": "Map for choosing the location",
+    "HINT": "Move the map to place the crosshair on the location.",
+    "LATITUDE": "Latitude",
+    "LONGITUDE": "Longitude"
   }
 }

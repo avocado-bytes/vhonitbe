@@ -1,21 +1,205 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import { provideTranslateService, TranslateService } from '@ngx-translate/core';
+import { HuntingEvent } from '../model/event';
+import { EventsActions } from '../state/events/events.actions';
+import { EventsState, initialState } from '../state/events/events.reducer';
 import { Overview } from './overview';
 
 describe('Overview', () => {
-  let component: Overview;
   let fixture: ComponentFixture<Overview>;
+  let store: MockStore;
+
+  const event = (id: string, overrides: Partial<HuntingEvent> = {}): HuntingEvent => ({
+    id,
+    type: 'spotting',
+    animal: 'roe-deer',
+    location: { latitude: 49, longitude: 13.5 },
+    note: '',
+    occurredAt: '2026-10-01T06:30:00.000Z',
+    createdAt: '2026-10-01T06:31:00.000Z',
+    updatedAt: '2026-10-01T06:31:00.000Z',
+    ...overrides,
+  });
+
+  const element = () => fixture.nativeElement as HTMLElement;
+  const text = () => element().textContent ?? '';
+  const button = (label: string) =>
+    Array.from(element().querySelectorAll('button')).find((b) => b.textContent?.trim() === label) as HTMLButtonElement;
+
+  async function setState(events: Partial<EventsState>) {
+    store.setState({ events: { ...initialState, ...events }, settings: { theme: 'light', language: 'en' } });
+    await fixture.whenStable();
+  }
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [Overview],
+      providers: [
+        provideTranslateService({ lang: 'en' }),
+        provideMockStore({ initialState: { events: initialState, settings: { theme: 'light', language: 'en' } } }),
+      ],
     }).compileComponents();
 
+    TestBed.inject(TranslateService).setTranslation('en', {
+      OVERVIEW: {
+        LOADING: 'Loading events…',
+        EMPTY: 'No events yet.',
+        LOAD_FAILED: 'Load failed',
+        PREVIOUS: 'Previous',
+        NEXT: 'Next',
+        PAGE: 'Page {{page}} of {{pages}}',
+        EDIT: 'Edit event',
+        DELETE: 'Delete event',
+        DELETE_CONFIRM: 'Delete this event?',
+        DELETE_FAILED: 'Delete failed',
+      },
+      ITEMS: { spotting: 'Sighting', harvest: 'Harvest' },
+      ANIMALS: { 'roe-deer': 'Roe deer' },
+    });
+    store = TestBed.inject(MockStore);
     fixture = TestBed.createComponent(Overview);
-    component = fixture.componentInstance;
     await fixture.whenStable();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  it('should show a loading message while the first page loads', async () => {
+    await setState({ loading: true });
+    expect(element().querySelector('[role="status"]')?.textContent).toContain('Loading events…');
+  });
+
+  it('should show an empty state when there are no events', async () => {
+    await setState({ total: 0 });
+    expect(text()).toContain('No events yet.');
+  });
+
+  it('should show an error when loading failed', async () => {
+    await setState({ loadError: 'boom' });
+    expect(element().querySelector('[role="alert"]')?.textContent).toContain('Load failed');
+  });
+
+  it('should list the events of the current page', async () => {
+    await setState({
+      events: [event('a', { type: 'harvest', note: 'Clean shot' }), event('b', { animal: null, location: null })],
+      total: 2,
+    });
+
+    const items = Array.from(element().querySelectorAll('li.event'));
+    expect(items).toHaveLength(2);
+    expect(items[0].textContent).toContain('Harvest');
+    expect(items[0].textContent).toContain('Roe deer');
+    expect(items[0].textContent).toContain('49.00000, 13.50000');
+    expect(items[0].textContent).toContain('Clean shot');
+    expect(items[0].querySelector('time')?.getAttribute('datetime')).toBe('2026-10-01T06:30:00.000Z');
+    expect(items[0].querySelector('time')?.textContent?.trim()).toBe(
+      new Intl.DateTimeFormat('en', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date('2026-10-01T06:30:00.000Z')),
+    );
+    expect(items[1].textContent).not.toContain('Roe deer');
+  });
+
+  it('should hide the pagination when everything fits on one page', async () => {
+    await setState({ events: [event('a')], total: 1 });
+    expect(element().querySelector('nav')).toBeNull();
+  });
+
+  describe('pagination', () => {
+    let dispatch: ReturnType<typeof vi.spyOn>;
+
+    beforeEach(() => {
+      dispatch = vi.spyOn(store, 'dispatch');
+    });
+
+    it('should show the current page and disable Previous on the first page', async () => {
+      await setState({ events: [event('a')], total: 25, pageIndex: 0 });
+
+      expect(element().querySelector('nav')?.textContent).toContain('Page 1 of 3');
+      expect(button('Previous').disabled).toBe(true);
+      expect(button('Next').disabled).toBe(false);
+    });
+
+    it('should disable Next on the last page', async () => {
+      await setState({ events: [event('a')], total: 25, pageIndex: 2 });
+
+      expect(element().querySelector('nav')?.textContent).toContain('Page 3 of 3');
+      expect(button('Next').disabled).toBe(true);
+    });
+
+    it('should load the next and previous pages', async () => {
+      await setState({ events: [event('a')], total: 25, pageIndex: 1 });
+
+      button('Next').click();
+      expect(dispatch).toHaveBeenCalledWith(EventsActions.loadPage({ pageIndex: 2 }));
+
+      button('Previous').click();
+      expect(dispatch).toHaveBeenCalledWith(EventsActions.loadPage({ pageIndex: 0 }));
+    });
+
+    it('should disable paging while a page is loading', async () => {
+      await setState({ events: [event('a')], total: 25, pageIndex: 1, loading: true });
+
+      expect(button('Previous').disabled).toBe(true);
+      expect(button('Next').disabled).toBe(true);
+    });
+  });
+
+  describe('delete', () => {
+    let dispatch: ReturnType<typeof vi.spyOn>;
+    let confirm: ReturnType<typeof vi.spyOn>;
+    const deleteButton = (index = 0) =>
+      element().querySelectorAll<HTMLButtonElement>('li.event button[aria-label="Delete event"]')[index];
+
+    beforeEach(async () => {
+      dispatch = vi.spyOn(store, 'dispatch');
+      confirm = vi.spyOn(window, 'confirm');
+      await setState({ events: [event('a'), event('b')], total: 2 });
+    });
+
+    afterEach(() => confirm.mockRestore());
+
+    it('should show a delete button for every event', () => {
+      expect(deleteButton(0)).toBeTruthy();
+      expect(deleteButton(1)).toBeTruthy();
+    });
+
+    it('should delete the event after confirmation', () => {
+      confirm.mockReturnValue(true);
+
+      deleteButton(1).click();
+
+      expect(confirm).toHaveBeenCalledWith('Delete this event?');
+      expect(dispatch).toHaveBeenCalledWith(EventsActions.deleteEvent({ id: 'b' }));
+    });
+
+    it('should not delete the event when the confirmation is cancelled', () => {
+      confirm.mockReturnValue(false);
+
+      deleteButton(0).click();
+
+      expect(dispatch).not.toHaveBeenCalled();
+    });
+
+    it('should disable the button while the event is being deleted', async () => {
+      await setState({ events: [event('a'), event('b')], total: 2, deleting: ['a'] });
+
+      expect(deleteButton(0).disabled).toBe(true);
+      expect(deleteButton(1).disabled).toBe(false);
+    });
+
+    it('should show an error when deleting failed', async () => {
+      await setState({ events: [event('a')], total: 1, deleteError: 'boom' });
+
+      expect(element().querySelector('[role="alert"]')?.textContent).toContain('Delete failed');
+    });
+  });
+
+  describe('edit', () => {
+    it('should start editing the event when its edit button is clicked', async () => {
+      const dispatch = vi.spyOn(store, 'dispatch');
+      const second = event('b');
+      await setState({ events: [event('a'), second], total: 2 });
+
+      element().querySelectorAll<HTMLButtonElement>('li.event button[aria-label="Edit event"]')[1].click();
+
+      expect(dispatch).toHaveBeenCalledWith(EventsActions.startEdit({ event: second }));
+    });
   });
 });
