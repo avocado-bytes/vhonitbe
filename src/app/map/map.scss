@@ -10,6 +10,11 @@
   height: 100%;
 }
 
+.map-menu {
+  position: absolute;
+  z-index: 1001;
+}
+
 .map-status {
   position: absolute;
   top: 1rem;

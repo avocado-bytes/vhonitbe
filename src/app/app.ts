@@ -6,7 +6,7 @@ import { AddItem } from './add-item/add-item';
 import { Settings } from './settings/settings';
 import { FocusTrap } from './shared/focus-trap';
 import { EventsActions } from './state/events/events.actions';
-import { selectEditing } from './state/events/events.reducer';
+import { selectAddAt, selectEditing } from './state/events/events.reducer';
 
 @Component({
   imports: [RouterOutlet, RouterLink, RouterLinkActive, TranslatePipe, Settings, FocusTrap, AddItem],
@@ -26,9 +26,19 @@ export class App {
   private readonly store = inject(Store);
   /** The event being edited in the add item dialog, if any */
   protected readonly editing = this.store.selectSignal(selectEditing);
+  /** The location of a new event added from the map, if any */
+  protected readonly addAt = this.store.selectSignal(selectAddAt);
 
   private readonly injector = inject(Injector);
-  private readonly isRootActive = isActive('/', inject(Router), {
+  private readonly router = inject(Router);
+  private readonly isRootActive = isActive('/', this.router, {
+    paths: 'exact',
+    queryParams: 'ignored',
+    fragment: 'ignored',
+    matrixParams: 'ignored',
+  });
+  /** The map adds items from its context menu instead of the fab button */
+  protected readonly isMapActive = isActive('/map', this.router, {
     paths: 'exact',
     queryParams: 'ignored',
     fragment: 'ignored',
@@ -41,9 +51,9 @@ export class App {
   private readonly addItemDialog = viewChild.required<ElementRef<HTMLDialogElement>>('addItemDialog');
 
   constructor() {
-    // Editing an event re-uses the add item dialog
+    // Editing an event and adding one from the map re-use the add item dialog
     effect(() => {
-      if (this.editing() && !untracked(this.addItemOpen)) {
+      if ((this.editing() || this.addAt()) && !untracked(this.addItemOpen)) {
         this.showAddItemDialog();
       }
     });
@@ -64,6 +74,9 @@ export class App {
     this.addItemOpen.set(false);
     if (this.editing()) {
       this.store.dispatch(EventsActions.cancelEdit());
+    }
+    if (this.addAt()) {
+      this.store.dispatch(EventsActions.cancelAdd());
     }
   }
 

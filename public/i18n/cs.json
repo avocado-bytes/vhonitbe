@@ -129,5 +129,13 @@
     "HINT": "Posuňte mapu tak, aby byl zaměřovač na místě události.",
     "LATITUDE": "Zeměpisná šířka",
     "LONGITUDE": "Zeměpisná délka"
+  },
+  "MAP_MENU": {
+    "LABEL": "Akce na mapě",
+    "ITEMS": {
+      "add-item": "Přidat položku",
+      "edit-item": "Upravit položku",
+      "delete-item": "Smazat položku"
+    }
   }
 }

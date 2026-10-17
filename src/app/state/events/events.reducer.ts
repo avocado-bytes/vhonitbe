@@ -1,5 +1,5 @@
 import { createFeature, createReducer, createSelector, on } from '@ngrx/store';
-import { HuntingEvent } from '../../model/event';
+import { GeoPoint, HuntingEvent } from '../../model/event';
 import { EventsActions } from './events.actions';
 
 export const EVENTS_PAGE_SIZE = 10;
@@ -18,6 +18,8 @@ export interface EventsState {
   loadError: string | null;
   /** The newest events regardless of the loaded page, for the map */
   latest: HuntingEvent[];
+  /** The location of a new event added from the map */
+  addAt: GeoPoint | null;
   /** The event open in the edit dialog */
   editing: HuntingEvent | null;
   /** Adding or updating an event */
@@ -36,6 +38,7 @@ export const initialState: EventsState = {
   loading: false,
   loadError: null,
   latest: [],
+  addAt: null,
   editing: null,
   saving: false,
   saveError: null,
@@ -57,6 +60,8 @@ export const eventsFeature = createFeature({
     on(EventsActions.addEvent, (state): EventsState => ({ ...state, saving: true, saveError: null })),
     on(EventsActions.addEventSuccess, (state): EventsState => ({ ...state, saving: false })),
     on(EventsActions.addEventFailure, (state, { error }): EventsState => ({ ...state, saving: false, saveError: error })),
+    on(EventsActions.startAdd, (state, { location }): EventsState => ({ ...state, addAt: location, saveError: null })),
+    on(EventsActions.cancelAdd, (state): EventsState => ({ ...state, addAt: null })),
     on(EventsActions.startEdit, (state, { event }): EventsState => ({ ...state, editing: event, saveError: null })),
     on(EventsActions.cancelEdit, (state): EventsState => ({ ...state, editing: null })),
     on(EventsActions.updateEvent, (state): EventsState => ({ ...state, saving: true, saveError: null })),
@@ -109,6 +114,7 @@ export const {
   selectLoading,
   selectLoadError,
   selectLatest,
+  selectAddAt,
   selectEditing,
   selectSaving,
   selectSaveError,

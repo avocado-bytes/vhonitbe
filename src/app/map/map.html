@@ -2,6 +2,17 @@
   <div #map class="map"></div>
 }
 
+@if (menu(); as current) {
+  <app-map-menu
+    class="map-menu"
+    [items]="current.items"
+    [style.left.px]="current.x"
+    [style.top.px]="current.y"
+    (selected)="onMenuSelected($event)"
+    (closed)="closeMenu()"
+  />
+}
+
 @if (status() === 'locating') {
   <div class="map-status" role="status">{{ 'MAP.LOCATING' | translate }}</div>
 } @else if (status() === 'error') {

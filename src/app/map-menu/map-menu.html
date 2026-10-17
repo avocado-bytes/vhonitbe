@@ -1,0 +1,9 @@
+<ul class="dropdown-menu show position-static shadow" role="menu" [attr.aria-label]="'MAP_MENU.LABEL' | translate" appFocusTrap>
+  @for (item of items(); track item) {
+    <li role="none">
+      <button type="button" class="dropdown-item" role="menuitem" (click)="selected.emit(item)">
+        {{ 'MAP_MENU.ITEMS.' + item | translate }}
+      </button>
+    </li>
+  }
+</ul>

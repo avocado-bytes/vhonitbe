@@ -1,9 +1,10 @@
-import { Component, computed, DestroyRef, effect, ElementRef, inject, signal, untracked, viewChild } from '@angular/core';
+import { Component, computed, DestroyRef, DOCUMENT, effect, ElementRef, inject, signal, untracked, viewChild } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Store } from '@ngrx/store';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import * as L from 'leaflet';
-import { HuntingEvent } from '../model/event';
+import { EVENT_MENU_ITEMS, MapMenu, MapMenuItem, POINT_MENU_ITEMS } from '../map-menu/map-menu';
+import { GeoPoint, HuntingEvent } from '../model/event';
 import { OPEN_TOPO_MAP_OPTIONS, OPEN_TOPO_MAP_URL } from '../shared/map-tiles';
 import { EventsActions } from '../state/events/events.actions';
 import { selectLatest } from '../state/events/events.reducer';
@@ -14,6 +15,9 @@ import { selectLanguage } from '../state/settings/settings.reducer';
 const LOCATED_ZOOM = 14;
 
 const LOCATION_COLOR = '#355e3b';
+
+/** ~10 cm; avoids noise like 49.00000000001 from map projections */
+const PRECISION = 1e6;
 
 /** A pin, so events are easy to tell apart from the round "you are here" marker */
 const EVENT_ICON = L.divIcon({
@@ -28,7 +32,7 @@ const EVENT_ICON = L.divIcon({
 });
 
 @Component({
-  imports: [TranslatePipe],
+  imports: [TranslatePipe, MapMenu],
   selector: 'app-map',
   styleUrl: './map.scss',
   templateUrl: './map.html',
@@ -39,6 +43,17 @@ export class MapView {
   /** Only rendered once the location is known */
   private readonly container = viewChild<ElementRef<HTMLElement>>('map');
   private readonly map = signal<L.Map | undefined>(undefined);
+
+  private readonly window = inject(DOCUMENT).defaultView;
+
+  /** The context menu opened for a point or an event marker on the map, placed in container pixels */
+  protected readonly menu = signal<{
+    x: number;
+    y: number;
+    location: GeoPoint;
+    event: HuntingEvent | null;
+    items: readonly MapMenuItem[];
+  } | null>(null);
 
   protected readonly status = this.store.selectSignal(selectStatus);
   protected readonly error = this.store.selectSignal(selectError);
@@ -94,6 +109,8 @@ export class MapView {
             keyboard: true,
           })
             .bindPopup(() => this.popupContent(event))
+            // Markers don't pass mouse events on to the map, so this replaces the map's menu
+            .on('contextmenu', (mouseEvent: L.LeafletMouseEvent) => this.openMenu(mouseEvent, event))
             .addTo(eventsLayer);
         }
       }
@@ -106,8 +123,60 @@ export class MapView {
   private createMap(container: HTMLElement): L.Map {
     const map = L.map(container);
     L.tileLayer(OPEN_TOPO_MAP_URL, OPEN_TOPO_MAP_OPTIONS).addTo(map);
+    // Leaflet also fires contextmenu on a long press on touch devices
+    map.on('contextmenu', (event: L.LeafletMouseEvent) => this.openMenu(event));
+    // Touch devices have no right click, so a plain tap opens the menu as well
+    map.on('click', (event: L.LeafletMouseEvent) => {
+      if (typeof matchMedia !== 'undefined' && matchMedia('(pointer: coarse)').matches) {
+        this.openMenu(event);
+      }
+    });
+    // The menu belongs to a point, so it would be misplaced once the map moves
+    map.on('movestart zoomstart', () => this.closeMenu());
     this.map.set(map);
     return map;
+  }
+
+  /** Opens the menu for an event marker when an event is given, otherwise for the clicked point */
+  private openMenu(mouseEvent: L.LeafletMouseEvent, event: HuntingEvent | null = null): void {
+    this.menu.set({
+      x: mouseEvent.containerPoint.x,
+      y: mouseEvent.containerPoint.y,
+      location: {
+        latitude: Math.round(mouseEvent.latlng.lat * PRECISION) / PRECISION,
+        longitude: Math.round(mouseEvent.latlng.lng * PRECISION) / PRECISION,
+      },
+      event,
+      items: event ? EVENT_MENU_ITEMS : POINT_MENU_ITEMS,
+    });
+  }
+
+  protected onMenuSelected(item: MapMenuItem): void {
+    const menu = this.menu();
+    this.closeMenu();
+    if (!menu) {
+      return;
+    }
+
+    switch (item) {
+      case 'add-item':
+        this.store.dispatch(EventsActions.startAdd({ location: menu.location }));
+        break;
+      case 'edit-item':
+        if (menu.event) {
+          this.store.dispatch(EventsActions.startEdit({ event: menu.event }));
+        }
+        break;
+      case 'delete-item':
+        if (menu.event && this.window?.confirm(this.translate.instant('OVERVIEW.DELETE_CONFIRM'))) {
+          this.store.dispatch(EventsActions.deleteEvent({ id: menu.event.id }));
+        }
+        break;
+    }
+  }
+
+  protected closeMenu(): void {
+    this.menu.set(null);
   }
 
   /** Built from DOM nodes rather than an HTML string, so no user data is ever parsed as HTML */

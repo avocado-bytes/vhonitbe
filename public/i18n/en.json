@@ -129,5 +129,13 @@
     "HINT": "Move the map to place the crosshair on the location.",
     "LATITUDE": "Latitude",
     "LONGITUDE": "Longitude"
+  },
+  "MAP_MENU": {
+    "LABEL": "Map actions",
+    "ITEMS": {
+      "add-item": "Add item",
+      "edit-item": "Edit item",
+      "delete-item": "Delete item"
+    }
   }
 }

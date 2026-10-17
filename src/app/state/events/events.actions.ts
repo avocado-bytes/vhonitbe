@@ -1,5 +1,5 @@
 import { createActionGroup, emptyProps, props } from '@ngrx/store';
-import { HuntingEvent, NewHuntingEvent } from '../../model/event';
+import { GeoPoint, HuntingEvent, NewHuntingEvent } from '../../model/event';
 
 export const EventsActions = createActionGroup({
   source: 'Events',
@@ -13,6 +13,8 @@ export const EventsActions = createActionGroup({
     'Add Event': props<{ event: NewHuntingEvent }>(),
     'Add Event Success': props<{ event: HuntingEvent }>(),
     'Add Event Failure': props<{ error: string }>(),
+    'Start Add': props<{ location: GeoPoint }>(),
+    'Cancel Add': emptyProps(),
     'Start Edit': props<{ event: HuntingEvent }>(),
     'Cancel Edit': emptyProps(),
     'Update Event': props<{ event: HuntingEvent }>(),

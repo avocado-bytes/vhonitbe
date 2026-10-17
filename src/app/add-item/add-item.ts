@@ -33,8 +33,11 @@ export class AddItem implements OnInit {
   readonly type = linkedSignal<Item | null>(() => this.event()?.type ?? null);
   readonly animal = linkedSignal<Animal | null>(() => this.event()?.animal ?? null);
   readonly note = linkedSignal<string>(() => this.event()?.note ?? '');
+  /** Where a new event starts instead of the user's current location */
+  readonly initialLocation = input<GeoPoint | null>(null);
+
   /** Where the event happened; moved with the location picker */
-  readonly location = linkedSignal<GeoPoint | null>(() => this.event()?.location ?? null);
+  readonly location = linkedSignal<GeoPoint | null>(() => this.event()?.location ?? this.initialLocation() ?? null);
   /** Local "YYYY-MM-DDTHH:mm" value of the date input; now for a new event */
   readonly occurredAt = linkedSignal<string>(() => {
     const event = this.event();
