@@ -27,3 +27,16 @@ export interface HuntingEvent {
 
 /** The fields the user provides; `id`, `createdAt` and `updatedAt` are set when stored */
 export type NewHuntingEvent = Omit<HuntingEvent, 'id' | 'createdAt' | 'updatedAt'>;
+
+export type EventSort = 'newest' | 'oldest';
+
+/** How the event list is ordered and filtered */
+export interface EventQuery {
+  sort: EventSort;
+  /** Only events of this type; null for all */
+  type: Item | null;
+  /** Only events with this animal; null for all */
+  animal: Animal | null;
+}
+
+export const DEFAULT_EVENT_QUERY: EventQuery = { sort: 'newest', type: null, animal: null };

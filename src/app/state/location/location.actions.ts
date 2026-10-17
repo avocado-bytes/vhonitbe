@@ -7,6 +7,7 @@ export const LocationActions = createActionGroup({
     Locate: emptyProps(),
     Located: props<{ position: Coordinates }>(),
     'Locate Failed': props<{ error: LocationError }>(),
+    'Set Manual Position': props<{ position: Coordinates }>(),
     'Start Tracking': emptyProps(),
     'Stop Tracking': emptyProps(),
   },

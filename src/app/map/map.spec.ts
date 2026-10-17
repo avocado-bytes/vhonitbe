@@ -35,9 +35,10 @@ describe('MapView', () => {
 
   const element = () => fixture.nativeElement as HTMLElement;
   let latest: HuntingEvent[] = [];
-  async function setLocation(location: LocationState) {
+  /** A position from the device, not one set by hand */
+  async function setLocation(location: Omit<LocationState, 'manual'>) {
     store.setState({
-      location,
+      location: { ...location, manual: false },
       events: { ...eventsInitialState, latest },
       settings: { theme: 'light', language: 'en' },
     });
@@ -81,7 +82,7 @@ describe('MapView', () => {
   });
 
   describe('event markers', () => {
-    const located: LocationState = {
+    const located: Omit<LocationState, 'manual'> = {
       status: 'located',
       position: { latitude: 50.08, longitude: 14.42, accuracy: 20 },
       error: null,

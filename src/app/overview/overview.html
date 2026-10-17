@@ -2,6 +2,26 @@
   <h1 class="visually-hidden">{{ 'DASHBOARD.TITLE' | translate }}</h1>
 
   <div class="row g-3">
+    @if (nightEnds(); as ends) {
+      <div class="col-12">
+        <section class="card border-warning bg-warning-subtle" aria-labelledby="dashboard-night" role="status">
+          <div class="card-body d-flex align-items-center gap-3">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16" class="flex-shrink-0 text-warning-emphasis" aria-hidden="true">
+              @for (d of icons['clear-night']; track $index) {
+                <path [attr.d]="d" />
+              }
+            </svg>
+            <div>
+              <h2 id="dashboard-night" class="h6 mb-1 text-warning-emphasis">
+                {{ 'DASHBOARD.NIGHT_TITLE' | translate }} · {{ 'DASHBOARD.NIGHT_UNTIL' | translate: { time: formatTime(ends) } }}
+              </h2>
+              <p class="small mb-0">{{ 'DASHBOARD.NIGHT_TEXT' | translate }}</p>
+            </div>
+          </div>
+        </section>
+      </div>
+    }
+
     <div class="col-12 col-md-6 col-xxl-3">
       <section class="card h-100" aria-labelledby="dashboard-sun">
         <div class="card-body">
@@ -130,11 +150,54 @@
         <div class="card-body">
           <h2 id="dashboard-events" class="h5 card-title mb-3">{{ 'OVERVIEW.TITLE' | translate }}</h2>
 
+          @if (total() > 0 || filtered()) {
+            <div class="row g-2 mb-3">
+              <div class="col-12 col-sm-4">
+                <label for="events-sort" class="form-label small mb-1">{{ 'OVERVIEW.SORT' | translate }}</label>
+                <select id="events-sort" class="form-select form-select-sm" #sortSelect (change)="setSort(sortSelect.value)">
+                  <option value="newest" [selected]="query().sort === 'newest'">{{ 'OVERVIEW.SORT_NEWEST' | translate }}</option>
+                  <option value="oldest" [selected]="query().sort === 'oldest'">{{ 'OVERVIEW.SORT_OLDEST' | translate }}</option>
+                </select>
+              </div>
+              <div class="col-6 col-sm-4">
+                <label for="events-type" class="form-label small mb-1">{{ 'OVERVIEW.FILTER_TYPE' | translate }}</label>
+                <select id="events-type" class="form-select form-select-sm" #typeSelect (change)="setTypeFilter(typeSelect.value)">
+                  <option value="" [selected]="query().type === null">{{ 'OVERVIEW.FILTER_ALL_TYPES' | translate }}</option>
+                  @for (item of items; track item) {
+                    <option [value]="item" [selected]="query().type === item">{{ 'ITEMS.' + item | translate }}</option>
+                  }
+                </select>
+              </div>
+              <div class="col-6 col-sm-4">
+                <label for="events-animal" class="form-label small mb-1">{{ 'OVERVIEW.FILTER_ANIMAL' | translate }}</label>
+                <select id="events-animal" class="form-select form-select-sm" #animalSelect (change)="setAnimalFilter(animalSelect.value)">
+                  <option value="" [selected]="query().animal === null">{{ 'OVERVIEW.FILTER_ALL_ANIMALS' | translate }}</option>
+                  @for (group of animalGroups | keyvalue: keepOrder; track group.key) {
+                    <optgroup [label]="'ANIMAL_GROUPS.' + group.key | translate">
+                      @for (option of group.value; track option) {
+                        <option [value]="option" [selected]="query().animal === option">{{ 'ANIMALS.' + option | translate }}</option>
+                      }
+                    </optgroup>
+                  }
+                </select>
+              </div>
+              @if (filtered()) {
+                <div class="col-12 text-end">
+                  <button type="button" class="btn btn-link btn-sm p-0" (click)="clearFilters()">
+                    {{ 'OVERVIEW.CLEAR_FILTERS' | translate }}
+                  </button>
+                </div>
+              }
+            </div>
+          }
+
         @if (loadError()) {
           <p class="text-danger" role="alert">{{ 'OVERVIEW.LOAD_FAILED' | translate }}</p>
         } @else if (total() === 0) {
           @if (loading()) {
             <p class="text-body-secondary" role="status">{{ 'OVERVIEW.LOADING' | translate }}</p>
+          } @else if (filtered()) {
+            <p class="text-body-secondary">{{ 'OVERVIEW.NO_MATCHES' | translate }}</p>
           } @else {
             <p class="text-body-secondary">{{ 'OVERVIEW.EMPTY' | translate }}</p>
           }
@@ -146,10 +209,29 @@
             @for (event of events(); track event.id) {
               <li class="event p-3 mb-2 border rounded bg-body-tertiary">
                 <div class="d-flex align-items-center gap-2">
-                  <span class="fw-semibold me-auto">{{ 'ITEMS.' + event.type | translate }}</span>
-                  <time class="small text-body-secondary text-nowrap" [attr.datetime]="event.occurredAt">
-                    {{ formatDate(event.occurredAt) }}
-                  </time>
+                  <!-- The date sits below the type, leaving room for the action buttons on phones -->
+                  <div class="me-auto">
+                    <div class="fw-semibold">{{ 'ITEMS.' + event.type | translate }}</div>
+                    <time class="small text-body-secondary" [attr.datetime]="event.occurredAt">
+                      {{ formatDate(event.occurredAt) }}
+                    </time>
+                  </div>
+                  @if (event.location) {
+                    <button
+                      type="button"
+                      class="item-action"
+                      aria-haspopup="dialog"
+                      [attr.aria-label]="'OVERVIEW.SHOW_ON_MAP' | translate"
+                      (click)="showOnMap(event)"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+                        <path
+                          fill-rule="evenodd"
+                          d="M15.817.113A.5.5 0 0 1 16 .5v14a.5.5 0 0 1-.402.49l-5 1a.5.5 0 0 1-.196 0L5.5 15.01l-4.902.98A.5.5 0 0 1 0 15.5v-14a.5.5 0 0 1 .402-.49l5-1a.5.5 0 0 1 .196 0L10.5.99l4.902-.98a.5.5 0 0 1 .415.103M10 1.91l-4-.8v12.98l4 .8zm1 12.98 4-.8V1.11l-4 .8zm-6-.8V1.11l-4 .8v12.98z"
+                        />
+                      </svg>
+                    </button>
+                  }
                   <button
                     type="button"
                     class="item-action"
@@ -223,4 +305,21 @@
       </section>
     </div>
   </div>
+
+  <dialog #mapDialog class="map-dialog" aria-labelledby="event-map-title" (close)="mapEvent.set(null)">
+    @if (mapEvent(); as shown) {
+      <div class="d-flex align-items-center justify-content-between gap-2 p-3 border-bottom">
+        <div>
+          <h2 id="event-map-title" class="h5 mb-0">{{ 'ITEMS.' + shown.type | translate }}</h2>
+          <time class="small text-body-secondary" [attr.datetime]="shown.occurredAt">{{ formatDate(shown.occurredAt) }}</time>
+        </div>
+        <button type="button" class="btn-close" [attr.aria-label]="'OVERVIEW.MAP_CLOSE' | translate" (click)="closeMap()"></button>
+      </div>
+      @if (shown.location; as location) {
+        <div class="p-3">
+          <app-event-map [location]="location" />
+        </div>
+      }
+    }
+  </dialog>
 </section>

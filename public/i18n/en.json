@@ -41,7 +41,9 @@
     "WIND_LOADING": "Loading wind…",
     "WIND_FAILED": "Wind data could not be loaded.",
     "WIND_CONE_CURRENT": "Now {{length}} m at {{speed}} m/s",
-    "WIND_CONE_RULE": "{{calmLength}} m in calm wind (up to {{calmSpeed}} m/s), growing to {{strongLength}} m at {{strongSpeed}} m/s and more"
+    "WIND_CONE_RULE": "{{calmLength}} m in calm wind (up to {{calmSpeed}} m/s), growing to {{strongLength}} m at {{strongSpeed}} m/s and more",
+    "WIND_TERRAIN_NOTE": "Wind measured 10 m above the ground; terrain, forest and valleys can change its direction and strength near you.",
+    "MANUAL_POSITION": "Manual position. Turn on tracking to use your device location again."
   },
   "ADD_ITEM": {
     "TITLE": "Add item",
@@ -131,7 +133,18 @@
     "DELETE": "Delete event",
     "DELETE_CONFIRM": "Delete this event? This cannot be undone.",
     "DELETE_FAILED": "The event could not be deleted. Please try again.",
-    "EDIT": "Edit event"
+    "EDIT": "Edit event",
+    "SHOW_ON_MAP": "Show on map",
+    "MAP_CLOSE": "Close",
+    "SORT": "Sort",
+    "SORT_NEWEST": "Newest first",
+    "SORT_OLDEST": "Oldest first",
+    "FILTER_TYPE": "Event",
+    "FILTER_ALL_TYPES": "All events",
+    "FILTER_ANIMAL": "Animal",
+    "FILTER_ALL_ANIMALS": "All animals",
+    "NO_MATCHES": "No events match the selected filters.",
+    "CLEAR_FILTERS": "Clear filters"
   },
   "LOCATION_PICKER": {
     "MAP": "Map for choosing the location",
@@ -144,7 +157,8 @@
     "ITEMS": {
       "add-item": "Add item",
       "edit-item": "Edit item",
-      "delete-item": "Delete item"
+      "delete-item": "Delete item",
+      "manual-position": "Manual position"
     }
   },
   "SHOOTING_SAFETY": {
@@ -201,6 +215,12 @@
       "SW": "SW",
       "W": "W",
       "NW": "NW"
-    }
+    },
+    "NIGHT_TITLE": "Night time",
+    "NIGHT_UNTIL": "until {{time}}",
+    "NIGHT_TEXT": "From one hour after sunset until one hour before sunrise, some game may not be hunted."
+  },
+  "EVENT_MAP": {
+    "MAP": "Map of the event location"
   }
 }

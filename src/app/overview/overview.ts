@@ -1,7 +1,9 @@
-import { Component, computed, DOCUMENT, inject } from '@angular/core';
-import { DecimalPipe } from '@angular/common';
+import { afterNextRender, Component, computed, DestroyRef, DOCUMENT, ElementRef, inject, Injector, signal, viewChild } from '@angular/core';
+import { DecimalPipe, KeyValuePipe } from '@angular/common';
 import { Store } from '@ngrx/store';
-import { HuntingEvent } from '../model/event';
+import { EventMap } from '../event-map/event-map';
+import { EventSort, HuntingEvent } from '../model/event';
+import { Animal, ANIMAL_GROUPS, Item, ITEMS } from '../model/item';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { EventsActions } from '../state/events/events.actions';
 import {
@@ -12,6 +14,7 @@ import {
   selectLoading,
   selectPageCount,
   selectPageIndex,
+  selectQuery,
   selectTotal,
 } from '../state/events/events.reducer';
 import { moonIllumination, MoonIllumination, moonPhaseName, sunTimes } from '../shared/astronomy';
@@ -22,6 +25,12 @@ import { WeatherActions } from '../state/weather/weather.actions';
 import { compassDirection, weatherCondition } from '../state/weather/weather.model';
 import { selectCurrentWeather, selectWeatherStatus } from '../state/weather/weather.reducer';
 import { DASHBOARD_ICONS, DashboardIcon } from './dashboard-icons';
+
+const HOUR_MS = 60 * 60 * 1000;
+const DAY_MS = 24 * HOUR_MS;
+
+/** Hunting some game is not allowed from this long after sunset until this long before sunrise */
+const NIGHT_MARGIN = HOUR_MS;
 
 /** Radius of the drawn moon in its 16 × 16 view box */
 const MOON_RADIUS = 7;
@@ -42,7 +51,7 @@ function moonLitPath({ fraction, phase }: MoonIllumination): string {
 }
 
 @Component({
-  imports: [TranslatePipe, DecimalPipe],
+  imports: [TranslatePipe, DecimalPipe, KeyValuePipe, EventMap],
   selector: 'app-overview',
   styleUrl: './overview.scss',
   templateUrl: './overview.html',
@@ -61,6 +70,13 @@ export class Overview {
   protected readonly deleteError = this.store.selectSignal(selectDeleteError);
   private readonly deleting = this.store.selectSignal(selectDeleting);
 
+  protected readonly query = this.store.selectSignal(selectQuery);
+  protected readonly filtered = computed(() => this.query().type !== null || this.query().animal !== null);
+  protected readonly items = ITEMS;
+  protected readonly animalGroups = ANIMAL_GROUPS;
+  /** Keeps the groups in their declared order instead of KeyValuePipe's alphabetical order */
+  protected readonly keepOrder = () => 0;
+
   private readonly language = this.store.selectSignal(selectLanguage);
   private readonly dateFormat = computed(
     () => new Intl.DateTimeFormat(this.language(), { dateStyle: 'medium', timeStyle: 'short' }),
@@ -71,11 +87,39 @@ export class Overview {
   protected readonly position = this.store.selectSignal(selectPosition);
   protected readonly locationStatus = this.store.selectSignal(selectStatus);
 
-  /** Local noon picks today's sunrise and sunset in any time zone */
-  private readonly today = new Date(new Date().setHours(12, 0, 0, 0));
+
+  /** The current time, updated every minute so the night card appears and disappears on its own */
+  private readonly now = signal(Date.now());
+
+  /** Local noon picks today's sunrise and sunset in any time zone; follows the date past midnight */
+  private readonly today = computed(() => new Date(new Date(this.now()).setHours(12, 0, 0, 0)));
   protected readonly sun = computed(() => {
     const position = this.position();
-    return position ? sunTimes(this.today, position.latitude, position.longitude) : null;
+    return position ? sunTimes(this.today(), position.latitude, position.longitude) : null;
+  });
+
+  /** When the current night ends, if it is night: one hour after sunset until one hour before sunrise */
+  protected readonly nightEnds = computed((): Date | null => {
+    const position = this.position();
+    if (!position) {
+      return null;
+    }
+    const now = this.now();
+    const times = (dayOffset: number) =>
+      sunTimes(new Date(this.today().getTime() + dayOffset * DAY_MS), position.latitude, position.longitude);
+    const today = this.sun() ?? times(0);
+    if (!today.sunrise || !today.sunset) {
+      // No sunrise or sunset today (polar day or night)
+      return null;
+    }
+    if (now < today.sunrise.getTime() - NIGHT_MARGIN) {
+      return new Date(today.sunrise.getTime() - NIGHT_MARGIN);
+    }
+    if (now > today.sunset.getTime() + NIGHT_MARGIN) {
+      const tomorrow = times(1).sunrise;
+      return tomorrow ? new Date(tomorrow.getTime() - NIGHT_MARGIN) : null;
+    }
+    return null;
   });
 
   protected readonly moon = moonIllumination(new Date());
@@ -110,7 +154,15 @@ export class Overview {
     return weather ? compassDirection(weather.windDirection) : null;
   });
 
+  /** The event shown in the map dialog, if any */
+  protected readonly mapEvent = signal<HuntingEvent | null>(null);
+  private readonly mapDialog = viewChild.required<ElementRef<HTMLDialogElement>>('mapDialog');
+  private readonly injector = inject(Injector);
+
   constructor() {
+    const clock = setInterval(() => this.now.set(Date.now()), 60_000);
+    inject(DestroyRef).onDestroy(() => clearInterval(clock));
+
     // Sunrise, sunset and the weather depend on where the user is
     this.store.dispatch(LocationActions.locate());
     this.store.dispatch(WeatherActions.load());
@@ -124,12 +176,39 @@ export class Overview {
     return this.dateFormat().format(new Date(iso));
   }
 
+  protected setSort(value: string): void {
+    this.store.dispatch(EventsActions.setQuery({ query: { ...this.query(), sort: value as EventSort } }));
+  }
+
+  protected setTypeFilter(value: string): void {
+    this.store.dispatch(EventsActions.setQuery({ query: { ...this.query(), type: value ? (value as Item) : null } }));
+  }
+
+  protected setAnimalFilter(value: string): void {
+    this.store.dispatch(EventsActions.setQuery({ query: { ...this.query(), animal: value ? (value as Animal) : null } }));
+  }
+
+  /** Shows all events again, keeping the chosen order */
+  protected clearFilters(): void {
+    this.store.dispatch(EventsActions.setQuery({ query: { ...this.query(), type: null, animal: null } }));
+  }
+
   protected goToPage(pageIndex: number): void {
     this.store.dispatch(EventsActions.loadPage({ pageIndex }));
   }
 
   protected edit(event: HuntingEvent): void {
     this.store.dispatch(EventsActions.startEdit({ event }));
+  }
+
+  protected showOnMap(event: HuntingEvent): void {
+    this.mapEvent.set(event);
+    // Open once the content is rendered, so focus moves to its close button
+    afterNextRender(() => this.mapDialog().nativeElement.showModal(), { injector: this.injector });
+  }
+
+  protected closeMap(): void {
+    this.mapDialog().nativeElement.close();
   }
 
   protected isDeleting(id: string): boolean {

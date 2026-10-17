@@ -1,6 +1,6 @@
 import { DestroyRef, inject, Service } from '@angular/core';
-import { DBSchema, IDBPDatabase, openDB } from 'idb';
-import { HuntingEvent, NewHuntingEvent } from '../model/event';
+import { DBSchema, IDBPDatabase, IDBPIndex, openDB } from 'idb';
+import { DEFAULT_EVENT_QUERY, EventQuery, HuntingEvent, NewHuntingEvent } from '../model/event';
 import { Animal, Item } from '../model/item';
 
 const DB_NAME = 'vhonitbe';
@@ -37,13 +37,20 @@ export class EventStorage {
     return (await this.open()).getAllFromIndex('events', 'by-occurred-at');
   }
 
-  /** One page of events, newest first, together with the total number of events */
-  async getPage(offset: number, limit: number): Promise<EventPage> {
+  /**
+   * One page of events, sorted and filtered by `query` (newest first by default), together with
+   * the total number of matching events
+   */
+  async getPage(offset: number, limit: number, query: EventQuery = DEFAULT_EVENT_QUERY): Promise<EventPage> {
     const tx = (await this.open()).transaction('events');
+    const direction = query.sort === 'newest' ? 'prev' : 'next';
+    if (query.type !== null || query.animal !== null) {
+      return this.getFilteredPage(tx.store.index('by-occurred-at'), direction, offset, limit, query);
+    }
     const total = await tx.store.count();
 
     const events: HuntingEvent[] = [];
-    let cursor = await tx.store.index('by-occurred-at').openCursor(null, 'prev');
+    let cursor = await tx.store.index('by-occurred-at').openCursor(null, direction);
     if (cursor && offset > 0) {
       cursor = await cursor.advance(offset);
     }
@@ -53,6 +60,28 @@ export class EventStorage {
     }
 
     await tx.done;
+    return { events, total };
+  }
+
+  /** Walks all events in date order, as matching ones can only be counted by looking at each of them */
+  private async getFilteredPage(
+    index: IDBPIndex<VhonitbeDB, ['events'], 'events', 'by-occurred-at'>,
+    direction: IDBCursorDirection,
+    offset: number,
+    limit: number,
+    { type, animal }: EventQuery,
+  ): Promise<EventPage> {
+    const events: HuntingEvent[] = [];
+    let total = 0;
+    for (let cursor = await index.openCursor(null, direction); cursor; cursor = await cursor.continue()) {
+      const event = cursor.value;
+      if ((type === null || event.type === type) && (animal === null || event.animal === animal)) {
+        if (total >= offset && events.length < limit) {
+          events.push(event);
+        }
+        total++;
+      }
+    }
     return { events, total };
   }
 

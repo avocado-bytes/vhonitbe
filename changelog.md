@@ -1,5 +1,31 @@
 # Changelog
 
+## 0.18.0
+
+- Show a note in the map panel while the position is set by hand.
+- Show a night card on the dashboard from one hour after sunset until one hour before sunrise, when some game may not be hunted, with the time the night period ends.
+
+## 0.17.0
+
+- Add "Manual position" to the map's context menu: it turns off tracking and follow me and sets the user's position to the chosen point. Device positions are ignored until tracking is turned on again, which looks up the device position right away.
+
+## 0.16.1
+
+- Add a "Clear filters" button to the dashboard's event list, shown while a filter is active; the sort order is kept.
+
+## 0.16.0
+
+- Sort the events on the dashboard newest or oldest first, and filter them by event type and animal. Paging and the event count follow the filters; the map keeps showing the newest events unfiltered.
+
+## 0.15.0
+
+- Add a map button to events with a location in the overview, opening a dialog with a map that shows where the event happened.
+- Show the event's date below its type in the overview, so the action buttons fit on phones.
+
+## 0.14.2
+
+- Add a note to the wind cone legend that terrain, forest and valleys can change the wind's direction and strength.
+
 ## 0.14.1
 
 - Show a legend for the wind cone on the map with its current length and wind speed, and how the length follows the wind speed (100 m in calm wind up to 500 m at 8 m/s).

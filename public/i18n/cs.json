@@ -41,7 +41,9 @@
     "WIND_LOADING": "Načítám vítr…",
     "WIND_FAILED": "Data o větru se nepodařilo načíst.",
     "WIND_CONE_CURRENT": "Nyní {{length}} m při {{speed}} m/s",
-    "WIND_CONE_RULE": "{{calmLength}} m za bezvětří (do {{calmSpeed}} m/s), roste až na {{strongLength}} m při {{strongSpeed}} m/s a více"
+    "WIND_CONE_RULE": "{{calmLength}} m za bezvětří (do {{calmSpeed}} m/s), roste až na {{strongLength}} m při {{strongSpeed}} m/s a více",
+    "WIND_TERRAIN_NOTE": "Vítr měřený 10 m nad zemí; terén, les a údolí mohou v okolí změnit jeho směr i sílu.",
+    "MANUAL_POSITION": "Ruční poloha. Pro návrat k poloze zařízení zapněte sledování."
   },
   "ADD_ITEM": {
     "TITLE": "Přidat položku",
@@ -131,7 +133,18 @@
     "DELETE": "Smazat událost",
     "DELETE_CONFIRM": "Smazat tuto událost? Tuto akci nelze vrátit.",
     "DELETE_FAILED": "Událost se nepodařilo smazat. Zkuste to prosím znovu.",
-    "EDIT": "Upravit událost"
+    "EDIT": "Upravit událost",
+    "SHOW_ON_MAP": "Zobrazit na mapě",
+    "MAP_CLOSE": "Zavřít",
+    "SORT": "Řazení",
+    "SORT_NEWEST": "Od nejnovějších",
+    "SORT_OLDEST": "Od nejstarších",
+    "FILTER_TYPE": "Událost",
+    "FILTER_ALL_TYPES": "Všechny události",
+    "FILTER_ANIMAL": "Zvíře",
+    "FILTER_ALL_ANIMALS": "Všechna zvířata",
+    "NO_MATCHES": "Vybraným filtrům neodpovídá žádná událost.",
+    "CLEAR_FILTERS": "Zrušit filtry"
   },
   "LOCATION_PICKER": {
     "MAP": "Mapa pro výběr polohy",
@@ -144,7 +157,8 @@
     "ITEMS": {
       "add-item": "Přidat položku",
       "edit-item": "Upravit položku",
-      "delete-item": "Smazat položku"
+      "delete-item": "Smazat položku",
+      "manual-position": "Ruční poloha"
     }
   },
   "SHOOTING_SAFETY": {
@@ -201,6 +215,12 @@
       "SW": "JZ",
       "W": "Z",
       "NW": "SZ"
-    }
+    },
+    "NIGHT_TITLE": "Noc",
+    "NIGHT_UNTIL": "do {{time}}",
+    "NIGHT_TEXT": "Od jedné hodiny po západu do jedné hodiny před východem slunce se některá zvěř nesmí lovit."
+  },
+  "EVENT_MAP": {
+    "MAP": "Mapa místa události"
   }
 }

@@ -1,10 +1,11 @@
 import { createActionGroup, emptyProps, props } from '@ngrx/store';
-import { GeoPoint, HuntingEvent, NewHuntingEvent } from '../../model/event';
+import { EventQuery, GeoPoint, HuntingEvent, NewHuntingEvent } from '../../model/event';
 
 export const EventsActions = createActionGroup({
   source: 'Events',
   events: {
     'Load Page': props<{ pageIndex: number }>(),
+    'Set Query': props<{ query: EventQuery }>(),
     'Load Page Success': props<{ pageIndex: number; events: HuntingEvent[]; total: number }>(),
     'Load Page Failure': props<{ error: string }>(),
     'Load Latest': emptyProps(),

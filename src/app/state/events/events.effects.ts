@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { catchError, concatMap, exhaustMap, from, map, mergeMap, of, switchMap, withLatestFrom } from 'rxjs';
 import { EventStorage } from '../../storage/event-storage';
 import { EventsActions } from './events.actions';
-import { LATEST_EVENTS_COUNT, selectPageCount, selectPageIndex, selectPageSize } from './events.reducer';
+import { LATEST_EVENTS_COUNT, selectPageCount, selectPageIndex, selectPageSize, selectQuery } from './events.reducer';
 
 /** Asks the browser to keep the database when it runs low on storage */
 export const requestPersistentStorage = createEffect(
@@ -40,14 +40,24 @@ export const loadPage = createEffect(
   (actions$ = inject(Actions), store = inject(Store), storage = inject(EventStorage)) =>
     actions$.pipe(
       ofType(EventsActions.loadPage),
-      withLatestFrom(store.select(selectPageSize)),
+      withLatestFrom(store.select(selectPageSize), store.select(selectQuery)),
       // A newer page request makes an older, still running one obsolete
-      switchMap(([{ pageIndex }, pageSize]) =>
-        from(storage.getPage(pageIndex * pageSize, pageSize)).pipe(
+      switchMap(([{ pageIndex }, pageSize, query]) =>
+        from(storage.getPage(pageIndex * pageSize, pageSize, query)).pipe(
           map(({ events, total }) => EventsActions.loadPageSuccess({ pageIndex, events, total })),
           catchError((error: unknown) => of(EventsActions.loadPageFailure({ error: String(error) }))),
         ),
       ),
+    ),
+  { functional: true },
+);
+
+/** A different order or filter starts again at the first page */
+export const reloadAfterQueryChange = createEffect(
+  (actions$ = inject(Actions)) =>
+    actions$.pipe(
+      ofType(EventsActions.setQuery),
+      map(() => EventsActions.loadPage({ pageIndex: 0 })),
     ),
   { functional: true },
 );

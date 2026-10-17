@@ -8,11 +8,12 @@ import { EVENT_MENU_ITEMS, MapMenu, MapMenuItem, POINT_MENU_ITEMS } from '../map
 import { GeoPoint, HuntingEvent } from '../model/event';
 import { ELEVATION_ATTRIBUTION } from '../shooting-safety/elevation';
 import { offset } from '../shooting-safety/geo';
+import { EVENT_PIN_OPTIONS } from '../shared/event-pin';
 import { OPEN_TOPO_MAP_OPTIONS, OPEN_TOPO_MAP_URL } from '../shared/map-tiles';
 import { EventsActions } from '../state/events/events.actions';
 import { selectLatest } from '../state/events/events.reducer';
 import { LocationActions } from '../state/location/location.actions';
-import { selectError, selectPosition, selectStatus } from '../state/location/location.reducer';
+import { selectError, selectManual, selectPosition, selectStatus } from '../state/location/location.reducer';
 import { MapOptionsActions } from '../state/map-options/map-options.actions';
 import { selectDistanceRings, selectFollowMe, selectTracking, selectWindCone } from '../state/map-options/map-options.reducer';
 import { selectLanguage } from '../state/settings/settings.reducer';
@@ -62,17 +63,7 @@ const WIND_CONE_STYLE: L.PathOptions = {
 /** ~10 cm; avoids noise like 49.00000000001 from map projections */
 const PRECISION = 1e6;
 
-/** A pin, so events are easy to tell apart from the round "you are here" marker */
-const EVENT_ICON = L.divIcon({
-  className: 'event-marker',
-  html: `<svg xmlns="http://www.w3.org/2000/svg" width="28" height="36" viewBox="0 0 28 36" aria-hidden="true">
-    <path d="M14 1C7 1 1.5 6.5 1.5 13.5 1.5 23 14 35 14 35s12.5-12 12.5-21.5C26.5 6.5 21 1 14 1z" fill="#22392a" stroke="#fff" stroke-width="2"/>
-    <circle cx="14" cy="13.5" r="5" fill="#fff"/>
-  </svg>`,
-  iconSize: [28, 36],
-  iconAnchor: [14, 35],
-  popupAnchor: [0, -32],
-});
+const EVENT_ICON = L.divIcon(EVENT_PIN_OPTIONS);
 
 @Component({
   imports: [TranslatePipe, DecimalPipe, MapMenu],
@@ -101,6 +92,7 @@ export class MapView {
   protected readonly status = this.store.selectSignal(selectStatus);
   protected readonly error = this.store.selectSignal(selectError);
   protected readonly position = this.store.selectSignal(selectPosition);
+  protected readonly manualPosition = this.store.selectSignal(selectManual);
   private readonly latest = this.store.selectSignal(selectLatest);
 
   protected readonly safetyEnabled = this.store.selectSignal(selectShootingSafetyEnabled);
@@ -320,6 +312,12 @@ export class MapView {
       case 'add-item':
         this.store.dispatch(EventsActions.startAdd({ location: menu.location }));
         break;
+      case 'manual-position':
+        // Device positions would move the user away from the chosen point again
+        this.setTracking(false);
+        this.setFollowMe(false);
+        this.store.dispatch(LocationActions.setManualPosition({ position: { ...menu.location, accuracy: 0 } }));
+        break;
       case 'edit-item':
         if (menu.event) {
           this.store.dispatch(EventsActions.startEdit({ event: menu.event }));
@@ -339,6 +337,10 @@ export class MapView {
 
   protected setTracking(enabled: boolean): void {
     this.store.dispatch(MapOptionsActions.setTracking({ enabled }));
+    // Replaces a position set by hand right away instead of at the next regular refresh
+    if (enabled) {
+      this.store.dispatch(LocationActions.locate());
+    }
   }
 
   protected setFollowMe(enabled: boolean): void {

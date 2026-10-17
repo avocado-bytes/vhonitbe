@@ -13,4 +13,6 @@ export interface LocationState {
   status: LocationStatus;
   position: Coordinates | null;
   error: LocationError | null;
+  /** The position was set by hand on the map; device positions are ignored until tracking is turned on again */
+  manual: boolean;
 }

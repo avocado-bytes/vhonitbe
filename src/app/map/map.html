@@ -22,6 +22,9 @@
       />
       <label class="form-check-label fw-semibold" for="tracking">{{ 'MAP.TRACKING' | translate }}</label>
     </div>
+    @if (manualPosition()) {
+      <p class="small text-warning-emphasis mt-1 mb-0">{{ 'MAP.MANUAL_POSITION' | translate }}</p>
+    }
 
     <div class="form-check mt-1 mb-0">
       <input
@@ -89,6 +92,7 @@
                     }
             }}
           </div>
+          <div class="text-body-secondary fst-italic mt-1">{{ 'MAP.WIND_TERRAIN_NOTE' | translate }}</div>
         </div>
       } @else {
         <p class="small text-body-secondary mt-1 mb-0" [attr.role]="weatherStatus() === 'error' ? 'alert' : 'status'">

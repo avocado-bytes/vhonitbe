@@ -4,7 +4,7 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { Action } from '@ngrx/store';
 import { provideMockStore } from '@ngrx/store/testing';
 import { firstValueFrom, Observable, of } from 'rxjs';
-import { HuntingEvent, NewHuntingEvent } from '../../model/event';
+import { DEFAULT_EVENT_QUERY, HuntingEvent, NewHuntingEvent } from '../../model/event';
 import { EventStorage } from '../../storage/event-storage';
 import { EventsActions } from './events.actions';
 import {
@@ -100,7 +100,7 @@ describe('events effects', () => {
       expect(await run(loadPage, EventsActions.loadPage({ pageIndex: 2 }), { getPage })).toEqual(
         EventsActions.loadPageSuccess({ pageIndex: 2, events: [stored], total: 21 }),
       );
-      expect(getPage).toHaveBeenCalledWith(20, 10);
+      expect(getPage).toHaveBeenCalledWith(20, 10, DEFAULT_EVENT_QUERY);
     });
 
     it('should dispatch failure when loading fails', async () => {

@@ -2,10 +2,10 @@ import { Component, ElementRef, inject, input, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FocusTrap } from '../shared/focus-trap';
 
-export type MapMenuItem = 'add-item' | 'edit-item' | 'delete-item';
+export type MapMenuItem = 'add-item' | 'manual-position' | 'edit-item' | 'delete-item';
 
 /** The actions for an empty point on the map */
-export const POINT_MENU_ITEMS: readonly MapMenuItem[] = ['add-item'];
+export const POINT_MENU_ITEMS: readonly MapMenuItem[] = ['add-item', 'manual-position'];
 
 /** The actions for an event marker */
 export const EVENT_MENU_ITEMS: readonly MapMenuItem[] = ['edit-item', 'delete-item'];

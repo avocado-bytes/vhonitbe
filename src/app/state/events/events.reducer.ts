@@ -1,5 +1,5 @@
 import { createFeature, createReducer, createSelector, on } from '@ngrx/store';
-import { GeoPoint, HuntingEvent } from '../../model/event';
+import { DEFAULT_EVENT_QUERY, EventQuery, GeoPoint, HuntingEvent } from '../../model/event';
 import { EventsActions } from './events.actions';
 
 export const EVENTS_PAGE_SIZE = 10;
@@ -12,7 +12,9 @@ export interface EventsState {
   /** Zero-based index of the loaded page */
   pageIndex: number;
   pageSize: number;
-  /** Number of all stored events */
+  /** How the list is sorted and filtered */
+  query: EventQuery;
+  /** Number of stored events matching the query */
   total: number;
   loading: boolean;
   loadError: string | null;
@@ -34,6 +36,7 @@ export const initialState: EventsState = {
   events: [],
   pageIndex: 0,
   pageSize: EVENTS_PAGE_SIZE,
+  query: DEFAULT_EVENT_QUERY,
   total: 0,
   loading: false,
   loadError: null,
@@ -51,6 +54,7 @@ export const eventsFeature = createFeature({
   reducer: createReducer(
     initialState,
     on(EventsActions.loadPage, (state): EventsState => ({ ...state, loading: true, loadError: null })),
+    on(EventsActions.setQuery, (state, { query }): EventsState => ({ ...state, query })),
     on(
       EventsActions.loadPageSuccess,
       (state, { pageIndex, events, total }): EventsState => ({ ...state, pageIndex, events, total, loading: false }),
@@ -109,6 +113,7 @@ export const {
   selectEvents,
   selectPageIndex,
   selectPageSize,
+  selectQuery,
   selectPageCount,
   selectTotal,
   selectLoading,

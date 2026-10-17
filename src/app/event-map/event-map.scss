@@ -1,0 +1,12 @@
+:host {
+  display: block;
+  // Keep Leaflet's z-indexes (up to 1000) contained in the map
+  isolation: isolate;
+  overflow: hidden;
+  border: var(--bs-border-width) solid var(--bs-border-color);
+  border-radius: var(--bs-border-radius);
+}
+
+.event-map {
+  height: min(60vh, 28rem);
+}
