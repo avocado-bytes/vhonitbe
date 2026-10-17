@@ -43,7 +43,9 @@
     "WIND_CONE_CURRENT": "Nyní {{length}} m při {{speed}} m/s",
     "WIND_CONE_RULE": "{{calmLength}} m za bezvětří (do {{calmSpeed}} m/s), roste až na {{strongLength}} m při {{strongSpeed}} m/s a více",
     "WIND_TERRAIN_NOTE": "Vítr měřený 10 m nad zemí; terén, les a údolí mohou v okolí změnit jeho směr i sílu.",
-    "MANUAL_POSITION": "Ruční poloha. Pro návrat k poloze zařízení zapněte sledování."
+    "MANUAL_POSITION": "Ruční poloha. Pro návrat k poloze zařízení zapněte sledování.",
+    "SHOW_PANEL": "Zobrazit možnosti mapy a legendu",
+    "HIDE_PANEL": "Skrýt možnosti mapy a legendu"
   },
   "ADD_ITEM": {
     "TITLE": "Přidat položku",

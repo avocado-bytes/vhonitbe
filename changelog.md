@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.21.0
+
+- On phones the map's options and legend panel is collapsed behind a small round button in the top right corner of the map, which shows and hides it. When open, the panel scrolls if it is taller than the map. On larger screens the panel is always shown as before.
+
 ## 0.20.0
 
 - Add a photo button to events with a photo in the overview, opening a dialog that shows the photo, like the map button does for the location.

@@ -15,7 +15,7 @@ import { selectLatest } from '../state/events/events.reducer';
 import { LocationActions } from '../state/location/location.actions';
 import { selectError, selectManual, selectPosition, selectStatus } from '../state/location/location.reducer';
 import { MapOptionsActions } from '../state/map-options/map-options.actions';
-import { selectDistanceRings, selectFollowMe, selectTracking, selectWindCone } from '../state/map-options/map-options.reducer';
+import { selectDistanceRings, selectFollowMe, selectPanelOpen, selectTracking, selectWindCone } from '../state/map-options/map-options.reducer';
 import { selectLanguage } from '../state/settings/settings.reducer';
 import { ShootingSafetyActions } from '../state/shooting-safety/shooting-safety.actions';
 import {
@@ -103,6 +103,7 @@ export class MapView {
   protected readonly tracking = this.store.selectSignal(selectTracking);
   protected readonly followMe = this.store.selectSignal(selectFollowMe);
   protected readonly windCone = this.store.selectSignal(selectWindCone);
+  protected readonly panelOpen = this.store.selectSignal(selectPanelOpen);
   protected readonly weather = this.store.selectSignal(selectCurrentWeather);
   protected readonly weatherStatus = this.store.selectSignal(selectWeatherStatus);
   protected readonly windConeLength = computed(() => {
@@ -349,6 +350,10 @@ export class MapView {
 
   protected setWindCone(enabled: boolean): void {
     this.store.dispatch(MapOptionsActions.setWindCone({ enabled }));
+  }
+
+  protected togglePanel(): void {
+    this.store.dispatch(MapOptionsActions.setPanelOpen({ open: !this.panelOpen() }));
   }
 
   protected setDistanceRings(enabled: boolean): void {

@@ -10,6 +10,8 @@ export interface MapOptionsState {
   followMe: boolean;
   /** A cone showing where the wind carries the user's scent */
   windCone: boolean;
+  /** The options and legend panel is shown on small screens, where it is collapsed behind a button */
+  panelOpen: boolean;
 }
 
 export const initialState: MapOptionsState = {
@@ -17,6 +19,7 @@ export const initialState: MapOptionsState = {
   tracking: true,
   followMe: true,
   windCone: false,
+  panelOpen: false,
 };
 
 export const mapOptionsFeature = createFeature({
@@ -27,7 +30,8 @@ export const mapOptionsFeature = createFeature({
     on(MapOptionsActions.setTracking, (state, { enabled }): MapOptionsState => ({ ...state, tracking: enabled })),
     on(MapOptionsActions.setFollowMe, (state, { enabled }): MapOptionsState => ({ ...state, followMe: enabled })),
     on(MapOptionsActions.setWindCone, (state, { enabled }): MapOptionsState => ({ ...state, windCone: enabled })),
+    on(MapOptionsActions.setPanelOpen, (state, { open }): MapOptionsState => ({ ...state, panelOpen: open })),
   ),
 });
 
-export const { selectDistanceRings, selectTracking, selectFollowMe, selectWindCone } = mapOptionsFeature;
+export const { selectDistanceRings, selectTracking, selectFollowMe, selectWindCone, selectPanelOpen } = mapOptionsFeature;

@@ -43,7 +43,9 @@
     "WIND_CONE_CURRENT": "Now {{length}} m at {{speed}} m/s",
     "WIND_CONE_RULE": "{{calmLength}} m in calm wind (up to {{calmSpeed}} m/s), growing to {{strongLength}} m at {{strongSpeed}} m/s and more",
     "WIND_TERRAIN_NOTE": "Wind measured 10 m above the ground; terrain, forest and valleys can change its direction and strength near you.",
-    "MANUAL_POSITION": "Manual position. Turn on tracking to use your device location again."
+    "MANUAL_POSITION": "Manual position. Turn on tracking to use your device location again.",
+    "SHOW_PANEL": "Show map options and legend",
+    "HIDE_PANEL": "Hide map options and legend"
   },
   "ADD_ITEM": {
     "TITLE": "Add item",
