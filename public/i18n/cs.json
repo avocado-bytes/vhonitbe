@@ -34,7 +34,9 @@
       "unavailable": "Vaši polohu se nepodařilo zjistit.",
       "timeout": "Zjišťování polohy trvalo příliš dlouho. Zkuste to prosím znovu."
     },
-    "DISTANCE_RINGS": "Vzdálenostní kruhy (100, 150, 200 m)"
+    "DISTANCE_RINGS": "Vzdálenostní kruhy (100, 150, 200 m)",
+    "TRACKING": "Sledovat moji polohu",
+    "FOLLOW_ME": "Mapa mě následuje"
   },
   "ADD_ITEM": {
     "TITLE": "Přidat položku",

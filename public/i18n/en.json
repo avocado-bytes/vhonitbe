@@ -34,7 +34,9 @@
       "unavailable": "Your location could not be determined.",
       "timeout": "Finding your location took too long. Please try again."
     },
-    "DISTANCE_RINGS": "Distance circles (100, 150, 200 m)"
+    "DISTANCE_RINGS": "Distance circles (100, 150, 200 m)",
+    "TRACKING": "Track my location",
+    "FOLLOW_ME": "Follow me"
   },
   "ADD_ITEM": {
     "TITLE": "Add item",

@@ -12,7 +12,7 @@ import { selectLatest } from '../state/events/events.reducer';
 import { LocationActions } from '../state/location/location.actions';
 import { selectError, selectPosition, selectStatus } from '../state/location/location.reducer';
 import { MapOptionsActions } from '../state/map-options/map-options.actions';
-import { selectDistanceRings } from '../state/map-options/map-options.reducer';
+import { selectDistanceRings, selectFollowMe, selectTracking } from '../state/map-options/map-options.reducer';
 import { selectLanguage } from '../state/settings/settings.reducer';
 import { ShootingSafetyActions } from '../state/shooting-safety/shooting-safety.actions';
 import {
@@ -82,6 +82,8 @@ export class MapView {
   private readonly safetyOverlay = this.store.selectSignal(selectShootingSafetyOverlay);
 
   protected readonly distanceRings = this.store.selectSignal(selectDistanceRings);
+  protected readonly tracking = this.store.selectSignal(selectTracking);
+  protected readonly followMe = this.store.selectSignal(selectFollowMe);
 
   private readonly language = this.store.selectSignal(selectLanguage);
   /** Changes once the translations of a newly selected language are loaded */
@@ -92,25 +94,34 @@ export class MapView {
 
   constructor() {
     this.store.dispatch(LocationActions.locate());
+    this.store.dispatch(LocationActions.startTracking());
     this.store.dispatch(EventsActions.loadLatest());
 
     const locationLayer = L.layerGroup();
     effect(() => {
       const container = this.container();
       const position = this.position();
+      // Read up front, so turning following on centers the map right away
+      const followMe = this.followMe();
       if (!container || !position) {
         return;
       }
 
       const center: L.LatLngTuple = [position.latitude, position.longitude];
-      const map = untracked(this.map) ?? this.createMap(container.nativeElement);
+      const existing = untracked(this.map);
+      const map = existing ?? this.createMap(container.nativeElement);
       locationLayer.clearLayers();
       L.circle(center, { radius: position.accuracy, color: LOCATION_COLOR, weight: 1, fillOpacity: 0.1 }).addTo(locationLayer);
       L.circleMarker(center, { radius: 8, color: '#fff', weight: 2, fillColor: LOCATION_COLOR, fillOpacity: 1 }).addTo(
         locationLayer,
       );
       locationLayer.addTo(map);
-      map.setView(center, LOCATED_ZOOM);
+      // Later updates keep the zoom, and only move the map while following the user
+      if (!existing) {
+        map.setView(center, LOCATED_ZOOM);
+      } else if (followMe) {
+        map.panTo(center);
+      }
     });
 
     const eventsLayer = L.layerGroup();
@@ -183,7 +194,10 @@ export class MapView {
       ringsLayer.addTo(map);
     });
 
-    inject(DestroyRef).onDestroy(() => this.map()?.remove());
+    inject(DestroyRef).onDestroy(() => {
+      this.store.dispatch(LocationActions.stopTracking());
+      this.map()?.remove();
+    });
   }
 
   private createMap(container: HTMLElement): L.Map {
@@ -243,6 +257,14 @@ export class MapView {
 
   protected setSafetyEnabled(enabled: boolean): void {
     this.store.dispatch(ShootingSafetyActions.setEnabled({ enabled }));
+  }
+
+  protected setTracking(enabled: boolean): void {
+    this.store.dispatch(MapOptionsActions.setTracking({ enabled }));
+  }
+
+  protected setFollowMe(enabled: boolean): void {
+    this.store.dispatch(MapOptionsActions.setFollowMe({ enabled }));
   }
 
   protected setDistanceRings(enabled: boolean): void {

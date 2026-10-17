@@ -13,6 +13,30 @@
   <div class="safety-panel">
     <div class="form-check mb-0">
       <input
+        id="tracking"
+        class="form-check-input"
+        type="checkbox"
+        #trackingCheckbox
+        [checked]="tracking()"
+        (change)="setTracking(trackingCheckbox.checked)"
+      />
+      <label class="form-check-label fw-semibold" for="tracking">{{ 'MAP.TRACKING' | translate }}</label>
+    </div>
+
+    <div class="form-check mt-1 mb-0">
+      <input
+        id="follow-me"
+        class="form-check-input"
+        type="checkbox"
+        #followMeCheckbox
+        [checked]="followMe()"
+        (change)="setFollowMe(followMeCheckbox.checked)"
+      />
+      <label class="form-check-label fw-semibold" for="follow-me">{{ 'MAP.FOLLOW_ME' | translate }}</label>
+    </div>
+
+    <div class="form-check mt-1 mb-0">
+      <input
         id="shooting-safety"
         class="form-check-input"
         type="checkbox"

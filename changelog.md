@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.6.0
+
+- Add map options to turn off tracking the user's location and to follow the user, keeping the map centered on their position. Both are on by default.
+
+## 0.5.0
+
+- Refresh the user's position every 10 seconds while the map is open; the position marker, distance circles and shooting safety overlay follow it.
+- The map only centers on the user's first position, so later updates keep the current view.
+
 ## 0.4.0
 
 - Add a map option that shows circles 100, 150 and 200 meters around the user.
