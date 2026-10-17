@@ -36,7 +36,12 @@
     },
     "DISTANCE_RINGS": "Vzdálenostní kruhy (100, 150, 200 m)",
     "TRACKING": "Sledovat moji polohu",
-    "FOLLOW_ME": "Mapa mě následuje"
+    "FOLLOW_ME": "Mapa mě následuje",
+    "WIND_CONE": "Kužel větru",
+    "WIND_LOADING": "Načítám vítr…",
+    "WIND_FAILED": "Data o větru se nepodařilo načíst.",
+    "WIND_CONE_CURRENT": "Nyní {{length}} m při {{speed}} m/s",
+    "WIND_CONE_RULE": "{{calmLength}} m za bezvětří (do {{calmSpeed}} m/s), roste až na {{strongLength}} m při {{strongSpeed}} m/s a více"
   },
   "ADD_ITEM": {
     "TITLE": "Přidat položku",
@@ -153,5 +158,49 @@
     "DISCLAIMER": "Odhad podle terénu (výšková data s rozlišením asi 30 m, střelba vestoje) a budov z OpenStreetMap, které nemusí být úplné. Lidé, cesty, stromy ani odrazy střel nejsou zohledněny. Bezpečné pozadí cíle vždy ověřte sami.",
     "HAZARDS_FAILED": "Data o budovách se nepodařilo načíst, proto nejsou zohledněna.",
     "BUILDINGS_LOADING": "Načítám budovy… Do té doby nejsou pásma budov zobrazena."
+  },
+  "DASHBOARD": {
+    "TITLE": "Přehled",
+    "SUN": "Dnes",
+    "SUNRISE": "Východ slunce",
+    "SUNSET": "Západ slunce",
+    "MOON": "Měsíc",
+    "MOON_PHASES": {
+      "new": "Nov",
+      "waxing-crescent": "Dorůstající srpek",
+      "first-quarter": "První čtvrť",
+      "waxing-gibbous": "Dorůstající měsíc",
+      "full": "Úplněk",
+      "waning-gibbous": "Couvající měsíc",
+      "last-quarter": "Poslední čtvrť",
+      "waning-crescent": "Couvající srpek"
+    },
+    "ILLUMINATED": "osvětleno {{percent}} %",
+    "WEATHER": "Počasí",
+    "WEATHER_LOADING": "Načítám počasí…",
+    "WEATHER_FAILED": "Počasí se nepodařilo načíst.",
+    "LOCATION_NEEDED": "Pro zobrazení povolte přístup k poloze.",
+    "CONDITIONS": {
+      "clear": "Jasno",
+      "partly-cloudy": "Polojasno",
+      "overcast": "Zataženo",
+      "fog": "Mlha",
+      "drizzle": "Mrholení",
+      "rain": "Déšť",
+      "snow": "Sněžení",
+      "thunderstorm": "Bouřka"
+    },
+    "WIND": "Vítr",
+    "WIND_FROM": "Od {{direction}}",
+    "DIRECTIONS": {
+      "N": "S",
+      "NE": "SV",
+      "E": "V",
+      "SE": "JV",
+      "S": "J",
+      "SW": "JZ",
+      "W": "Z",
+      "NW": "SZ"
+    }
   }
 }

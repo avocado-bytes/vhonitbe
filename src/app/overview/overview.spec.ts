@@ -4,6 +4,8 @@ import { provideTranslateService, TranslateService } from '@ngx-translate/core';
 import { HuntingEvent } from '../model/event';
 import { EventsActions } from '../state/events/events.actions';
 import { EventsState, initialState } from '../state/events/events.reducer';
+import { initialState as locationState } from '../state/location/location.reducer';
+import { initialState as weatherState } from '../state/weather/weather.reducer';
 import { Overview } from './overview';
 
 describe('Overview', () => {
@@ -27,8 +29,15 @@ describe('Overview', () => {
   const button = (label: string) =>
     Array.from(element().querySelectorAll('button')).find((b) => b.textContent?.trim() === label) as HTMLButtonElement;
 
+  const storeState = {
+    events: initialState,
+    settings: { theme: 'light', language: 'en' },
+    location: locationState,
+    weather: weatherState,
+  };
+
   async function setState(events: Partial<EventsState>) {
-    store.setState({ events: { ...initialState, ...events }, settings: { theme: 'light', language: 'en' } });
+    store.setState({ ...storeState, events: { ...initialState, ...events } });
     await fixture.whenStable();
   }
 
@@ -37,7 +46,7 @@ describe('Overview', () => {
       imports: [Overview],
       providers: [
         provideTranslateService({ lang: 'en' }),
-        provideMockStore({ initialState: { events: initialState, settings: { theme: 'light', language: 'en' } } }),
+        provideMockStore({ initialState: storeState }),
       ],
     }).compileComponents();
 
@@ -64,7 +73,9 @@ describe('Overview', () => {
 
   it('should show a loading message while the first page loads', async () => {
     await setState({ loading: true });
-    expect(element().querySelector('[role="status"]')?.textContent).toContain('Loading events…');
+    expect(element().querySelector('[aria-labelledby="dashboard-events"] [role="status"]')?.textContent).toContain(
+      'Loading events…',
+    );
   });
 
   it('should show an empty state when there are no events', async () => {

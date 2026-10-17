@@ -65,6 +65,16 @@
   opacity: 1;
 }
 
+.wind-swatch {
+  flex-shrink: 0;
+  width: 1rem;
+  height: 1rem;
+  // Matches the wind cone's fill and dashed outline
+  background-color: rgba(255, 193, 7, 0.35);
+  border: 2px dashed #b8860b;
+  border-radius: var(--bs-border-radius-sm);
+}
+
 .map-status {
   position: absolute;
   top: 1rem;

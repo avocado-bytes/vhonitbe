@@ -1,3 +1,4 @@
+import { DecimalPipe } from '@angular/common';
 import { Component, computed, DestroyRef, DOCUMENT, effect, ElementRef, inject, signal, untracked, viewChild } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Store } from '@ngrx/store';
@@ -6,13 +7,14 @@ import * as L from 'leaflet';
 import { EVENT_MENU_ITEMS, MapMenu, MapMenuItem, POINT_MENU_ITEMS } from '../map-menu/map-menu';
 import { GeoPoint, HuntingEvent } from '../model/event';
 import { ELEVATION_ATTRIBUTION } from '../shooting-safety/elevation';
+import { offset } from '../shooting-safety/geo';
 import { OPEN_TOPO_MAP_OPTIONS, OPEN_TOPO_MAP_URL } from '../shared/map-tiles';
 import { EventsActions } from '../state/events/events.actions';
 import { selectLatest } from '../state/events/events.reducer';
 import { LocationActions } from '../state/location/location.actions';
 import { selectError, selectPosition, selectStatus } from '../state/location/location.reducer';
 import { MapOptionsActions } from '../state/map-options/map-options.actions';
-import { selectDistanceRings, selectFollowMe, selectTracking } from '../state/map-options/map-options.reducer';
+import { selectDistanceRings, selectFollowMe, selectTracking, selectWindCone } from '../state/map-options/map-options.reducer';
 import { selectLanguage } from '../state/settings/settings.reducer';
 import { ShootingSafetyActions } from '../state/shooting-safety/shooting-safety.actions';
 import {
@@ -20,6 +22,8 @@ import {
   selectShootingSafetyOverlay,
   selectShootingSafetyStatus,
 } from '../state/shooting-safety/shooting-safety.reducer';
+import { WeatherActions } from '../state/weather/weather.actions';
+import { selectCurrentWeather, selectWeatherStatus } from '../state/weather/weather.reducer';
 
 const LOCATED_ZOOM = 14;
 
@@ -32,6 +36,27 @@ const FOLLOW_THRESHOLD = 0.3;
 const DISTANCE_RINGS = [100, 150, 200];
 
 const DISTANCE_RING_COLOR = '#212529';
+
+/** The wind cone fans out this many degrees in total, centered on the downwind direction */
+const WIND_CONE_ANGLE = 30;
+/** The wind cone grows linearly from its shortest length in calm wind to its longest length in strong wind */
+const WIND_CONE_CALM = { speed: 1, length: 100 };
+const WIND_CONE_STRONG = { speed: 8, length: 500 };
+
+/** How far the wind carries the user's scent noticeably, in meters, for a wind speed in m/s */
+function windConeLength(speed: number): number {
+  const share = Math.min(1, Math.max(0, (speed - WIND_CONE_CALM.speed) / (WIND_CONE_STRONG.speed - WIND_CONE_CALM.speed)));
+  return WIND_CONE_CALM.length + share * (WIND_CONE_STRONG.length - WIND_CONE_CALM.length);
+}
+/** Yellow fill with a darker amber, dashed outline, so it stands apart from the yellow of the shooting safety overlay */
+const WIND_CONE_STYLE: L.PathOptions = {
+  color: '#b8860b',
+  weight: 2,
+  dashArray: '6 4',
+  fillColor: '#ffc107',
+  fillOpacity: 0.35,
+  interactive: false,
+};
 
 
 /** ~10 cm; avoids noise like 49.00000000001 from map projections */
@@ -50,7 +75,7 @@ const EVENT_ICON = L.divIcon({
 });
 
 @Component({
-  imports: [TranslatePipe, MapMenu],
+  imports: [TranslatePipe, DecimalPipe, MapMenu],
   selector: 'app-map',
   styleUrl: './map.scss',
   templateUrl: './map.html',
@@ -85,6 +110,16 @@ export class MapView {
   protected readonly distanceRings = this.store.selectSignal(selectDistanceRings);
   protected readonly tracking = this.store.selectSignal(selectTracking);
   protected readonly followMe = this.store.selectSignal(selectFollowMe);
+  protected readonly windCone = this.store.selectSignal(selectWindCone);
+  protected readonly weather = this.store.selectSignal(selectCurrentWeather);
+  protected readonly weatherStatus = this.store.selectSignal(selectWeatherStatus);
+  protected readonly windConeLength = computed(() => {
+    const weather = this.weather();
+    return weather ? Math.round(windConeLength(weather.windSpeed)) : null;
+  });
+  /** For the legend's explanation of how the cone length follows the wind speed */
+  protected readonly windConeCalm = WIND_CONE_CALM;
+  protected readonly windConeStrong = WIND_CONE_STRONG;
 
   private readonly language = this.store.selectSignal(selectLanguage);
   /** Changes once the translations of a newly selected language are loaded */
@@ -97,6 +132,9 @@ export class MapView {
     this.store.dispatch(LocationActions.locate());
     this.store.dispatch(LocationActions.startTracking());
     this.store.dispatch(EventsActions.loadLatest());
+    this.store.dispatch(WeatherActions.load());
+    // Keeps the wind cone current while the map is open
+    this.store.dispatch(WeatherActions.startRefresh());
 
     const locationLayer = L.layerGroup();
     let wasFollowing = false;
@@ -197,8 +235,33 @@ export class MapView {
       ringsLayer.addTo(map);
     });
 
+    const windLayer = L.layerGroup();
+    effect(() => {
+      const map = this.map();
+      const position = this.position();
+      const weather = this.weather();
+      if (!map) {
+        return;
+      }
+
+      windLayer.clearLayers();
+      if (this.windCone() && position && weather) {
+        // The wind direction says where it comes from; the scent travels the opposite way
+        const downwind = weather.windDirection + 180;
+        const length = windConeLength(weather.windSpeed);
+        const points: L.LatLngTuple[] = [[position.latitude, position.longitude]];
+        for (let angle = -WIND_CONE_ANGLE / 2; angle <= WIND_CONE_ANGLE / 2; angle++) {
+          const point = offset(position, length, ((downwind + angle) * Math.PI) / 180);
+          points.push([point.latitude, point.longitude]);
+        }
+        L.polygon(points, WIND_CONE_STYLE).addTo(windLayer);
+      }
+      windLayer.addTo(map);
+    });
+
     inject(DestroyRef).onDestroy(() => {
       this.store.dispatch(LocationActions.stopTracking());
+      this.store.dispatch(WeatherActions.stopRefresh());
       this.map()?.remove();
     });
   }
@@ -280,6 +343,10 @@ export class MapView {
 
   protected setFollowMe(enabled: boolean): void {
     this.store.dispatch(MapOptionsActions.setFollowMe({ enabled }));
+  }
+
+  protected setWindCone(enabled: boolean): void {
+    this.store.dispatch(MapOptionsActions.setWindCone({ enabled }));
   }
 
   protected setDistanceRings(enabled: boolean): void {

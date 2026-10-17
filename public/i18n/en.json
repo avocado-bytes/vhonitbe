@@ -36,7 +36,12 @@
     },
     "DISTANCE_RINGS": "Distance circles (100, 150, 200 m)",
     "TRACKING": "Track my location",
-    "FOLLOW_ME": "Follow me"
+    "FOLLOW_ME": "Follow me",
+    "WIND_CONE": "Wind cone",
+    "WIND_LOADING": "Loading wind…",
+    "WIND_FAILED": "Wind data could not be loaded.",
+    "WIND_CONE_CURRENT": "Now {{length}} m at {{speed}} m/s",
+    "WIND_CONE_RULE": "{{calmLength}} m in calm wind (up to {{calmSpeed}} m/s), growing to {{strongLength}} m at {{strongSpeed}} m/s and more"
   },
   "ADD_ITEM": {
     "TITLE": "Add item",
@@ -153,5 +158,49 @@
     "DISCLAIMER": "Estimate from terrain (about 30 m elevation data, standing shot) and OpenStreetMap buildings, which may be incomplete. People, roads, trees and ricochets are not taken into account. Always check the backstop yourself.",
     "HAZARDS_FAILED": "Building data could not be loaded, so buildings are not taken into account.",
     "BUILDINGS_LOADING": "Loading buildings… Until then, building zones are not shown."
+  },
+  "DASHBOARD": {
+    "TITLE": "Overview",
+    "SUN": "Today",
+    "SUNRISE": "Sunrise",
+    "SUNSET": "Sunset",
+    "MOON": "Moon",
+    "MOON_PHASES": {
+      "new": "New moon",
+      "waxing-crescent": "Waxing crescent",
+      "first-quarter": "First quarter",
+      "waxing-gibbous": "Waxing gibbous",
+      "full": "Full moon",
+      "waning-gibbous": "Waning gibbous",
+      "last-quarter": "Last quarter",
+      "waning-crescent": "Waning crescent"
+    },
+    "ILLUMINATED": "{{percent}} % lit",
+    "WEATHER": "Weather",
+    "WEATHER_LOADING": "Loading weather…",
+    "WEATHER_FAILED": "The weather could not be loaded.",
+    "LOCATION_NEEDED": "Allow location access to see this.",
+    "CONDITIONS": {
+      "clear": "Clear",
+      "partly-cloudy": "Partly cloudy",
+      "overcast": "Overcast",
+      "fog": "Fog",
+      "drizzle": "Drizzle",
+      "rain": "Rain",
+      "snow": "Snow",
+      "thunderstorm": "Thunderstorm"
+    },
+    "WIND": "Wind",
+    "WIND_FROM": "From {{direction}}",
+    "DIRECTIONS": {
+      "N": "N",
+      "NE": "NE",
+      "E": "E",
+      "SE": "SE",
+      "S": "S",
+      "SW": "SW",
+      "W": "W",
+      "NW": "NW"
+    }
   }
 }

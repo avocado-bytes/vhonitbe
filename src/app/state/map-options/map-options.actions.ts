@@ -6,5 +6,6 @@ export const MapOptionsActions = createActionGroup({
     'Set Distance Rings': props<{ enabled: boolean }>(),
     'Set Tracking': props<{ enabled: boolean }>(),
     'Set Follow Me': props<{ enabled: boolean }>(),
+    'Set Wind Cone': props<{ enabled: boolean }>(),
   },
 });

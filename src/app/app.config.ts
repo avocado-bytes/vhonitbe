@@ -16,6 +16,8 @@ import * as settingsEffects from './state/settings/settings.effects';
 import { settingsFeature } from './state/settings/settings.reducer';
 import * as shootingSafetyEffects from './state/shooting-safety/shooting-safety.effects';
 import { shootingSafetyFeature } from './state/shooting-safety/shooting-safety.reducer';
+import * as weatherEffects from './state/weather/weather.effects';
+import { weatherFeature } from './state/weather/weather.reducer';
 import { provideServiceWorker } from '@angular/service-worker';
 
 export const appConfig: ApplicationConfig = {
@@ -29,7 +31,8 @@ export const appConfig: ApplicationConfig = {
     provideState(eventsFeature),
     provideState(shootingSafetyFeature),
     provideState(mapOptionsFeature),
-    provideEffects(settingsEffects, locationEffects, eventsEffects, shootingSafetyEffects),
+    provideState(weatherFeature),
+    provideEffects(settingsEffects, locationEffects, eventsEffects, shootingSafetyEffects, weatherEffects),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
     provideTranslateService({
       loader: provideTranslateHttpLoader({ prefix: '/i18n/', suffix: '.json' }),

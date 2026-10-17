@@ -59,6 +59,44 @@
       <label class="form-check-label fw-semibold" for="distance-rings">{{ 'MAP.DISTANCE_RINGS' | translate }}</label>
     </div>
 
+    <div class="form-check mt-1 mb-0">
+      <input
+        id="wind-cone"
+        class="form-check-input"
+        type="checkbox"
+        #windConeCheckbox
+        [checked]="windCone()"
+        (change)="setWindCone(windConeCheckbox.checked)"
+      />
+      <label class="form-check-label fw-semibold" for="wind-cone">{{ 'MAP.WIND_CONE' | translate }}</label>
+    </div>
+    @if (windCone()) {
+      @if (weather(); as current) {
+        <div class="small mt-1">
+          <div class="d-flex align-items-center gap-2">
+            <span class="wind-swatch" aria-hidden="true"></span>
+            {{ 'MAP.WIND_CONE_CURRENT' | translate: { length: windConeLength(), speed: (current.windSpeed | number: '1.0-1') } }}
+          </div>
+          <div class="text-body-secondary">
+            {{
+              'MAP.WIND_CONE_RULE'
+                | translate
+                  : {
+                      calmLength: windConeCalm.length,
+                      calmSpeed: windConeCalm.speed,
+                      strongLength: windConeStrong.length,
+                      strongSpeed: windConeStrong.speed,
+                    }
+            }}
+          </div>
+        </div>
+      } @else {
+        <p class="small text-body-secondary mt-1 mb-0" [attr.role]="weatherStatus() === 'error' ? 'alert' : 'status'">
+          {{ (weatherStatus() === 'error' ? 'MAP.WIND_FAILED' : 'MAP.WIND_LOADING') | translate }}
+        </p>
+      }
+    }
+
     @if (safetyEnabled()) {
       @switch (safetyStatus()) {
         @case ('error') {

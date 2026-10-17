@@ -8,12 +8,15 @@ export interface MapOptionsState {
   tracking: boolean;
   /** Keep the map centered on the user's position */
   followMe: boolean;
+  /** A cone showing where the wind carries the user's scent */
+  windCone: boolean;
 }
 
 export const initialState: MapOptionsState = {
   distanceRings: false,
   tracking: true,
   followMe: true,
+  windCone: false,
 };
 
 export const mapOptionsFeature = createFeature({
@@ -23,7 +26,8 @@ export const mapOptionsFeature = createFeature({
     on(MapOptionsActions.setDistanceRings, (state, { enabled }): MapOptionsState => ({ ...state, distanceRings: enabled })),
     on(MapOptionsActions.setTracking, (state, { enabled }): MapOptionsState => ({ ...state, tracking: enabled })),
     on(MapOptionsActions.setFollowMe, (state, { enabled }): MapOptionsState => ({ ...state, followMe: enabled })),
+    on(MapOptionsActions.setWindCone, (state, { enabled }): MapOptionsState => ({ ...state, windCone: enabled })),
   ),
 });
 
-export const { selectDistanceRings, selectTracking, selectFollowMe } = mapOptionsFeature;
+export const { selectDistanceRings, selectTracking, selectFollowMe, selectWindCone } = mapOptionsFeature;

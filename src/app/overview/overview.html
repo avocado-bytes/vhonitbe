@@ -1,93 +1,226 @@
 <section class="container py-3 overview">
-  <h1 class="h4 mb-3">{{ 'OVERVIEW.TITLE' | translate }}</h1>
+  <h1 class="visually-hidden">{{ 'DASHBOARD.TITLE' | translate }}</h1>
 
-  @if (loadError()) {
-    <p class="text-danger" role="alert">{{ 'OVERVIEW.LOAD_FAILED' | translate }}</p>
-  } @else if (total() === 0) {
-    @if (loading()) {
-      <p class="text-body-secondary" role="status">{{ 'OVERVIEW.LOADING' | translate }}</p>
-    } @else {
-      <p class="text-body-secondary">{{ 'OVERVIEW.EMPTY' | translate }}</p>
-    }
-  } @else {
-    @if (deleteError()) {
-      <p class="text-danger" role="alert">{{ 'OVERVIEW.DELETE_FAILED' | translate }}</p>
-    }
-    <ul class="list-unstyled mb-3 event-list" [attr.aria-busy]="loading()">
-      @for (event of events(); track event.id) {
-        <li class="event p-3 mb-2 border rounded bg-body-tertiary">
+  <div class="row g-3">
+    <div class="col-12 col-md-6 col-xxl-3">
+      <section class="card h-100" aria-labelledby="dashboard-sun">
+        <div class="card-body">
+          <h2 id="dashboard-sun" class="h6 card-title text-body-secondary">{{ 'DASHBOARD.SUN' | translate }}</h2>
+          @if (sun(); as times) {
+            <dl class="d-flex justify-content-around gap-3 mb-0">
+              <div class="d-flex align-items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" viewBox="0 0 16 16" class="flex-shrink-0 text-warning" aria-hidden="true">
+              @for (d of icons.sunrise; track $index) {
+                <path [attr.d]="d" />
+              }
+            </svg>
+                <div>
+                  <dt class="small fw-normal text-body-secondary">{{ 'DASHBOARD.SUNRISE' | translate }}</dt>
+                  <dd class="fs-5 fw-semibold text-nowrap mb-0">{{ formatTime(times.sunrise) }}</dd>
+                </div>
+              </div>
+              <div class="d-flex align-items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" viewBox="0 0 16 16" class="flex-shrink-0 text-warning" aria-hidden="true">
+              @for (d of icons.sunset; track $index) {
+                <path [attr.d]="d" />
+              }
+            </svg>
+                <div>
+                  <dt class="small fw-normal text-body-secondary">{{ 'DASHBOARD.SUNSET' | translate }}</dt>
+                  <dd class="fs-5 fw-semibold text-nowrap mb-0">{{ formatTime(times.sunset) }}</dd>
+                </div>
+              </div>
+            </dl>
+          } @else if (locationStatus() === 'error') {
+            <p class="small text-body-secondary mb-0">{{ 'DASHBOARD.LOCATION_NEEDED' | translate }}</p>
+          } @else {
+            <p class="small text-body-secondary mb-0" role="status">{{ 'MAP.LOCATING' | translate }}</p>
+          }
+        </div>
+      </section>
+    </div>
+
+    <div class="col-6 col-md-6 col-xxl-3">
+      <section class="card h-100" aria-labelledby="dashboard-moon">
+        <div class="card-body">
+          <h2 id="dashboard-moon" class="h6 card-title text-body-secondary">{{ 'DASHBOARD.MOON' | translate }}</h2>
           <div class="d-flex align-items-center gap-2">
-            <span class="fw-semibold me-auto">{{ 'ITEMS.' + event.type | translate }}</span>
-            <time class="small text-body-secondary text-nowrap" [attr.datetime]="event.occurredAt">
-              {{ formatDate(event.occurredAt) }}
-            </time>
-            <button
-              type="button"
-              class="item-action"
-              [attr.aria-label]="'OVERVIEW.EDIT' | translate"
-              [disabled]="isDeleting(event.id)"
-              (click)="edit(event)"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
-                <path
-                  d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"
-                />
-              </svg>
-            </button>
-            <button
-              type="button"
-              class="item-action item-action-danger"
-              [attr.aria-label]="'OVERVIEW.DELETE' | translate"
-              [disabled]="isDeleting(event.id)"
-              (click)="delete(event.id)"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
-                <path
-                  d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"
-                />
-                <path
-                  d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"
-                />
-              </svg>
-            </button>
-          </div>
-          @if (event.animal) {
-            <div>{{ 'ANIMALS.' + event.animal | translate }}</div>
-          }
-          @if (event.location) {
-            <div class="small text-body-secondary">
-              {{ event.location.latitude | number: '1.5-5' }}, {{ event.location.longitude | number: '1.5-5' }}
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 16 16" class="flex-shrink-0" aria-hidden="true">
+              <circle cx="8" cy="8" r="7" class="moon-dark" />
+              <path [attr.d]="moonPath" class="moon-lit" />
+            </svg>
+            <div>
+              <div class="fw-semibold">{{ 'DASHBOARD.MOON_PHASES.' + moonPhase | translate }}</div>
+              <div class="small text-body-secondary">
+                {{ 'DASHBOARD.ILLUMINATED' | translate: { percent: (moon.fraction * 100 | number: '1.0-0') } }}
+              </div>
             </div>
-          }
-          @if (event.note) {
-            <p class="mb-0 mt-1">{{ event.note }}</p>
-          }
-        </li>
-      }
-    </ul>
+          </div>
+        </div>
+      </section>
+    </div>
 
-    @if (pageCount() > 1) {
-      <nav class="d-flex align-items-center justify-content-between gap-2" [attr.aria-label]="'OVERVIEW.PAGINATION' | translate">
-        <button
-          type="button"
-          class="btn btn-outline-primary"
-          [disabled]="pageIndex() === 0 || loading()"
-          (click)="goToPage(pageIndex() - 1)"
-        >
-          {{ 'OVERVIEW.PREVIOUS' | translate }}
-        </button>
-        <span class="small text-body-secondary" aria-live="polite">
-          {{ 'OVERVIEW.PAGE' | translate: { page: pageIndex() + 1, pages: pageCount() } }}
-        </span>
-        <button
-          type="button"
-          class="btn btn-outline-primary"
-          [disabled]="pageIndex() >= pageCount() - 1 || loading()"
-          (click)="goToPage(pageIndex() + 1)"
-        >
-          {{ 'OVERVIEW.NEXT' | translate }}
-        </button>
-      </nav>
-    }
-  }
+    <div class="col-6 col-md-6 col-xxl-3">
+      <section class="card h-100" aria-labelledby="dashboard-weather">
+        <div class="card-body">
+          <h2 id="dashboard-weather" class="h6 card-title text-body-secondary">{{ 'DASHBOARD.WEATHER' | translate }}</h2>
+          @if (weather(); as current) {
+            <div class="d-flex align-items-center gap-2">
+              @if (weatherIcon(); as name) {
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16" class="flex-shrink-0 text-primary-emphasis" aria-hidden="true">
+                  @for (d of icons[name]; track $index) {
+                    <path [attr.d]="d" />
+                  }
+                </svg>
+              }
+              <div>
+                <div class="fs-5 fw-semibold">{{ current.temperature | number: '1.0-0' }} °C</div>
+                <div class="small text-body-secondary">{{ 'DASHBOARD.CONDITIONS.' + weatherCondition() | translate }}</div>
+              </div>
+            </div>
+          } @else if (weatherStatus() === 'error') {
+            <p class="small text-body-secondary mb-0">{{ 'DASHBOARD.WEATHER_FAILED' | translate }}</p>
+          } @else if (locationStatus() === 'error') {
+            <p class="small text-body-secondary mb-0">{{ 'DASHBOARD.LOCATION_NEEDED' | translate }}</p>
+          } @else {
+            <p class="small text-body-secondary mb-0" role="status">{{ 'DASHBOARD.WEATHER_LOADING' | translate }}</p>
+          }
+        </div>
+      </section>
+    </div>
+
+    <div class="col-12 col-md-6 col-xxl-3">
+      <section class="card h-100" aria-labelledby="dashboard-wind">
+        <div class="card-body">
+          <h2 id="dashboard-wind" class="h6 card-title text-body-secondary">{{ 'DASHBOARD.WIND' | translate }}</h2>
+          @if (weather(); as current) {
+            <div class="d-flex align-items-center gap-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="32"
+                height="32"
+                fill="currentColor"
+                viewBox="0 0 16 16"
+                class="flex-shrink-0 text-primary-emphasis"
+                [style.transform]="'rotate(' + windArrowRotation() + 'deg)'"
+                aria-hidden="true"
+              >
+                <path fill-rule="evenodd" [attr.d]="icons.arrow[0]" />
+              </svg>
+              <div>
+                <div class="fs-5 fw-semibold">{{ current.windSpeed | number: '1.0-1' }} m/s</div>
+                <div class="small text-body-secondary">
+                  {{ 'DASHBOARD.WIND_FROM' | translate: { direction: ('DASHBOARD.DIRECTIONS.' + windFrom() | translate) } }}
+                </div>
+              </div>
+            </div>
+          } @else if (weatherStatus() === 'error') {
+            <p class="small text-body-secondary mb-0">{{ 'DASHBOARD.WEATHER_FAILED' | translate }}</p>
+          } @else if (locationStatus() === 'error') {
+            <p class="small text-body-secondary mb-0">{{ 'DASHBOARD.LOCATION_NEEDED' | translate }}</p>
+          } @else {
+            <p class="small text-body-secondary mb-0" role="status">{{ 'DASHBOARD.WEATHER_LOADING' | translate }}</p>
+          }
+        </div>
+      </section>
+    </div>
+
+    <div class="col-12">
+      <section class="card" aria-labelledby="dashboard-events">
+        <div class="card-body">
+          <h2 id="dashboard-events" class="h5 card-title mb-3">{{ 'OVERVIEW.TITLE' | translate }}</h2>
+
+        @if (loadError()) {
+          <p class="text-danger" role="alert">{{ 'OVERVIEW.LOAD_FAILED' | translate }}</p>
+        } @else if (total() === 0) {
+          @if (loading()) {
+            <p class="text-body-secondary" role="status">{{ 'OVERVIEW.LOADING' | translate }}</p>
+          } @else {
+            <p class="text-body-secondary">{{ 'OVERVIEW.EMPTY' | translate }}</p>
+          }
+        } @else {
+          @if (deleteError()) {
+            <p class="text-danger" role="alert">{{ 'OVERVIEW.DELETE_FAILED' | translate }}</p>
+          }
+          <ul class="list-unstyled mb-3 event-list" [attr.aria-busy]="loading()">
+            @for (event of events(); track event.id) {
+              <li class="event p-3 mb-2 border rounded bg-body-tertiary">
+                <div class="d-flex align-items-center gap-2">
+                  <span class="fw-semibold me-auto">{{ 'ITEMS.' + event.type | translate }}</span>
+                  <time class="small text-body-secondary text-nowrap" [attr.datetime]="event.occurredAt">
+                    {{ formatDate(event.occurredAt) }}
+                  </time>
+                  <button
+                    type="button"
+                    class="item-action"
+                    [attr.aria-label]="'OVERVIEW.EDIT' | translate"
+                    [disabled]="isDeleting(event.id)"
+                    (click)="edit(event)"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+                      <path
+                        d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"
+                      />
+                    </svg>
+                  </button>
+                  <button
+                    type="button"
+                    class="item-action item-action-danger"
+                    [attr.aria-label]="'OVERVIEW.DELETE' | translate"
+                    [disabled]="isDeleting(event.id)"
+                    (click)="delete(event.id)"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+                      <path
+                        d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"
+                      />
+                      <path
+                        d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"
+                      />
+                    </svg>
+                  </button>
+                </div>
+                @if (event.animal) {
+                  <div>{{ 'ANIMALS.' + event.animal | translate }}</div>
+                }
+                @if (event.location) {
+                  <div class="small text-body-secondary">
+                    {{ event.location.latitude | number: '1.5-5' }}, {{ event.location.longitude | number: '1.5-5' }}
+                  </div>
+                }
+                @if (event.note) {
+                  <p class="mb-0 mt-1">{{ event.note }}</p>
+                }
+              </li>
+            }
+          </ul>
+
+          @if (pageCount() > 1) {
+            <nav class="d-flex align-items-center justify-content-between gap-2" [attr.aria-label]="'OVERVIEW.PAGINATION' | translate">
+              <button
+                type="button"
+                class="btn btn-outline-primary"
+                [disabled]="pageIndex() === 0 || loading()"
+                (click)="goToPage(pageIndex() - 1)"
+              >
+                {{ 'OVERVIEW.PREVIOUS' | translate }}
+              </button>
+              <span class="small text-body-secondary" aria-live="polite">
+                {{ 'OVERVIEW.PAGE' | translate: { page: pageIndex() + 1, pages: pageCount() } }}
+              </span>
+              <button
+                type="button"
+                class="btn btn-outline-primary"
+                [disabled]="pageIndex() >= pageCount() - 1 || loading()"
+                (click)="goToPage(pageIndex() + 1)"
+              >
+                {{ 'OVERVIEW.NEXT' | translate }}
+              </button>
+            </nav>
+          }
+        }
+        </div>
+      </section>
+    </div>
+  </div>
 </section>

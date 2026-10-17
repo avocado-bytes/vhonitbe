@@ -8,6 +8,17 @@
   padding-bottom: 6rem !important;
 }
 
+// The unlit part of the moon stays visible against the card in both themes
+.moon-dark {
+  fill: var(--bs-secondary-bg);
+  stroke: var(--bs-border-color);
+  stroke-width: 0.5;
+}
+
+.moon-lit {
+  fill: #f2d47a;
+}
+
 .item-action {
   display: inline-flex;
   padding: 0.375rem;

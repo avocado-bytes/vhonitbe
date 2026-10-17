@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.14.1
+
+- Show a legend for the wind cone on the map with its current length and wind speed, and how the length follows the wind speed (100 m in calm wind up to 500 m at 8 m/s).
+
+## 0.14.0
+
+- Refresh the weather and wind every 15 minutes while the map is open, so the wind cone stays current.
+- The wind cone's length follows the wind speed: 100 m in calm wind (1 m/s or less), growing to 500 m at 8 m/s and more.
+
+## 0.13.0
+
+- Add a wind card to the dashboard with the wind speed, an arrow pointing where the wind blows and the direction it comes from.
+- Add a map option showing a yellow cone fanning out 30° and 300 m from the user's position in the direction the wind blows, where the user's scent travels.
+
+## 0.12.0
+
+- Turn the overview into a dashboard: cards with today's sunrise and sunset, the moon phase and the current weather at the user's position, above the events.
+- Sunrise, sunset and the moon phase are calculated on the device; the weather comes from Open-Meteo.
+- Enable Bootstrap's card and spinner styles; the loading spinners on the map didn't show before.
+
 ## 0.11.2
 
 - Lower the safety distance from buildings in the shooting safety overlay from 200 m to 100 m.
