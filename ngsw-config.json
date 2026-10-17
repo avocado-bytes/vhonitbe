@@ -36,8 +36,20 @@
       ],
       "cacheConfig": {
         "strategy": "performance",
-        "maxSize": 2000,
-        "maxAge": "30d",
+        "maxSize": 10000,
+        "maxAge": "365d",
+        "timeout": "5s"
+      }
+    },
+    {
+      "name": "elevation-tiles",
+      "urls": [
+        "https://s3.amazonaws.com/elevation-tiles-prod/**"
+      ],
+      "cacheConfig": {
+        "strategy": "performance",
+        "maxSize": 500,
+        "maxAge": "365d",
         "timeout": "5s"
       }
     }

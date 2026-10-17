@@ -141,7 +141,7 @@
   },
   "SHOOTING_SAFETY": {
     "TOGGLE": "Bezpečnost střelby",
-    "LOADING": "Načítám výšková data…",
+    "LOADING": "Načítám a vyhodnocuji výšková data…",
     "FAILED": "Výšková data se nepodařilo načíst.",
     "BACKSTOP": "Terén zachytí střelu",
     "NO_BACKSTOP": "Terén střelu nezachytí",

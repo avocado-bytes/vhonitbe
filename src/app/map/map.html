@@ -1,6 +1,15 @@
 @if (position()) {
   <div #map class="map"></div>
 
+  @if (safetyEnabled() && safetyStatus() === 'loading') {
+    <div class="safety-loading" role="status">
+      <div class="safety-loading-content d-flex align-items-center gap-2">
+        <span class="spinner-border spinner-border-sm text-primary" aria-hidden="true"></span>
+        <span>{{ 'SHOOTING_SAFETY.LOADING' | translate }}</span>
+      </div>
+    </div>
+  }
+
   <div class="safety-panel">
     <div class="form-check mb-0">
       <input
@@ -16,9 +25,6 @@
 
     @if (safetyEnabled()) {
       @switch (safetyStatus()) {
-        @case ('loading') {
-          <p class="small mt-2 mb-0" role="status">{{ 'SHOOTING_SAFETY.LOADING' | translate }}</p>
-        }
         @case ('error') {
           <p class="small text-danger mt-2 mb-0" role="alert">{{ 'SHOOTING_SAFETY.FAILED' | translate }}</p>
         }

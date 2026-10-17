@@ -16,6 +16,8 @@ export const shootingSafetyFeature = createFeature({
     on(ShootingSafetyActions.setEnabled, (state, { enabled }): ShootingSafetyState =>
       enabled ? { ...state, enabled, status: 'loading', error: null } : initialState,
     ),
+    // The previous overlay stays visible until the new one is ready
+    on(ShootingSafetyActions.analyze, (state): ShootingSafetyState => ({ ...state, status: 'loading', error: null })),
     on(ShootingSafetyActions.analyzeSuccess, (state, { overlay }): ShootingSafetyState => ({ ...state, status: 'ready', overlay })),
     on(
       ShootingSafetyActions.analyzeFailure,

@@ -141,7 +141,7 @@
   },
   "SHOOTING_SAFETY": {
     "TOGGLE": "Shooting safety",
-    "LOADING": "Loading elevation data…",
+    "LOADING": "Loading and analyzing elevation data…",
     "FAILED": "The elevation data could not be loaded.",
     "BACKSTOP": "Terrain stops the bullet",
     "NO_BACKSTOP": "No terrain backstop",

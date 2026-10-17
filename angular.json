@@ -41,7 +41,8 @@
                   "if-function"
                 ]
               }
-            }
+            },
+            "webWorkerTsConfig": "tsconfig.worker.json"
           },
           "configurations": {
             "production": {

@@ -89,12 +89,11 @@ const COLORS: Record<number, [number, number, number] | undefined> = {
 };
 
 /** Draws the grid as a square image centered on `origin`, one pixel per sample step */
-export function renderBackstop(grid: BackstopGrid, origin: GeoPoint, document: Document): BackstopOverlay {
+export async function renderBackstop(grid: BackstopGrid, origin: GeoPoint): Promise<BackstopOverlay> {
   const { radius, rays, step } = grid.options;
   const size = 2 * Math.ceil(radius / step);
-  const canvas = document.createElement('canvas');
-  canvas.width = size;
-  canvas.height = size;
+  // An offscreen canvas also works inside a web worker
+  const canvas = new OffscreenCanvas(size, size);
   const context = canvas.getContext('2d');
   if (!context) {
     throw new Error('Canvas is not supported');
@@ -126,10 +125,19 @@ export function renderBackstop(grid: BackstopGrid, origin: GeoPoint, document: D
   const south = offset(origin, half, Math.PI).latitude;
   const west = offset(origin, half, (3 * Math.PI) / 2).longitude;
   return {
-    image: canvas.toDataURL('image/png'),
+    image: await toDataUrl(await canvas.convertToBlob({ type: 'image/png' })),
     bounds: [
       [south, west],
       [north, east],
     ],
   };
+}
+
+function toDataUrl(blob: Blob): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = () => reject(reader.error);
+    reader.readAsDataURL(blob);
+  });
 }

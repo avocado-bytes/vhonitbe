@@ -40,7 +40,7 @@ export class ElevationModel {
 }
 
 /** Loads the elevation tiles covering `radius` meters around `center` */
-export async function loadElevation(center: GeoPoint, radius: number, document: Document): Promise<ElevationModel> {
+export async function loadElevation(center: GeoPoint, radius: number): Promise<ElevationModel> {
   // One extra pixel on every side, so interpolation at the edge has its neighbors
   const north = worldPixel(offset(center, radius, 0));
   const east = worldPixel(offset(center, radius, Math.PI / 2));
@@ -54,13 +54,13 @@ export async function loadElevation(center: GeoPoint, radius: number, document: 
   const requests: Promise<[string, Float32Array]>[] = [];
   for (let x = minX; x <= maxX; x++) {
     for (let y = minY; y <= maxY; y++) {
-      requests.push(loadTile(x, y, document).then((heights) => [tileKey(x, y), heights]));
+      requests.push(loadTile(x, y).then((heights) => [tileKey(x, y), heights]));
     }
   }
   return new ElevationModel(new Map(await Promise.all(requests)));
 }
 
-async function loadTile(x: number, y: number, document: Document): Promise<Float32Array> {
+async function loadTile(x: number, y: number): Promise<Float32Array> {
   const url = ELEVATION_TILE_URL.replace('{z}', String(ZOOM)).replace('{x}', String(x)).replace('{y}', String(y));
   const response = await fetch(url);
   if (!response.ok) {
@@ -68,9 +68,8 @@ async function loadTile(x: number, y: number, document: Document): Promise<Float
   }
   // The colors encode heights, so they must reach the canvas unchanged
   const bitmap = await createImageBitmap(await response.blob(), { colorSpaceConversion: 'none', premultiplyAlpha: 'none' });
-  const canvas = document.createElement('canvas');
-  canvas.width = TILE_SIZE;
-  canvas.height = TILE_SIZE;
+  // An offscreen canvas also works inside a web worker
+  const canvas = new OffscreenCanvas(TILE_SIZE, TILE_SIZE);
   const context = canvas.getContext('2d', { willReadFrequently: true });
   if (!context) {
     throw new Error('Canvas is not supported');
