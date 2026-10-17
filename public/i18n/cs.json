@@ -18,7 +18,8 @@
     "LANGUAGES": {
       "en": "English",
       "cs": "Čeština"
-    }
+    },
+    "VERSION": "Verze {{version}}"
   },
   "NAV": {
     "HOME": "Domů",

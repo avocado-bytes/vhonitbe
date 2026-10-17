@@ -18,7 +18,8 @@
     "LANGUAGES": {
       "en": "English",
       "cs": "Čeština"
-    }
+    },
+    "VERSION": "Version {{version}}"
   },
   "NAV": {
     "HOME": "Home",

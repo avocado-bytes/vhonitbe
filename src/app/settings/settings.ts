@@ -4,6 +4,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { SettingsActions } from '../state/settings/settings.actions';
 import { Language, LANGUAGES, Theme, THEMES } from '../state/settings/settings.model';
 import { selectLanguage, selectTheme } from '../state/settings/settings.reducer';
+import { version } from '../../../package.json';
 
 @Component({
   imports: [TranslatePipe],
@@ -14,6 +15,7 @@ import { selectLanguage, selectTheme } from '../state/settings/settings.reducer'
 export class Settings {
   private readonly store = inject(Store);
 
+  protected readonly version = version;
   protected readonly themes = THEMES;
   protected readonly languages = LANGUAGES;
   protected readonly theme = this.store.selectSignal(selectTheme);
