@@ -138,5 +138,13 @@
       "edit-item": "Upravit položku",
       "delete-item": "Smazat položku"
     }
+  },
+  "SHOOTING_SAFETY": {
+    "TOGGLE": "Bezpečnost střelby",
+    "LOADING": "Načítám výšková data…",
+    "FAILED": "Výšková data se nepodařilo načíst.",
+    "BACKSTOP": "Terén zachytí střelu",
+    "NO_BACKSTOP": "Terén střelu nezachytí",
+    "DISCLAIMER": "Odhad pouze podle terénu (výšková data s rozlišením asi 30 m, střelba vestoje). Lidé, cesty, budovy, stromy ani odrazy střel nejsou zohledněny. Bezpečné pozadí cíle vždy ověřte sami."
   }
 }

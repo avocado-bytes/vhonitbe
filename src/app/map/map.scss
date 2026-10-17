@@ -15,6 +15,28 @@
   z-index: 1001;
 }
 
+.safety-panel {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  z-index: 1001;
+  max-width: min(18rem, calc(100% - 5rem));
+  padding: 0.5rem 0.75rem;
+  color: var(--bs-body-color);
+  background-color: var(--bs-body-bg);
+  border-radius: var(--bs-border-radius);
+  box-shadow: var(--bs-box-shadow);
+}
+
+.safety-swatch {
+  flex-shrink: 0;
+  width: 1rem;
+  height: 1rem;
+  // Matches the overlay's opacity on the map
+  opacity: 0.6;
+  border-radius: var(--bs-border-radius-sm);
+}
+
 .map-status {
   position: absolute;
   top: 1rem;

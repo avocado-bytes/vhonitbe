@@ -5,16 +5,26 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import * as L from 'leaflet';
 import { EVENT_MENU_ITEMS, MapMenu, MapMenuItem, POINT_MENU_ITEMS } from '../map-menu/map-menu';
 import { GeoPoint, HuntingEvent } from '../model/event';
+import { ELEVATION_ATTRIBUTION } from '../shooting-safety/elevation';
 import { OPEN_TOPO_MAP_OPTIONS, OPEN_TOPO_MAP_URL } from '../shared/map-tiles';
 import { EventsActions } from '../state/events/events.actions';
 import { selectLatest } from '../state/events/events.reducer';
 import { LocationActions } from '../state/location/location.actions';
 import { selectError, selectPosition, selectStatus } from '../state/location/location.reducer';
 import { selectLanguage } from '../state/settings/settings.reducer';
+import { ShootingSafetyActions } from '../state/shooting-safety/shooting-safety.actions';
+import {
+  selectShootingSafetyEnabled,
+  selectShootingSafetyOverlay,
+  selectShootingSafetyStatus,
+} from '../state/shooting-safety/shooting-safety.reducer';
 
 const LOCATED_ZOOM = 14;
 
 const LOCATION_COLOR = '#355e3b';
+
+/** Lets the map show through the shooting safety colors */
+const SAFETY_OPACITY = 0.4;
 
 /** ~10 cm; avoids noise like 49.00000000001 from map projections */
 const PRECISION = 1e6;
@@ -59,6 +69,10 @@ export class MapView {
   protected readonly error = this.store.selectSignal(selectError);
   protected readonly position = this.store.selectSignal(selectPosition);
   private readonly latest = this.store.selectSignal(selectLatest);
+
+  protected readonly safetyEnabled = this.store.selectSignal(selectShootingSafetyEnabled);
+  protected readonly safetyStatus = this.store.selectSignal(selectShootingSafetyStatus);
+  private readonly safetyOverlay = this.store.selectSignal(selectShootingSafetyOverlay);
 
   private readonly language = this.store.selectSignal(selectLanguage);
   /** Changes once the translations of a newly selected language are loaded */
@@ -117,6 +131,26 @@ export class MapView {
       eventsLayer.addTo(map);
     });
 
+    // Below the markers, so they stay visible and clickable
+    const safetyLayer = L.layerGroup();
+    effect(() => {
+      const map = this.map();
+      const overlay = this.safetyOverlay();
+      if (!map) {
+        return;
+      }
+
+      safetyLayer.clearLayers();
+      if (overlay) {
+        L.imageOverlay(overlay.image, overlay.bounds, {
+          opacity: SAFETY_OPACITY,
+          interactive: false,
+          attribution: ELEVATION_ATTRIBUTION,
+        }).addTo(safetyLayer);
+      }
+      safetyLayer.addTo(map);
+    });
+
     inject(DestroyRef).onDestroy(() => this.map()?.remove());
   }
 
@@ -173,6 +207,10 @@ export class MapView {
         }
         break;
     }
+  }
+
+  protected setSafetyEnabled(enabled: boolean): void {
+    this.store.dispatch(ShootingSafetyActions.setEnabled({ enabled }));
   }
 
   protected closeMenu(): void {

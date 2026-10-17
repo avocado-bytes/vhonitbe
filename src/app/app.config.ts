@@ -13,6 +13,8 @@ import * as locationEffects from './state/location/location.effects';
 import { locationFeature } from './state/location/location.reducer';
 import * as settingsEffects from './state/settings/settings.effects';
 import { settingsFeature } from './state/settings/settings.reducer';
+import * as shootingSafetyEffects from './state/shooting-safety/shooting-safety.effects';
+import { shootingSafetyFeature } from './state/shooting-safety/shooting-safety.reducer';
 import { provideServiceWorker } from '@angular/service-worker';
 
 export const appConfig: ApplicationConfig = {
@@ -24,7 +26,8 @@ export const appConfig: ApplicationConfig = {
     provideState(settingsFeature),
     provideState(locationFeature),
     provideState(eventsFeature),
-    provideEffects(settingsEffects, locationEffects, eventsEffects),
+    provideState(shootingSafetyFeature),
+    provideEffects(settingsEffects, locationEffects, eventsEffects, shootingSafetyEffects),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
     provideTranslateService({
       loader: provideTranslateHttpLoader({ prefix: '/i18n/', suffix: '.json' }),

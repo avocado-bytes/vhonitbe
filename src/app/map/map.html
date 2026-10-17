@@ -1,5 +1,41 @@
 @if (position()) {
   <div #map class="map"></div>
+
+  <div class="safety-panel">
+    <div class="form-check mb-0">
+      <input
+        id="shooting-safety"
+        class="form-check-input"
+        type="checkbox"
+        #safetyCheckbox
+        [checked]="safetyEnabled()"
+        (change)="setSafetyEnabled(safetyCheckbox.checked)"
+      />
+      <label class="form-check-label fw-semibold" for="shooting-safety">{{ 'SHOOTING_SAFETY.TOGGLE' | translate }}</label>
+    </div>
+
+    @if (safetyEnabled()) {
+      @switch (safetyStatus()) {
+        @case ('loading') {
+          <p class="small mt-2 mb-0" role="status">{{ 'SHOOTING_SAFETY.LOADING' | translate }}</p>
+        }
+        @case ('error') {
+          <p class="small text-danger mt-2 mb-0" role="alert">{{ 'SHOOTING_SAFETY.FAILED' | translate }}</p>
+        }
+        @case ('ready') {
+          <ul class="list-unstyled small mt-2 mb-0">
+            <li class="d-flex align-items-center gap-2">
+              <span class="safety-swatch bg-success" aria-hidden="true"></span>{{ 'SHOOTING_SAFETY.BACKSTOP' | translate }}
+            </li>
+            <li class="d-flex align-items-center gap-2">
+              <span class="safety-swatch bg-danger" aria-hidden="true"></span>{{ 'SHOOTING_SAFETY.NO_BACKSTOP' | translate }}
+            </li>
+          </ul>
+        }
+      }
+      <p class="small text-body-secondary mt-2 mb-0">{{ 'SHOOTING_SAFETY.DISCLAIMER' | translate }}</p>
+    }
+  </div>
 }
 
 @if (menu(); as current) {
