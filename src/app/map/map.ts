@@ -25,6 +25,9 @@ const LOCATED_ZOOM = 14;
 
 const LOCATION_COLOR = '#355e3b';
 
+/** Following re-centers the map only once the user is this share of its width or height away from the center */
+const FOLLOW_THRESHOLD = 0.3;
+
 /** Radii of the distance rings around the user, in meters */
 const DISTANCE_RINGS = [100, 150, 200];
 
@@ -98,6 +101,7 @@ export class MapView {
     this.store.dispatch(EventsActions.loadLatest());
 
     const locationLayer = L.layerGroup();
+    let wasFollowing = false;
     effect(() => {
       const container = this.container();
       const position = this.position();
@@ -119,9 +123,11 @@ export class MapView {
       // Later updates keep the zoom, and only move the map while following the user
       if (!existing) {
         map.setView(center, LOCATED_ZOOM);
-      } else if (followMe) {
+      } else if (followMe && (!wasFollowing || this.isFarFromCenter(map, center))) {
+        // Turning following on centers right away; afterwards small moves don't shift the map
         map.panTo(center);
       }
+      wasFollowing = followMe;
     });
 
     const eventsLayer = L.layerGroup();
@@ -213,8 +219,20 @@ export class MapView {
     });
     // The menu belongs to a point, so it would be misplaced once the map moves
     map.on('movestart zoomstart', () => this.closeMenu());
+    // Panning by hand means the user wants to look elsewhere; re-centering is only done with panTo
+    map.on('dragstart', () => {
+      if (this.followMe()) {
+        this.setFollowMe(false);
+      }
+    });
     this.map.set(map);
     return map;
+  }
+
+  private isFarFromCenter(map: L.Map, center: L.LatLngTuple): boolean {
+    const size = map.getSize();
+    const offset = map.latLngToContainerPoint(center).subtract(size.divideBy(2));
+    return Math.abs(offset.x) > size.x * FOLLOW_THRESHOLD || Math.abs(offset.y) > size.y * FOLLOW_THRESHOLD;
   }
 
   /** Opens the menu for an event marker when an event is given, otherwise for the clicked point */

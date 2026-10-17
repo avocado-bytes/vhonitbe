@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.7.0
+
+- Follow me only re-centers the map once the user is more than 30% of the map's width or height away from its center, so the map doesn't shift with every position update.
+- Panning the map by hand turns follow me off.
+
 ## 0.6.0
 
 - Add map options to turn off tracking the user's location and to follow the user, keeping the map centered on their position. Both are on by default.
