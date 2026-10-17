@@ -23,6 +23,18 @@
       <label class="form-check-label fw-semibold" for="shooting-safety">{{ 'SHOOTING_SAFETY.TOGGLE' | translate }}</label>
     </div>
 
+    <div class="form-check mt-1 mb-0">
+      <input
+        id="distance-rings"
+        class="form-check-input"
+        type="checkbox"
+        #ringsCheckbox
+        [checked]="distanceRings()"
+        (change)="setDistanceRings(ringsCheckbox.checked)"
+      />
+      <label class="form-check-label fw-semibold" for="distance-rings">{{ 'MAP.DISTANCE_RINGS' | translate }}</label>
+    </div>
+
     @if (safetyEnabled()) {
       @switch (safetyStatus()) {
         @case ('error') {

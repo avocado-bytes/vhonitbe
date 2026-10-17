@@ -9,6 +9,7 @@ import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { routes } from './app.routes';
 import * as eventsEffects from './state/events/events.effects';
 import { eventsFeature } from './state/events/events.reducer';
+import { mapOptionsFeature } from './state/map-options/map-options.reducer';
 import * as locationEffects from './state/location/location.effects';
 import { locationFeature } from './state/location/location.reducer';
 import * as settingsEffects from './state/settings/settings.effects';
@@ -27,6 +28,7 @@ export const appConfig: ApplicationConfig = {
     provideState(locationFeature),
     provideState(eventsFeature),
     provideState(shootingSafetyFeature),
+    provideState(mapOptionsFeature),
     provideEffects(settingsEffects, locationEffects, eventsEffects, shootingSafetyEffects),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
     provideTranslateService({

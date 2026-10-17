@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.0
+
+- Add a map option that shows circles 100, 150 and 200 meters around the user.
+
 ## 0.3.0
 
 - Load and analyze the elevation data for the shooting safety overlay in a web worker, so the map stays responsive.

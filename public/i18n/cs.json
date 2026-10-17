@@ -33,7 +33,8 @@
       "denied": "Přístup k poloze byl zamítnut. Povolte ho v prohlížeči, abyste viděli své okolí.",
       "unavailable": "Vaši polohu se nepodařilo zjistit.",
       "timeout": "Zjišťování polohy trvalo příliš dlouho. Zkuste to prosím znovu."
-    }
+    },
+    "DISTANCE_RINGS": "Vzdálenostní kruhy (100, 150, 200 m)"
   },
   "ADD_ITEM": {
     "TITLE": "Přidat položku",

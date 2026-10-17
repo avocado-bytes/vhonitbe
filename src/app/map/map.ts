@@ -11,6 +11,8 @@ import { EventsActions } from '../state/events/events.actions';
 import { selectLatest } from '../state/events/events.reducer';
 import { LocationActions } from '../state/location/location.actions';
 import { selectError, selectPosition, selectStatus } from '../state/location/location.reducer';
+import { MapOptionsActions } from '../state/map-options/map-options.actions';
+import { selectDistanceRings } from '../state/map-options/map-options.reducer';
 import { selectLanguage } from '../state/settings/settings.reducer';
 import { ShootingSafetyActions } from '../state/shooting-safety/shooting-safety.actions';
 import {
@@ -22,6 +24,11 @@ import {
 const LOCATED_ZOOM = 14;
 
 const LOCATION_COLOR = '#355e3b';
+
+/** Radii of the distance rings around the user, in meters */
+const DISTANCE_RINGS = [100, 150, 200];
+
+const DISTANCE_RING_COLOR = '#212529';
 
 /** Lets the map show through the shooting safety colors */
 const SAFETY_OPACITY = 0.4;
@@ -73,6 +80,8 @@ export class MapView {
   protected readonly safetyEnabled = this.store.selectSignal(selectShootingSafetyEnabled);
   protected readonly safetyStatus = this.store.selectSignal(selectShootingSafetyStatus);
   private readonly safetyOverlay = this.store.selectSignal(selectShootingSafetyOverlay);
+
+  protected readonly distanceRings = this.store.selectSignal(selectDistanceRings);
 
   private readonly language = this.store.selectSignal(selectLanguage);
   /** Changes once the translations of a newly selected language are loaded */
@@ -151,6 +160,29 @@ export class MapView {
       safetyLayer.addTo(map);
     });
 
+    const ringsLayer = L.layerGroup();
+    effect(() => {
+      const map = this.map();
+      const position = this.position();
+      if (!map) {
+        return;
+      }
+
+      ringsLayer.clearLayers();
+      if (this.distanceRings() && position) {
+        for (const radius of DISTANCE_RINGS) {
+          L.circle([position.latitude, position.longitude], {
+            radius,
+            color: DISTANCE_RING_COLOR,
+            weight: 2,
+            fill: false,
+            interactive: false,
+          }).addTo(ringsLayer);
+        }
+      }
+      ringsLayer.addTo(map);
+    });
+
     inject(DestroyRef).onDestroy(() => this.map()?.remove());
   }
 
@@ -211,6 +243,10 @@ export class MapView {
 
   protected setSafetyEnabled(enabled: boolean): void {
     this.store.dispatch(ShootingSafetyActions.setEnabled({ enabled }));
+  }
+
+  protected setDistanceRings(enabled: boolean): void {
+    this.store.dispatch(MapOptionsActions.setDistanceRings({ enabled }));
   }
 
   protected closeMenu(): void {

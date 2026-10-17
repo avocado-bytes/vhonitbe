@@ -33,7 +33,8 @@
       "denied": "Location access was denied. Allow it in your browser to see your area.",
       "unavailable": "Your location could not be determined.",
       "timeout": "Finding your location took too long. Please try again."
-    }
+    },
+    "DISTANCE_RINGS": "Distance circles (100, 150, 200 m)"
   },
   "ADD_ITEM": {
     "TITLE": "Add item",
