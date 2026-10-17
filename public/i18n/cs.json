@@ -147,6 +147,7 @@
     "LOADING": "Načítám a vyhodnocuji výšková data…",
     "FAILED": "Výšková data se nepodařilo načíst.",
     "BACKSTOP": "Terén zachytí střelu",
+    "DISTANT_BACKSTOP": "Terén zachytí střelu až dál za cílem – zkontrolujte prostor mezi",
     "NO_BACKSTOP": "Terén střelu nezachytí",
     "DISCLAIMER": "Odhad pouze podle terénu (výšková data s rozlišením asi 30 m, střelba vestoje). Lidé, cesty, budovy, stromy ani odrazy střel nejsou zohledněny. Bezpečné pozadí cíle vždy ověřte sami."
   }

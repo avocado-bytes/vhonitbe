@@ -147,6 +147,7 @@
     "LOADING": "Loading and analyzing elevation data…",
     "FAILED": "The elevation data could not be loaded.",
     "BACKSTOP": "Terrain stops the bullet",
+    "DISTANT_BACKSTOP": "Terrain stops the bullet further away – check the ground in between",
     "NO_BACKSTOP": "No terrain backstop",
     "DISCLAIMER": "Estimate from terrain only (about 30 m elevation data, standing shot). People, roads, buildings, trees and ricochets are not taken into account. Always check the backstop yourself."
   }

@@ -15,6 +15,10 @@ export interface BackstopOptions {
   targetHeight: number;
   /** The terrain must stop the bullet within this distance behind the target, in meters */
   backstopDistance: number;
+  /** Beyond `backstopDistance`, terrain stopping the bullet within this distance still counts as a distant backstop */
+  distantBackstopDistance: number;
+  /** A shot this many degrees higher than aimed must still be stopped by a distant backstop */
+  aimMargin: number;
 }
 
 /** A standing shot at game; conservative, as bullet drop is ignored */
@@ -25,6 +29,8 @@ export const DEFAULT_BACKSTOP_OPTIONS: BackstopOptions = {
   muzzleHeight: 1.5,
   targetHeight: 0.8,
   backstopDistance: 50,
+  distantBackstopDistance: 300,
+  aimMargin: 0.5,
 };
 
 /** The target can't be seen, so it can't be shot at */
@@ -33,32 +39,47 @@ export const HIDDEN = 0;
 export const BACKSTOP = 1;
 /** A bullet passing the target would fly on */
 export const NO_BACKSTOP = 2;
+/** The terrain stops the bullet, but further behind the target; the ground in between is in the line of fire */
+export const DISTANT_BACKSTOP = 3;
 
 export interface BackstopGrid {
   options: BackstopOptions;
   /** Samples per direction; the sample `i` lies `(i + 1) * step` meters away */
   steps: number;
-  /** One of HIDDEN, BACKSTOP or NO_BACKSTOP per direction and sample: `cells[ray * steps + i]` */
+  /** One of HIDDEN, BACKSTOP, DISTANT_BACKSTOP or NO_BACKSTOP per direction and sample: `cells[ray * steps + i]` */
   cells: Uint8Array;
 }
 
 /**
  * Classifies the terrain around `origin` by casting rays outwards. For every sample the shot aims at
  * the target above the ground there; it has a backstop when the ground rises above the continued line
- * of fire within `backstopDistance` behind the target.
+ * of fire within `backstopDistance` behind the target. Otherwise it has a distant backstop when the ground
+ * rises above that line, raised by `aimMargin` to allow for a high shot, within `distantBackstopDistance`.
  */
 export function analyzeBackstop(
   heightAt: (point: GeoPoint) => number,
   origin: GeoPoint,
   options: BackstopOptions = DEFAULT_BACKSTOP_OPTIONS,
 ): BackstopGrid {
-  const { radius, rays, step, muzzleHeight, targetHeight, backstopDistance } = options;
+  const { radius, rays, step, muzzleHeight, targetHeight, backstopDistance, distantBackstopDistance, aimMargin } = options;
   const steps = Math.floor(radius / step);
   const behind = Math.ceil(backstopDistance / step);
+  const distantBehind = Math.ceil(distantBackstopDistance / step);
+  const margin = Math.tan((aimMargin * Math.PI) / 180);
   const muzzle = heightAt(origin) + muzzleHeight;
   const cells = new Uint8Array(rays * steps);
   // ground[i] is the height i * step meters away, lowered by the earth's curvature
-  const ground = new Float64Array(steps + behind + 1);
+  const ground = new Float64Array(steps + Math.max(behind, distantBehind) + 1);
+
+  /** Whether the ground rises above the line of fire with `slope` within `count` samples after sample `from` */
+  const stopsWithin = (from: number, count: number, slope: number): boolean => {
+    for (let j = from + 1; j <= from + count; j++) {
+      if (ground[j] >= muzzle + slope * j * step) {
+        return true;
+      }
+    }
+    return false;
+  };
 
   for (let ray = 0; ray < rays; ray++) {
     const azimuth = (ray / rays) * 2 * Math.PI;
@@ -71,11 +92,11 @@ export function analyzeBackstop(
     for (let i = 1; i <= steps; i++) {
       const slope = (ground[i] + targetHeight - muzzle) / (i * step);
       if (slope >= horizon) {
-        let stopped = false;
-        for (let j = i + 1; j <= i + behind && !stopped; j++) {
-          stopped = ground[j] >= muzzle + slope * j * step;
-        }
-        cells[ray * steps + i - 1] = stopped ? BACKSTOP : NO_BACKSTOP;
+        cells[ray * steps + i - 1] = stopsWithin(i, behind, slope)
+          ? BACKSTOP
+          : stopsWithin(i + behind, distantBehind - behind, slope + margin)
+            ? DISTANT_BACKSTOP
+            : NO_BACKSTOP;
       }
       horizon = Math.max(horizon, (ground[i] - muzzle) / (i * step));
     }
@@ -86,6 +107,7 @@ export function analyzeBackstop(
 const COLORS: Record<number, [number, number, number] | undefined> = {
   [BACKSTOP]: [25, 135, 84],
   [NO_BACKSTOP]: [220, 53, 69],
+  [DISTANT_BACKSTOP]: [255, 193, 7],
 };
 
 /** Draws the grid as a square image centered on `origin`, one pixel per sample step */

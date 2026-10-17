@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.8.0
+
+- Mark regions in yellow on the shooting safety overlay where the terrain stops the bullet further behind the target (within 300 m, allowing for a shot 0.5° high), so the ground in between is in the line of fire.
+
 ## 0.7.0
 
 - Follow me only re-centers the map once the user is more than 30% of the map's width or height away from its center, so the map doesn't shift with every position update.
