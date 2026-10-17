@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.20.0
+
+- Add a photo button to events with a photo in the overview, opening a dialog that shows the photo, like the map button does for the location.
+
+## 0.19.0
+
+- Add a photo to an event when adding or editing it; on phones the camera opens. Photos are scaled down to 1600 px and re-encoded as WebP (or JPEG), which also removes their metadata such as the GPS position, and stored locally in a separate photo store.
+- Deleting an event or replacing its photo also deletes the old photo.
+
 ## 0.18.0
 
 - Show a note in the map panel while the position is set by hand.

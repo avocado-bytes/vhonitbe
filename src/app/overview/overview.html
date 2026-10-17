@@ -216,6 +216,22 @@
                       {{ formatDate(event.occurredAt) }}
                     </time>
                   </div>
+                  @if (event.photoId) {
+                    <button
+                      type="button"
+                      class="item-action"
+                      aria-haspopup="dialog"
+                      [attr.aria-label]="'OVERVIEW.SHOW_PHOTO' | translate"
+                      (click)="showPhoto(event)"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+                        <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0" />
+                        <path
+                          d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1z"
+                        />
+                      </svg>
+                    </button>
+                  }
                   @if (event.location) {
                     <button
                       type="button"
@@ -318,6 +334,23 @@
       @if (shown.location; as location) {
         <div class="p-3">
           <app-event-map [location]="location" />
+        </div>
+      }
+    }
+  </dialog>
+
+  <dialog #photoDialog class="map-dialog" aria-labelledby="event-photo-title" (close)="photoEvent.set(null)">
+    @if (photoEvent(); as shown) {
+      <div class="d-flex align-items-center justify-content-between gap-2 p-3 border-bottom">
+        <div>
+          <h2 id="event-photo-title" class="h5 mb-0">{{ 'ITEMS.' + shown.type | translate }}</h2>
+          <time class="small text-body-secondary" [attr.datetime]="shown.occurredAt">{{ formatDate(shown.occurredAt) }}</time>
+        </div>
+        <button type="button" class="btn-close" [attr.aria-label]="'OVERVIEW.PHOTO_CLOSE' | translate" (click)="closePhoto()"></button>
+      </div>
+      @if (shown.photoId; as photoId) {
+        <div class="p-3">
+          <app-event-photo [photoId]="photoId" />
         </div>
       }
     }

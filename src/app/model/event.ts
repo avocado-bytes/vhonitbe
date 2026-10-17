@@ -18,6 +18,8 @@ export interface HuntingEvent {
   animal: Animal | null;
   location: GeoPoint | null;
   note: string;
+  /** Key of the event's photo in the photo store; missing or null without a photo */
+  photoId?: string | null;
   /** When the event happened */
   occurredAt: string;
   /** When the record was created / last changed */

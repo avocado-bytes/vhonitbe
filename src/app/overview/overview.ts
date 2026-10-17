@@ -2,6 +2,7 @@ import { afterNextRender, Component, computed, DestroyRef, DOCUMENT, ElementRef,
 import { DecimalPipe, KeyValuePipe } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { EventMap } from '../event-map/event-map';
+import { EventPhoto } from '../event-photo/event-photo';
 import { EventSort, HuntingEvent } from '../model/event';
 import { Animal, ANIMAL_GROUPS, Item, ITEMS } from '../model/item';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -51,7 +52,7 @@ function moonLitPath({ fraction, phase }: MoonIllumination): string {
 }
 
 @Component({
-  imports: [TranslatePipe, DecimalPipe, KeyValuePipe, EventMap],
+  imports: [TranslatePipe, DecimalPipe, KeyValuePipe, EventMap, EventPhoto],
   selector: 'app-overview',
   styleUrl: './overview.scss',
   templateUrl: './overview.html',
@@ -157,6 +158,9 @@ export class Overview {
   /** The event shown in the map dialog, if any */
   protected readonly mapEvent = signal<HuntingEvent | null>(null);
   private readonly mapDialog = viewChild.required<ElementRef<HTMLDialogElement>>('mapDialog');
+  /** The event shown in the photo dialog, if any */
+  protected readonly photoEvent = signal<HuntingEvent | null>(null);
+  private readonly photoDialog = viewChild.required<ElementRef<HTMLDialogElement>>('photoDialog');
   private readonly injector = inject(Injector);
 
   constructor() {
@@ -209,6 +213,16 @@ export class Overview {
 
   protected closeMap(): void {
     this.mapDialog().nativeElement.close();
+  }
+
+  protected showPhoto(event: HuntingEvent): void {
+    this.photoEvent.set(event);
+    // Open once the content is rendered, so focus moves to its close button
+    afterNextRender(() => this.photoDialog().nativeElement.showModal(), { injector: this.injector });
+  }
+
+  protected closePhoto(): void {
+    this.photoDialog().nativeElement.close();
   }
 
   protected isDeleting(id: string): boolean {

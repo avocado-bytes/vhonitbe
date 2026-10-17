@@ -1,0 +1,14 @@
+@switch (status()) {
+  @case ('loading') {
+    <p class="small text-body-secondary d-flex align-items-center gap-2 mb-0" role="status">
+      <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+      {{ 'EVENT_PHOTO.LOADING' | translate }}
+    </p>
+  }
+  @case ('loaded') {
+    <img class="event-photo d-block mx-auto rounded" [src]="url()" [alt]="'EVENT_PHOTO.ALT' | translate" />
+  }
+  @case ('missing') {
+    <p class="small text-danger mb-0" role="alert">{{ 'EVENT_PHOTO.MISSING' | translate }}</p>
+  }
+}

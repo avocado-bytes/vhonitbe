@@ -60,7 +60,14 @@
     "LOCATION": "Poloha",
     "NOTE": "Poznámka",
     "NO_LOCATION": "U této události nebyla zaznamenána poloha.",
-    "LOCATION_UNAVAILABLE": "Vaše poloha není k dispozici. Událost bude uložena bez polohy."
+    "LOCATION_UNAVAILABLE": "Vaše poloha není k dispozici. Událost bude uložena bez polohy.",
+    "PHOTO": "Fotografie",
+    "TAKE_PHOTO": "Vyfotit",
+    "REPLACE_PHOTO": "Nahradit fotografii",
+    "REMOVE_PHOTO": "Odebrat fotografii",
+    "PHOTO_PROCESSING": "Zpracovávám fotografii…",
+    "PHOTO_FAILED": "Fotografii se nepodařilo zpracovat nebo uložit. Zkuste to prosím znovu.",
+    "PHOTO_PREVIEW": "Fotografie události"
   },
   "ITEMS": {
     "spotting": "Pozorování",
@@ -144,7 +151,9 @@
     "FILTER_ANIMAL": "Zvíře",
     "FILTER_ALL_ANIMALS": "Všechna zvířata",
     "NO_MATCHES": "Vybraným filtrům neodpovídá žádná událost.",
-    "CLEAR_FILTERS": "Zrušit filtry"
+    "CLEAR_FILTERS": "Zrušit filtry",
+    "SHOW_PHOTO": "Zobrazit fotografii",
+    "PHOTO_CLOSE": "Zavřít"
   },
   "LOCATION_PICKER": {
     "MAP": "Mapa pro výběr polohy",
@@ -222,5 +231,10 @@
   },
   "EVENT_MAP": {
     "MAP": "Mapa místa události"
+  },
+  "EVENT_PHOTO": {
+    "ALT": "Fotografie události",
+    "LOADING": "Načítám fotografii…",
+    "MISSING": "Fotografii se nepodařilo načíst."
   }
 }

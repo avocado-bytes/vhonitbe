@@ -1,13 +1,15 @@
-import { Component, computed, effect, inject, input, linkedSignal, OnInit, output } from '@angular/core';
+import { Component, computed, effect, inject, input, linkedSignal, OnInit, output, signal } from '@angular/core';
 import { KeyValuePipe } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { TranslatePipe } from '@ngx-translate/core';
-import { GeoPoint, HuntingEvent } from '../model/event';
+import { GeoPoint, HuntingEvent, NewHuntingEvent } from '../model/event';
 import { Animal, ANIMAL_GROUPS, Item, ITEMS } from '../model/item';
 import { LocationPicker } from '../location-picker/location-picker';
+import { compressImage } from '../shared/compress-image';
 import { fromDateTimeLocal, toDateTimeLocal } from '../shared/datetime-local';
+import { EventStorage } from '../storage/event-storage';
 import { EventsActions } from '../state/events/events.actions';
 import { selectSaveError, selectSaving } from '../state/events/events.reducer';
 import { LocationActions } from '../state/location/location.actions';
@@ -21,6 +23,7 @@ import { selectPosition, selectStatus } from '../state/location/location.reducer
 })
 export class AddItem implements OnInit {
   private readonly store = inject(Store);
+  private readonly storage = inject(EventStorage);
 
   protected readonly items = ITEMS;
   protected readonly animalGroups = ANIMAL_GROUPS;
@@ -44,6 +47,15 @@ export class AddItem implements OnInit {
     return toDateTimeLocal(event ? new Date(event.occurredAt) : new Date());
   });
 
+  /** The compressed photo shown in the form; for an edited event its stored photo, once loaded */
+  protected readonly photo = signal<Blob | null>(null);
+  /** The user took, replaced or removed the photo, so it is stored anew on saving */
+  private readonly photoChanged = signal(false);
+  protected readonly photoUrl = signal<string | null>(null);
+  /** Compressing a new photo or storing it on saving */
+  protected readonly photoBusy = signal(false);
+  protected readonly photoError = signal(false);
+
   protected readonly saving = this.store.selectSignal(selectSaving);
   protected readonly error = this.store.selectSignal(selectSaveError);
   private readonly position = this.store.selectSignal(selectPosition);
@@ -57,7 +69,8 @@ export class AddItem implements OnInit {
   });
 
   protected readonly canSubmit = computed(
-    () => !!this.type() && fromDateTimeLocal(this.occurredAt()) !== null && !this.isFuture() && !this.saving(),
+    () =>
+      !!this.type() && fromDateTimeLocal(this.occurredAt()) !== null && !this.isFuture() && !this.saving() && !this.photoBusy(),
   );
 
   /** Emits the stored event once it has been persisted */
@@ -73,6 +86,18 @@ export class AddItem implements OnInit {
       }
     });
 
+    // An object url lets the preview show the photo without reading it into memory as text
+    effect((onCleanup) => {
+      const photo = this.photo();
+      if (!photo) {
+        this.photoUrl.set(null);
+        return;
+      }
+      const url = URL.createObjectURL(photo);
+      this.photoUrl.set(url);
+      onCleanup(() => URL.revokeObjectURL(url));
+    });
+
     inject(Actions)
       .pipe(ofType(EventsActions.addEventSuccess, EventsActions.updateEventSuccess), takeUntilDestroyed())
       .subscribe(({ event }) => this.saved.emit(event));
@@ -84,6 +109,41 @@ export class AddItem implements OnInit {
     if (!this.event()) {
       this.store.dispatch(LocationActions.locate());
     }
+
+    const photoId = this.event()?.photoId;
+    if (photoId) {
+      void this.storage.getPhoto(photoId).then((photo) => {
+        // A photo taken meanwhile wins over the stored one
+        if (photo && !this.photoChanged()) {
+          this.photo.set(photo);
+        }
+      });
+    }
+  }
+
+  protected async selectPhoto(input: HTMLInputElement): Promise<void> {
+    const file = input.files?.[0];
+    // Lets the same photo be chosen again after removing it
+    input.value = '';
+    if (!file) {
+      return;
+    }
+    this.photoBusy.set(true);
+    this.photoError.set(false);
+    try {
+      this.photo.set(await compressImage(file));
+      this.photoChanged.set(true);
+    } catch {
+      this.photoError.set(true);
+    } finally {
+      this.photoBusy.set(false);
+    }
+  }
+
+  protected removePhoto(): void {
+    this.photo.set(null);
+    this.photoChanged.set(true);
+    this.photoError.set(false);
   }
 
   protected selectType(value: string): void {
@@ -102,20 +162,31 @@ export class AddItem implements OnInit {
       return;
     }
 
+    const fields = { type, animal: this.animal(), location: this.location(), note: this.note().trim(), occurredAt };
+    const photo = this.photo();
+    if (!this.photoChanged()) {
+      this.save(fields, this.event()?.photoId);
+    } else if (!photo) {
+      this.save(fields, null);
+    } else {
+      // The photo is stored first, so the event never points to a missing photo
+      this.photoBusy.set(true);
+      this.storage
+        .addPhoto(photo)
+        .then(
+          (photoId) => this.save(fields, photoId),
+          () => this.photoError.set(true),
+        )
+        .finally(() => this.photoBusy.set(false));
+    }
+  }
+
+  private save(fields: Omit<NewHuntingEvent, 'photoId'>, photoId: string | null | undefined): void {
     const editing = this.event();
     if (editing) {
-      this.store.dispatch(
-        EventsActions.updateEvent({
-          event: { ...editing, type, animal: this.animal(), occurredAt, location: this.location(), note: this.note().trim() },
-        }),
-      );
-      return;
+      this.store.dispatch(EventsActions.updateEvent({ event: { ...editing, ...fields, photoId } }));
+    } else {
+      this.store.dispatch(EventsActions.addEvent({ event: { ...fields, photoId } }));
     }
-
-    this.store.dispatch(
-      EventsActions.addEvent({
-        event: { type, animal: this.animal(), location: this.location(), note: this.note().trim(), occurredAt },
-      }),
-    );
   }
 }

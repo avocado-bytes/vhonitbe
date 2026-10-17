@@ -60,7 +60,14 @@
     "LOCATION": "Location",
     "NOTE": "Note",
     "NO_LOCATION": "No location was recorded for this event.",
-    "LOCATION_UNAVAILABLE": "Your location is not available. The event will be saved without a position."
+    "LOCATION_UNAVAILABLE": "Your location is not available. The event will be saved without a position.",
+    "PHOTO": "Photo",
+    "TAKE_PHOTO": "Take photo",
+    "REPLACE_PHOTO": "Replace photo",
+    "REMOVE_PHOTO": "Remove photo",
+    "PHOTO_PROCESSING": "Processing photo…",
+    "PHOTO_FAILED": "The photo could not be processed or saved. Please try again.",
+    "PHOTO_PREVIEW": "Photo of the event"
   },
   "ITEMS": {
     "spotting": "Sighting",
@@ -144,7 +151,9 @@
     "FILTER_ANIMAL": "Animal",
     "FILTER_ALL_ANIMALS": "All animals",
     "NO_MATCHES": "No events match the selected filters.",
-    "CLEAR_FILTERS": "Clear filters"
+    "CLEAR_FILTERS": "Clear filters",
+    "SHOW_PHOTO": "Show photo",
+    "PHOTO_CLOSE": "Close"
   },
   "LOCATION_PICKER": {
     "MAP": "Map for choosing the location",
@@ -222,5 +231,10 @@
   },
   "EVENT_MAP": {
     "MAP": "Map of the event location"
+  },
+  "EVENT_PHOTO": {
+    "ALT": "Photo of the event",
+    "LOADING": "Loading photo…",
+    "MISSING": "The photo could not be loaded."
   }
 }
