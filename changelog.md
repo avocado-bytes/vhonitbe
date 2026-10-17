@@ -1,5 +1,28 @@
 # Changelog
 
+## 0.11.2
+
+- Lower the safety distance from buildings in the shooting safety overlay from 200 m to 100 m.
+
+## 0.11.1
+
+- The shooting safety analysis only restarts once the user has moved more than 20 m and further than the accuracy of the reported position, so position jitter while standing still doesn't restart it.
+
+## 0.11.0
+
+- Store the building data for the shooting safety overlay locally in IndexedDB, per tile. Stored tiles are used right away, also offline, and loaded again in the background once they are older than 30 days. This replaces the service worker cache for building data, which didn't keep the responses.
+
+## 0.10.0
+
+- The shooting safety overlay only takes buildings into account; roads, forest tracks, paths and railways are no longer considered.
+- Show the terrain overlay as soon as the elevation data is analyzed and load the building data in the background, adding the building zones once it arrives.
+
+## 0.9.0
+
+- Take buildings, roads, paths and railways from OpenStreetMap into account in the shooting safety overlay: a line of fire passing within 200 m of a building or within 50 m of a road or path (beyond 50 m from the user) is marked red.
+- Show the 200 m zones around buildings as stripes on the overlay.
+- Cache the building and road data for offline use for up to 90 days.
+
 ## 0.8.0
 
 - Mark regions in yellow on the shooting safety overlay where the terrain stops the bullet further behind the target (within 300 m, allowing for a shot 0.5° high), so the ground in between is in the line of fire.

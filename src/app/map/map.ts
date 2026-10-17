@@ -33,8 +33,6 @@ const DISTANCE_RINGS = [100, 150, 200];
 
 const DISTANCE_RING_COLOR = '#212529';
 
-/** Lets the map show through the shooting safety colors */
-const SAFETY_OPACITY = 0.4;
 
 /** ~10 cm; avoids noise like 49.00000000001 from map projections */
 const PRECISION = 1e6;
@@ -82,7 +80,7 @@ export class MapView {
 
   protected readonly safetyEnabled = this.store.selectSignal(selectShootingSafetyEnabled);
   protected readonly safetyStatus = this.store.selectSignal(selectShootingSafetyStatus);
-  private readonly safetyOverlay = this.store.selectSignal(selectShootingSafetyOverlay);
+  protected readonly safetyOverlay = this.store.selectSignal(selectShootingSafetyOverlay);
 
   protected readonly distanceRings = this.store.selectSignal(selectDistanceRings);
   protected readonly tracking = this.store.selectSignal(selectTracking);
@@ -169,7 +167,6 @@ export class MapView {
       safetyLayer.clearLayers();
       if (overlay) {
         L.imageOverlay(overlay.image, overlay.bounds, {
-          opacity: SAFETY_OPACITY,
           interactive: false,
           attribution: ELEVATION_ATTRIBUTION,
         }).addTo(safetyLayer);

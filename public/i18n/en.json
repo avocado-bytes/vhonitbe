@@ -148,7 +148,10 @@
     "FAILED": "The elevation data could not be loaded.",
     "BACKSTOP": "Terrain stops the bullet",
     "DISTANT_BACKSTOP": "Terrain stops the bullet further away – check the ground in between",
-    "NO_BACKSTOP": "No terrain backstop",
-    "DISCLAIMER": "Estimate from terrain only (about 30 m elevation data, standing shot). People, roads, buildings, trees and ricochets are not taken into account. Always check the backstop yourself."
+    "NO_BACKSTOP": "No terrain backstop, or the line of fire passes a building zone",
+    "BUILDING_ZONE": "Within 100 m of a building",
+    "DISCLAIMER": "Estimate from terrain (about 30 m elevation data, standing shot) and OpenStreetMap buildings, which may be incomplete. People, roads, trees and ricochets are not taken into account. Always check the backstop yourself.",
+    "HAZARDS_FAILED": "Building data could not be loaded, so buildings are not taken into account.",
+    "BUILDINGS_LOADING": "Loading buildings… Until then, building zones are not shown."
   }
 }

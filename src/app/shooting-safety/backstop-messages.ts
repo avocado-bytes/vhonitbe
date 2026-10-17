@@ -8,5 +8,5 @@ export interface BackstopRequest {
   options: BackstopOptions;
 }
 
-/** Sent back by the backstop worker */
-export type BackstopResponse = { overlay: BackstopOverlay } | { error: string };
+/** Sent back by the backstop worker; an overlay that isn't `final` is followed by an updated one */
+export type BackstopResponse = { overlay: BackstopOverlay; final: boolean } | { error: string };

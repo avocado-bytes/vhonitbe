@@ -59,6 +59,12 @@
   border-radius: var(--bs-border-radius-sm);
 }
 
+.safety-swatch-zone {
+  // The overlay's diagonal stripes over the building zones
+  background: repeating-linear-gradient(-45deg, #212529 0 2px, transparent 2px 6px);
+  opacity: 1;
+}
+
 .map-status {
   position: absolute;
   top: 1rem;

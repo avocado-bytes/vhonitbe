@@ -5,7 +5,10 @@ import { BackstopOverlay } from '../state/shooting-safety/shooting-safety.model'
 import { BackstopOptions, DEFAULT_BACKSTOP_OPTIONS } from './backstop';
 import { BackstopRequest, BackstopResponse } from './backstop-messages';
 
-/** Loads the elevation around a point and draws where the terrain provides a backstop, in a web worker */
+/**
+ * Loads the elevation around a point and draws where the terrain provides a backstop, in a web worker.
+ * Emits the terrain-only overlay first and the overlay including buildings once their data is loaded.
+ */
 @Injectable({ providedIn: 'root' })
 export class BackstopAnalyzer {
   /** Unsubscribing terminates the worker, so an obsolete analysis stops right away */
@@ -20,7 +23,9 @@ export class BackstopAnalyzer {
       worker.onmessage = ({ data }: MessageEvent<BackstopResponse>) => {
         if ('overlay' in data) {
           subscriber.next(data.overlay);
-          subscriber.complete();
+          if (data.final) {
+            subscriber.complete();
+          }
         } else {
           subscriber.error(data.error);
         }

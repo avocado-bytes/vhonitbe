@@ -75,7 +75,23 @@
             <li class="d-flex align-items-center gap-2">
               <span class="safety-swatch bg-danger" aria-hidden="true"></span>{{ 'SHOOTING_SAFETY.NO_BACKSTOP' | translate }}
             </li>
+            @if (safetyOverlay()?.hazards === 'loaded') {
+              <li class="d-flex align-items-center gap-2">
+                <span class="safety-swatch safety-swatch-zone" aria-hidden="true"></span>{{ 'SHOOTING_SAFETY.BUILDING_ZONE' | translate }}
+              </li>
+            }
           </ul>
+          @switch (safetyOverlay()?.hazards) {
+            @case ('loading') {
+              <p class="small d-flex align-items-center gap-2 mt-2 mb-0" role="status">
+                <span class="spinner-border spinner-border-sm text-primary flex-shrink-0" aria-hidden="true"></span>
+                {{ 'SHOOTING_SAFETY.BUILDINGS_LOADING' | translate }}
+              </p>
+            }
+            @case ('failed') {
+              <p class="small text-warning-emphasis mt-2 mb-0" role="alert">{{ 'SHOOTING_SAFETY.HAZARDS_FAILED' | translate }}</p>
+            }
+          }
         }
       }
       <p class="small text-body-secondary mt-2 mb-0">{{ 'SHOOTING_SAFETY.DISCLAIMER' | translate }}</p>
