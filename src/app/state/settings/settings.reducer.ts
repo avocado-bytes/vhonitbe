@@ -1,6 +1,6 @@
 import { createFeature, createReducer, on } from '@ngrx/store';
 import { SettingsActions } from './settings.actions';
-import { SettingsState, Theme } from './settings.model';
+import { Language, LANGUAGES, SettingsState, Theme } from './settings.model';
 
 function preferredTheme(): Theme {
   return typeof window !== 'undefined' && window.matchMedia?.('(prefers-color-scheme: dark)').matches
@@ -8,9 +8,21 @@ function preferredTheme(): Theme {
     : 'light';
 }
 
+/** The first supported language from the browser's preferred languages, falling back to english */
+function preferredLanguage(): Language {
+  const browserLanguages = typeof navigator !== 'undefined' ? (navigator.languages ?? [navigator.language]) : [];
+  for (const browserLanguage of browserLanguages) {
+    const language = browserLanguage?.split('-')[0].toLowerCase();
+    if (LANGUAGES.includes(language as Language)) {
+      return language as Language;
+    }
+  }
+  return 'en';
+}
+
 export const initialState: SettingsState = {
   theme: preferredTheme(),
-  language: 'en',
+  language: preferredLanguage(),
 };
 
 export const settingsFeature = createFeature({
