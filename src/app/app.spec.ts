@@ -6,6 +6,7 @@ import { EMPTY } from 'rxjs';
 import { HuntingEvent } from './model/event';
 import { EventsActions } from './state/events/events.actions';
 import { initialState as eventsInitialState } from './state/events/events.reducer';
+import { initialState as feedingInitialState } from './state/feeding/feeding.reducer';
 import { initialState as locationInitialState } from './state/location/location.reducer';
 import { provideTranslateService, TranslateService } from '@ngx-translate/core';
 import { App } from './app';
@@ -24,6 +25,7 @@ describe('App', () => {
           initialState: {
             settings: { theme: 'light', language: 'en' },
             events: eventsInitialState,
+            feeding: feedingInitialState,
             location: locationInitialState,
           },
         }),
@@ -33,7 +35,7 @@ describe('App', () => {
 
     TestBed.inject(TranslateService).setTranslation('en', {
       APP: { TITLE: 'vHonitbě', ADD: 'Add' },
-      HEADER: { MENU: 'Open menu', SETTINGS: 'Settings' },
+      HEADER: { MENU: 'Open menu', MENU_ATTENTION: 'Open menu, {{count}} feeding places need replenishing', SETTINGS: 'Settings' },
       NAV: { HOME: 'Home', MAP: 'Map', FEEDING: 'Feeding', CLOSE: 'Close navigation' },
       ADD_ITEM: { TITLE: 'Add item', EDIT_TITLE: 'Edit event', CLOSE: 'Close' },
     });
@@ -279,6 +281,7 @@ describe('App', () => {
       store.setState({
         settings: { theme: 'light', language: 'en' },
         events: { ...eventsInitialState, editing: existing },
+        feeding: feedingInitialState,
         location: locationInitialState,
       });
       await app.fixture.whenStable();
@@ -314,6 +317,55 @@ describe('App', () => {
       await fixture.whenStable();
 
       expect(dispatch).not.toHaveBeenCalledWith(EventsActions.cancelEdit());
+    });
+  });
+
+  describe('feeding attention', () => {
+    const settings = { seasonStart: 10, seasonEnd: 3, replenishDays: 5 };
+    const place = (id: string, lastReplenishedAt: string | null) => ({
+      id,
+      type: 'feeding' as const,
+      location: null,
+      note: '',
+      photoId: null,
+      lastReplenishedAt,
+    });
+
+    afterEach(() => vi.useRealTimers());
+
+    async function createWithPlaces(now: Date) {
+      vi.useFakeTimers({ now, toFake: ['Date'] });
+      const app = await createApp();
+      TestBed.inject(MockStore).setState({
+        settings: { theme: 'light', language: 'en' },
+        events: eventsInitialState,
+        feeding: {
+          ...feedingInitialState,
+          settings,
+          places: [place('never', null), place('due', '2026-10-01T08:00:00.000Z'), place('fresh', '2026-10-19T08:00:00.000Z')],
+        },
+        location: locationInitialState,
+      });
+      await app.fixture.whenStable();
+      const burger = app.element.querySelector('[aria-controls="side-nav"]') as HTMLButtonElement;
+      const feedingLink = app.element.querySelector('a[routerLink="/feeding"]') as HTMLAnchorElement;
+      return { ...app, burger, feedingLink };
+    }
+
+    it('should mark the menu button and the feeding link while places need replenishing in the season', async () => {
+      const { burger, feedingLink } = await createWithPlaces(new Date('2026-10-20T12:00:00.000Z'));
+
+      expect(burger.querySelector('.attention-dot')).not.toBeNull();
+      expect(burger.getAttribute('aria-label')).toBe('Open menu, 2 feeding places need replenishing');
+      expect(feedingLink.querySelector('.nav-badge')?.textContent?.trim()).toMatch(/^2/);
+    });
+
+    it('should not mark anything outside of the feeding season', async () => {
+      const { burger, feedingLink } = await createWithPlaces(new Date('2026-07-01T12:00:00.000Z'));
+
+      expect(burger.querySelector('.attention-dot')).toBeNull();
+      expect(burger.getAttribute('aria-label')).toBe('Open menu');
+      expect(feedingLink.querySelector('.nav-badge')).toBeNull();
     });
   });
 });

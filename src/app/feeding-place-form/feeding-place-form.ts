@@ -149,7 +149,8 @@ export class FeedingPlaceForm implements OnInit {
     if (editing) {
       this.store.dispatch(FeedingActions.updatePlace({ place: { ...editing, ...fields, photoId } }));
     } else {
-      this.store.dispatch(FeedingActions.addPlace({ place: { ...fields, photoId } }));
+      // A new place has not been replenished yet
+      this.store.dispatch(FeedingActions.addPlace({ place: { ...fields, photoId, lastReplenishedAt: null } }));
     }
   }
 }

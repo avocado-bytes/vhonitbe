@@ -25,8 +25,15 @@ export const FeedingActions = createActionGroup({
     'Delete Place': props<{ id: string }>(),
     'Delete Place Success': props<{ id: string }>(),
     'Delete Place Failure': props<{ id: string; error: string }>(),
+    /** Records that the place was replenished just now */
+    'Replenish Place': props<{ place: FeedingPlace }>(),
+    'Replenish Place Success': props<{ place: FeedingPlace }>(),
+    'Replenish Place Failure': props<{ id: string; error: string }>(),
     'Share Place': props<{ place: FeedingPlace }>(),
     'Share Place Success': props<{ result: ShareResult }>(),
     'Share Place Failure': props<{ error: string }>(),
+    /** Months are 1–12; the end month may come before the start month for a season spanning the new year */
+    'Set Season': props<{ seasonStart: number; seasonEnd: number }>(),
+    'Set Replenish Days': props<{ replenishDays: number }>(),
   },
 });

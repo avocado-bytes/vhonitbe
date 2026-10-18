@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.38.0
+
+- Every feeding place records when it was last replenished; it is empty for new places and for places stored before.
+- A green "Replenished" / "Doplněno" action in each place's actions, both as an icon button and in the phone menu, records the current date and time.
+- The list shows when each place was last replenished, or that it was not replenished yet.
+- A place that was never replenished, or not within the replenishment interval, gets a red band along its left edge and a "Needs replenishing" / "Potřebuje doplnit" note. The list checks this every minute, so places become due on their own.
+
+## 0.37.1
+
+- The feeding season badge has more padding and a subtle look: a light green tint with a thin border while the season is in progress, light grey otherwise.
+
+## 0.37.0
+
+- The feeding page starts with two dashboard tiles, in the style of the overview:
+  - Feeding season: the first and last month of the season, October to the end of March by default, with a badge telling whether the season is in progress. A season may span the new year.
+  - Replenishment: how often feeders are replenished during the season, every 5 days by default, as a whole number from 1 to 60 days.
+- Both settings are remembered on the device for the next visit.
+
 ## 0.36.1
 
 - The type placeholder in the feeding place form reads "Vyberte druh krmeliště" / "Select the kind of feeding site".

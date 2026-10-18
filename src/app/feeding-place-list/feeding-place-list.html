@@ -4,11 +4,35 @@
 }
 <ul class="list-unstyled mb-3" [attr.aria-busy]="busy()">
   @for (place of places(); track place.id) {
-    <li class="place p-3 mb-2 border rounded bg-body-tertiary">
+    <li class="place p-3 mb-2 border rounded bg-body-tertiary" [class.needs-replenishing]="needsReplenishing(place)">
       <div class="d-flex align-items-center gap-2">
-        <div class="me-auto fw-semibold">{{ 'FEEDING.TYPES.' + place.type | translate }}</div>
+        <!-- When it was last replenished sits below the type, leaving room for the action buttons on phones -->
+        <div class="me-auto">
+          <div class="fw-semibold">{{ 'FEEDING.TYPES.' + place.type | translate }}</div>
+          <div class="small" [class.text-danger]="needsReplenishing(place)" [class.text-body-secondary]="!needsReplenishing(place)">
+            @if (place.lastReplenishedAt; as replenishedAt) {
+              {{ 'FEEDING.LAST_REPLENISHED' | translate }}
+              <time [attr.datetime]="replenishedAt">{{ formatDate(replenishedAt) }}</time>
+            } @else {
+              {{ 'FEEDING.NEVER_REPLENISHED' | translate }}
+            }
+            @if (needsReplenishing(place)) {
+              · <span class="fw-semibold">{{ 'FEEDING.NEEDS_REPLENISHING' | translate }}</span>
+            }
+          </div>
+        </div>
         <!-- Wider screens show every action as an icon button -->
         <div class="d-none d-md-flex align-items-center gap-2">
+          <button
+            type="button"
+            class="item-action item-action-success"
+            [attr.aria-label]="'FEEDING.REPLENISHED' | translate"
+            [title]="'FEEDING.REPLENISHED' | translate"
+            [disabled]="isReplenishing(place.id) || isDeleting(place.id)"
+            (click)="replenish(place)"
+          >
+            <ng-container [ngTemplateOutlet]="replenishIcon" />
+          </button>
           @if (place.photoId) {
             <button
               type="button"
@@ -77,6 +101,17 @@
               [attr.aria-label]="'OVERVIEW.ACTIONS' | translate"
               appFocusTrap
             >
+              <li role="none">
+                <button
+                  type="button"
+                  class="dropdown-item d-flex align-items-center gap-2 text-success"
+                  role="menuitem"
+                  [disabled]="isReplenishing(place.id) || isDeleting(place.id)"
+                  (click)="closeActions(); replenish(place)"
+                >
+                  <ng-container [ngTemplateOutlet]="replenishIcon" />{{ 'FEEDING.REPLENISHED' | translate }}
+                </button>
+              </li>
               @if (place.photoId) {
                 <li role="none">
                   <button type="button" class="dropdown-item d-flex align-items-center gap-2" role="menuitem" aria-haspopup="dialog" (click)="closeActions(); showPhoto(place)">
@@ -162,6 +197,12 @@
   }
 </dialog>
 <!-- Icons shared by the action buttons and the phone menu -->
+<ng-template #replenishIcon>
+  <svg class="flex-shrink-0" xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+    <path d="M2.5 8a5.5 5.5 0 0 1 8.25-4.764.5.5 0 0 0 .5-.866A6.5 6.5 0 1 0 14.5 8a.5.5 0 0 0-1 0 5.5 5.5 0 1 1-11 0" />
+    <path d="M15.354 3.354a.5.5 0 0 0-.708-.708L8 9.293 5.354 6.646a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0z" />
+  </svg>
+</ng-template>
 <ng-template #photoIcon>
   <svg class="flex-shrink-0" xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
     <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0" />

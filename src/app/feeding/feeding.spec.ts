@@ -60,6 +60,8 @@ describe('Feeding', () => {
         ADD: 'Add feeder or salt lick',
         TYPES: { feeding: 'Feeding', 'salt-lick': 'Salt lick' },
         FORM: { ADD_TITLE: 'Add feeding place', EDIT_TITLE: 'Edit feeding place' },
+        IN_SEASON: 'In season',
+        OUT_OF_SEASON: 'Out of season',
       },
     });
     store = TestBed.inject(MockStore);
@@ -138,5 +140,55 @@ describe('Feeding', () => {
 
     expect(dialog().open).toBe(false);
     expect(dispatch).not.toHaveBeenCalledWith(FeedingActions.closeForm());
+  });
+
+  describe('tiles', () => {
+    const startSelect = () => element().querySelector('#feeding-season-start') as HTMLSelectElement;
+    const endSelect = () => element().querySelector('#feeding-season-end') as HTMLSelectElement;
+    const daysInput = () => element().querySelector('#feeding-replenish-days') as HTMLInputElement;
+    const enterDays = async (value: string) => {
+      daysInput().value = value;
+      daysInput().dispatchEvent(new Event('input'));
+      await fixture.whenStable();
+    };
+
+    afterEach(() => vi.useRealTimers());
+
+    it('should show the season with month names and whether it is in progress', async () => {
+      vi.useFakeTimers({ now: new Date(2026, 11, 1), toFake: ['Date'] });
+      await setState({ settings: { seasonStart: 10, seasonEnd: 3, replenishDays: 5 } });
+
+      expect(startSelect().selectedOptions[0].textContent?.trim()).toBe('October');
+      expect(endSelect().selectedOptions[0].textContent?.trim()).toBe('March');
+      expect(element().querySelector('.badge')?.textContent).toContain('In season');
+
+      vi.setSystemTime(new Date(2026, 5, 1));
+      await setState({ settings: { seasonStart: 10, seasonEnd: 3, replenishDays: 6 } });
+      expect(element().querySelector('.badge')?.textContent).toContain('Out of season');
+    });
+
+    it('should change the start and end of the season', () => {
+      startSelect().value = '11';
+      startSelect().dispatchEvent(new Event('change'));
+      endSelect().value = '2';
+      endSelect().dispatchEvent(new Event('change'));
+
+      expect(dispatch).toHaveBeenCalledWith(FeedingActions.setSeason({ seasonStart: 11, seasonEnd: 3 }));
+      expect(dispatch).toHaveBeenCalledWith(FeedingActions.setSeason({ seasonStart: 10, seasonEnd: 2 }));
+    });
+
+    it('should show the interval and store only a valid number of days', async () => {
+      expect(daysInput().value).toBe('5');
+
+      await enterDays('7');
+      expect(dispatch).toHaveBeenCalledWith(FeedingActions.setReplenishDays({ replenishDays: 7 }));
+
+      dispatch.mockClear();
+      for (const invalid of ['0', '2.5', '', '61']) {
+        await enterDays(invalid);
+        expect(daysInput().classList).toContain('is-invalid');
+      }
+      expect(dispatch).not.toHaveBeenCalled();
+    });
   });
 });

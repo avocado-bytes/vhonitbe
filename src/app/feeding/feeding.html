@@ -2,6 +2,66 @@
   <h1 class="h4 mb-3">{{ 'FEEDING.TITLE' | translate }}</h1>
 
   <div class="row g-3">
+    <div class="col-12 col-md-6">
+      <section class="card h-100" aria-labelledby="feeding-season">
+        <div class="card-body">
+          <div class="d-flex align-items-start justify-content-between gap-2">
+            <h2 id="feeding-season" class="h6 card-title text-body-secondary">{{ 'FEEDING.SEASON' | translate }}</h2>
+            <span class="badge season-badge border" [class.in-season]="inSeason()">
+              {{ (inSeason() ? 'FEEDING.IN_SEASON' : 'FEEDING.OUT_OF_SEASON') | translate }}
+            </span>
+          </div>
+          <!-- The end may come before the start, for a season spanning the new year -->
+          <div class="row g-2">
+            <div class="col-6">
+              <label for="feeding-season-start" class="form-label small mb-1">{{ 'FEEDING.SEASON_START' | translate }}</label>
+              <select id="feeding-season-start" class="form-select form-select-sm" #startSelect (change)="setSeasonStart(startSelect.value)">
+                @for (month of months(); track month.value) {
+                  <option [value]="month.value" [selected]="settings().seasonStart === month.value">{{ month.name }}</option>
+                }
+              </select>
+            </div>
+            <div class="col-6">
+              <label for="feeding-season-end" class="form-label small mb-1">{{ 'FEEDING.SEASON_END' | translate }}</label>
+              <select id="feeding-season-end" class="form-select form-select-sm" #endSelect (change)="setSeasonEnd(endSelect.value)">
+                @for (month of months(); track month.value) {
+                  <option [value]="month.value" [selected]="settings().seasonEnd === month.value">{{ month.name }}</option>
+                }
+              </select>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="col-12 col-md-6">
+      <section class="card h-100" aria-labelledby="feeding-replenish">
+        <div class="card-body">
+          <h2 id="feeding-replenish" class="h6 card-title text-body-secondary">{{ 'FEEDING.REPLENISH' | translate }}</h2>
+          <label for="feeding-replenish-days" class="form-label small mb-1">{{ 'FEEDING.REPLENISH_DAYS' | translate }}</label>
+          <input
+            id="feeding-replenish-days"
+            type="number"
+            class="form-control form-control-sm"
+            inputmode="numeric"
+            step="1"
+            aria-describedby="feeding-replenish-hint feeding-replenish-error"
+            #replenishInput
+            [min]="minReplenishDays"
+            [max]="maxReplenishDays"
+            [value]="replenishDays()"
+            [class.is-invalid]="replenishDaysInvalid()"
+            [attr.aria-invalid]="replenishDaysInvalid()"
+            (input)="setReplenishDays(replenishInput.value)"
+          />
+          <div id="feeding-replenish-error" class="invalid-feedback">
+            {{ 'FEEDING.REPLENISH_INVALID' | translate: { min: minReplenishDays, max: maxReplenishDays } }}
+          </div>
+          <div id="feeding-replenish-hint" class="form-text">{{ 'FEEDING.REPLENISH_HINT' | translate }}</div>
+        </div>
+      </section>
+    </div>
+
     <div class="col-12">
       <section class="card" aria-labelledby="feeding-places">
         <div class="card-body">
@@ -46,6 +106,9 @@
           } @else {
             @if (deleteError()) {
               <p class="text-danger" role="alert">{{ 'FEEDING.DELETE_FAILED' | translate }}</p>
+            }
+            @if (replenishError()) {
+              <p class="text-danger" role="alert">{{ 'FEEDING.REPLENISH_FAILED' | translate }}</p>
             }
             <app-feeding-place-list [places]="places()" [busy]="loading()" />
 

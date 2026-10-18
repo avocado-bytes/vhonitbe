@@ -1,11 +1,24 @@
 import { DOCUMENT, inject } from '@angular/core';
-import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { Actions, createEffect, ofType, ROOT_EFFECTS_INIT } from '@ngrx/effects';
 import { TranslateService } from '@ngx-translate/core';
-import { catchError, concatMap, exhaustMap, from, map, mergeMap, of, switchMap } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { catchError, concatMap, exhaustMap, from, map, mergeMap, of, switchMap, tap, withLatestFrom } from 'rxjs';
+import { storeFeedingSettings } from '../../model/feeding-settings';
 import { placeShareText, sharedPhoto, shareText, ShareResult } from '../../shared/share-event';
 import { EventStorage } from '../../storage/event-storage';
 import { FeedingPlaceStorage } from '../../storage/feeding-place-storage';
 import { FeedingActions } from './feeding.actions';
+import { selectSettings } from './feeding.reducer';
+
+/** Loads the feeding places when the application starts, so the navigation can tell when they need attention */
+export const loadFeedingOnStartup = createEffect(
+  (actions$ = inject(Actions)) =>
+    actions$.pipe(
+      ofType(ROOT_EFFECTS_INIT),
+      map(() => FeedingActions.load()),
+    ),
+  { functional: true },
+);
 
 export const loadFeeding = createEffect(
   (actions$ = inject(Actions), storage = inject(FeedingPlaceStorage)) =>
@@ -73,6 +86,21 @@ export const deletePlace = createEffect(
   { functional: true },
 );
 
+/** Stores the current date and time as the place's last replenishment */
+export const replenishPlace = createEffect(
+  (actions$ = inject(Actions), storage = inject(FeedingPlaceStorage)) =>
+    actions$.pipe(
+      ofType(FeedingActions.replenishPlace),
+      mergeMap(({ place }) =>
+        from(storage.update({ ...place, lastReplenishedAt: new Date().toISOString() })).pipe(
+          map((stored) => FeedingActions.replenishPlaceSuccess({ place: stored })),
+          catchError((error: unknown) => of(FeedingActions.replenishPlaceFailure({ id: place.id, error: String(error) }))),
+        ),
+      ),
+    ),
+  { functional: true },
+);
+
 /** Shares a feeding place as a text message with a link to its location and its photo attached */
 export const sharePlace = createEffect(
   (
@@ -98,4 +126,15 @@ export const sharePlace = createEffect(
       }),
     ),
   { functional: true },
+);
+
+/** Remembers the feeding season and replenishment interval for the next visit */
+export const persistFeedingSettings = createEffect(
+  (actions$ = inject(Actions), store = inject(Store)) =>
+    actions$.pipe(
+      ofType(FeedingActions.setSeason, FeedingActions.setReplenishDays),
+      withLatestFrom(store.select(selectSettings)),
+      tap(([, settings]) => storeFeedingSettings(settings)),
+    ),
+  { functional: true, dispatch: false },
 );

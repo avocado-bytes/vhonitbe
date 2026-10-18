@@ -5,7 +5,8 @@
   },
   "HEADER": {
     "MENU": "Open menu",
-    "SETTINGS": "Settings"
+    "SETTINGS": "Settings",
+    "MENU_ATTENTION": "Open menu, {{count}} feeding places need replenishing"
   },
   "SETTINGS": {
     "TITLE": "Settings",
@@ -25,7 +26,8 @@
     "HOME": "Home",
     "MAP": "Map",
     "CLOSE": "Close navigation",
-    "FEEDING": "Feeding"
+    "FEEDING": "Feeding",
+    "FEEDING_ATTENTION": "feeding places need replenishing"
   },
   "MAP": {
     "LOCATING": "Finding your location…",
@@ -294,6 +296,20 @@
       "LOCATION_UNAVAILABLE": "Your location is not available. The place will be saved without a position.",
       "PHOTO_PREVIEW": "Photo of the place",
       "SAVE_FAILED": "The place could not be saved. Please try again."
-    }
+    },
+    "SEASON": "Feeding season",
+    "IN_SEASON": "In season",
+    "OUT_OF_SEASON": "Out of season",
+    "SEASON_START": "From",
+    "SEASON_END": "Until the end of",
+    "REPLENISH": "Replenishment",
+    "REPLENISH_DAYS": "Interval in days",
+    "REPLENISH_INVALID": "Enter a whole number from {{min}} to {{max}}.",
+    "REPLENISH_HINT": "How often feeders are replenished during the feeding season.",
+    "REPLENISHED": "Replenished",
+    "LAST_REPLENISHED": "Replenished",
+    "NEVER_REPLENISHED": "Not replenished yet",
+    "NEEDS_REPLENISHING": "Needs replenishing",
+    "REPLENISH_FAILED": "The replenishment could not be saved. Please try again."
   }
 }

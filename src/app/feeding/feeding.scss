@@ -6,3 +6,18 @@
 .feeding {
   padding-bottom: 6rem !important;
 }
+
+// A subtle tint rather than a solid color, green while the season is in progress and grey otherwise
+.season-badge {
+  padding: 0.45em 0.9em;
+  font-weight: 500;
+  color: var(--bs-secondary-color);
+  background-color: var(--bs-secondary-bg-subtle);
+  border-color: var(--bs-secondary-border-subtle) !important;
+
+  &.in-season {
+    color: var(--bs-primary-text-emphasis);
+    background-color: var(--bs-primary-bg-subtle);
+    border-color: var(--bs-primary-border-subtle) !important;
+  }
+}

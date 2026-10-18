@@ -1,17 +1,22 @@
 import { DecimalPipe, NgTemplateOutlet } from '@angular/common';
-import { afterNextRender, Component, DOCUMENT, ElementRef, inject, Injector, input, signal, viewChild } from '@angular/core';
+import { afterNextRender, Component, computed, DestroyRef, DOCUMENT, ElementRef, inject, Injector, input, signal, viewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { EventMap } from '../event-map/event-map';
 import { EventPhoto } from '../event-photo/event-photo';
-import { FeedingPlace } from '../model/feeding-place';
+import { FeedingPlace, needsReplenishing } from '../model/feeding-place';
 import { FocusTrap } from '../shared/focus-trap';
 import { FeedingActions } from '../state/feeding/feeding.actions';
-import { selectDeleting } from '../state/feeding/feeding.reducer';
+import { selectDeleting, selectReplenishing, selectSettings } from '../state/feeding/feeding.reducer';
+import { selectLanguage } from '../state/settings/settings.reducer';
+
+/** How often the list checks whether places have become due for replenishing */
+const NOW_REFRESH_MS = 60_000;
 
 /**
- * A list of feeders and salt licks with their details and actions: show the photo or the location in a dialog,
- * share, edit and delete. On phones the actions are collected in a menu behind a single button.
+ * A list of feeding places with their details and actions: mark as replenished, show the photo or the location
+ * in a dialog, share, edit and delete. During the feeding season places due for replenishing are marked with a red band.
+ * On phones the actions are collected in a menu behind a single button.
  */
 @Component({
   imports: [TranslatePipe, DecimalPipe, NgTemplateOutlet, EventMap, EventPhoto, FocusTrap],
@@ -33,6 +38,14 @@ export class FeedingPlaceList {
   readonly busy = input(false);
 
   private readonly deleting = this.store.selectSignal(selectDeleting);
+  private readonly replenishing = this.store.selectSignal(selectReplenishing);
+  private readonly settings = this.store.selectSignal(selectSettings);
+  private readonly language = this.store.selectSignal(selectLanguage);
+  private readonly dateFormat = computed(
+    () => new Intl.DateTimeFormat(this.language(), { dateStyle: 'medium', timeStyle: 'short' }),
+  );
+  /** The current time, updated every minute so places become due on their own */
+  private readonly now = signal(Date.now());
 
   /** Id of the place whose action menu is open on phones, if any */
   protected readonly actionsFor = signal<string | null>(null);
@@ -43,6 +56,27 @@ export class FeedingPlaceList {
   /** The place shown in the photo dialog, if any */
   protected readonly photoPlace = signal<FeedingPlace | null>(null);
   private readonly photoDialog = viewChild.required<ElementRef<HTMLDialogElement>>('photoDialog');
+
+  constructor() {
+    const timer = setInterval(() => this.now.set(Date.now()), NOW_REFRESH_MS);
+    inject(DestroyRef).onDestroy(() => clearInterval(timer));
+  }
+
+  protected formatDate(iso: string): string {
+    return this.dateFormat().format(new Date(iso));
+  }
+
+  protected needsReplenishing(place: FeedingPlace): boolean {
+    return needsReplenishing(place, this.settings(), new Date(this.now()));
+  }
+
+  protected isReplenishing(id: string): boolean {
+    return this.replenishing().includes(id);
+  }
+
+  protected replenish(place: FeedingPlace): void {
+    this.store.dispatch(FeedingActions.replenishPlace({ place }));
+  }
 
   protected toggleActions(id: string): void {
     this.actionsFor.update((open) => (open === id ? null : id));

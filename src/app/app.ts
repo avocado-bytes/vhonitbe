@@ -1,4 +1,4 @@
-import { afterNextRender, Component, effect, ElementRef, inject, Injector, signal, untracked, viewChild } from '@angular/core';
+import { afterNextRender, Component, computed, DestroyRef, effect, ElementRef, inject, Injector, signal, untracked, viewChild } from '@angular/core';
 import { isActive, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -6,7 +6,12 @@ import { AddItem } from './add-item/add-item';
 import { Settings } from './settings/settings';
 import { FocusTrap } from './shared/focus-trap';
 import { EventsActions } from './state/events/events.actions';
+import { needsReplenishing } from './model/feeding-place';
 import { selectAddAt, selectEditing, selectShareNotice } from './state/events/events.reducer';
+import { selectPlaces, selectSettings } from './state/feeding/feeding.reducer';
+
+/** How often the navigation checks whether feeding places have become due for replenishing */
+const NOW_REFRESH_MS = 60_000;
 
 @Component({
   imports: [RouterOutlet, RouterLink, RouterLinkActive, TranslatePipe, Settings, FocusTrap, AddItem],
@@ -30,6 +35,16 @@ export class App {
   protected readonly addAt = this.store.selectSignal(selectAddAt);
   /** Shown after sharing an event copied it to the clipboard or failed */
   protected readonly shareNotice = this.store.selectSignal(selectShareNotice);
+
+  private readonly feedingPlaces = this.store.selectSignal(selectPlaces);
+  private readonly feedingSettings = this.store.selectSignal(selectSettings);
+  /** The current time, updated every minute so places become due on their own */
+  private readonly now = signal(Date.now());
+  /** How many feeding places need replenishing, shown as badges on the menu button and the feeding link */
+  protected readonly feedingAttention = computed(() => {
+    const now = new Date(this.now());
+    return this.feedingPlaces().filter((place) => needsReplenishing(place, this.feedingSettings(), now)).length;
+  });
 
   private readonly injector = inject(Injector);
   private readonly router = inject(Router);
@@ -60,6 +75,9 @@ export class App {
   private readonly addItemDialog = viewChild.required<ElementRef<HTMLDialogElement>>('addItemDialog');
 
   constructor() {
+    const timer = setInterval(() => this.now.set(Date.now()), NOW_REFRESH_MS);
+    inject(DestroyRef).onDestroy(() => clearInterval(timer));
+
     // Editing an event and adding one from the map re-use the add item dialog
     effect(() => {
       if ((this.editing() || this.addAt()) && !untracked(this.addItemOpen)) {

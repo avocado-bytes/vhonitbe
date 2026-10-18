@@ -86,6 +86,33 @@ describe('feeding reducer', () => {
     });
   });
 
+  it('should track replenishing and replace the replenished place', () => {
+    const state = { ...initialState, places: [place('a'), place('b')] };
+    const replenishing = reducer(state, FeedingActions.replenishPlace({ place: place('a') }));
+    expect(replenishing.replenishing).toEqual(['a']);
+
+    const replenished = place('a', { lastReplenishedAt: '2026-10-20T12:00:00.000Z' });
+    expect(reducer(replenishing, FeedingActions.replenishPlaceSuccess({ place: replenished }))).toEqual({
+      ...state,
+      places: [replenished, place('b')],
+    });
+    expect(reducer(replenishing, FeedingActions.replenishPlaceFailure({ id: 'a', error: 'boom' }))).toEqual({
+      ...state,
+      replenishError: 'boom',
+    });
+  });
+
+  it('should set the season and the replenishment interval', () => {
+    const season = reducer(initialState, FeedingActions.setSeason({ seasonStart: 11, seasonEnd: 2 }));
+    expect(season.settings).toEqual({ ...initialState.settings, seasonStart: 11, seasonEnd: 2 });
+
+    expect(reducer(season, FeedingActions.setReplenishDays({ replenishDays: 7 })).settings).toEqual({
+      seasonStart: 11,
+      seasonEnd: 2,
+      replenishDays: 7,
+    });
+  });
+
   describe('selectors', () => {
     const places = [
       place('lick', { type: 'salt-lick', location: null }),

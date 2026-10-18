@@ -5,7 +5,8 @@
   },
   "HEADER": {
     "MENU": "Otevřít menu",
-    "SETTINGS": "Nastavení"
+    "SETTINGS": "Nastavení",
+    "MENU_ATTENTION": "Otevřít nabídku, počet míst přikrmování k doplnění: {{count}}"
   },
   "SETTINGS": {
     "TITLE": "Nastavení",
@@ -25,7 +26,8 @@
     "HOME": "Domů",
     "MAP": "Mapa",
     "CLOSE": "Zavřít navigaci",
-    "FEEDING": "Přikrmování"
+    "FEEDING": "Přikrmování",
+    "FEEDING_ATTENTION": "(počet míst přikrmování k doplnění)"
   },
   "MAP": {
     "LOCATING": "Zjišťuji vaši polohu…",
@@ -294,6 +296,20 @@
       "LOCATION_UNAVAILABLE": "Vaše poloha není k dispozici. Místo bude uloženo bez polohy.",
       "PHOTO_PREVIEW": "Fotografie místa",
       "SAVE_FAILED": "Místo se nepodařilo uložit. Zkuste to prosím znovu."
-    }
+    },
+    "SEASON": "Doba přikrmování",
+    "IN_SEASON": "Probíhá",
+    "OUT_OF_SEASON": "Mimo dobu přikrmování",
+    "SEASON_START": "Od",
+    "SEASON_END": "Do konce",
+    "REPLENISH": "Doplňování",
+    "REPLENISH_DAYS": "Interval ve dnech",
+    "REPLENISH_INVALID": "Zadejte celé číslo od {{min}} do {{max}}.",
+    "REPLENISH_HINT": "Jak často se krmeliště v době přikrmování doplňují.",
+    "REPLENISHED": "Doplněno",
+    "LAST_REPLENISHED": "Doplněno",
+    "NEVER_REPLENISHED": "Zatím nedoplněno",
+    "NEEDS_REPLENISHING": "Potřebuje doplnit",
+    "REPLENISH_FAILED": "Doplnění se nepodařilo uložit. Zkuste to prosím znovu."
   }
 }

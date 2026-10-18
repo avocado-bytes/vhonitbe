@@ -85,7 +85,13 @@ describe('FeedingPlaceForm', () => {
 
       expect(dispatch).toHaveBeenCalledWith(
         FeedingActions.addPlace({
-          place: { type: 'salt-lick', location: { latitude: 49, longitude: 13.5 }, note: 'By the oak', photoId: null },
+          place: {
+            type: 'salt-lick',
+            location: { latitude: 49, longitude: 13.5 },
+            note: 'By the oak',
+            photoId: null,
+            lastReplenishedAt: null,
+          },
         }),
       );
     });
@@ -106,6 +112,7 @@ describe('FeedingPlaceForm', () => {
       location: { latitude: 49, longitude: 13.5 },
       note: 'Hay rack',
       photoId: 'photo-1',
+      lastReplenishedAt: '2026-10-01T06:30:00.000Z',
     };
 
     beforeEach(() => create(existing));
@@ -117,7 +124,7 @@ describe('FeedingPlaceForm', () => {
       expect(dispatch).not.toHaveBeenCalledWith(LocationActions.locate());
     });
 
-    it('should update the place, keeping its id and photo', async () => {
+    it('should update the place, keeping its id, photo and last replenishment', async () => {
       await chooseType('salt-lick');
 
       submitButton().click();

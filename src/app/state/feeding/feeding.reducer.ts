@@ -1,5 +1,6 @@
 import { createFeature, createReducer, createSelector, on } from '@ngrx/store';
 import { FEEDING_PLACE_TYPES, FeedingPlace, FeedingPlaceType } from '../../model/feeding-place';
+import { FeedingSettings, storedFeedingSettings } from '../../model/feeding-settings';
 import { FeedingActions } from './feeding.actions';
 
 export const FEEDING_PAGE_SIZE = 10;
@@ -22,6 +23,11 @@ export interface FeedingState {
   /** Ids of places currently being deleted */
   deleting: string[];
   deleteError: string | null;
+  /** Ids of places whose replenishment is being stored */
+  replenishing: string[];
+  replenishError: string | null;
+  /** The feeding season and replenishment interval set by the user */
+  settings: FeedingSettings;
 }
 
 export const initialState: FeedingState = {
@@ -36,6 +42,9 @@ export const initialState: FeedingState = {
   saveError: null,
   deleting: [],
   deleteError: null,
+  replenishing: [],
+  replenishError: null,
+  settings: storedFeedingSettings(),
 };
 
 /** Places have no date, so they are listed in the order of their types and each type is ordered by its note */
@@ -88,6 +97,34 @@ export const feedingFeature = createFeature({
         deleteError: error,
       }),
     ),
+    on(
+      FeedingActions.replenishPlace,
+      (state, { place }): FeedingState => ({ ...state, replenishing: [...state.replenishing, place.id], replenishError: null }),
+    ),
+    on(
+      FeedingActions.replenishPlaceSuccess,
+      (state, { place }): FeedingState => ({
+        ...state,
+        places: state.places.map((existing) => (existing.id === place.id ? place : existing)),
+        replenishing: state.replenishing.filter((id) => id !== place.id),
+      }),
+    ),
+    on(
+      FeedingActions.replenishPlaceFailure,
+      (state, { id, error }): FeedingState => ({
+        ...state,
+        replenishing: state.replenishing.filter((replenishing) => replenishing !== id),
+        replenishError: error,
+      }),
+    ),
+    on(
+      FeedingActions.setSeason,
+      (state, { seasonStart, seasonEnd }): FeedingState => ({ ...state, settings: { ...state.settings, seasonStart, seasonEnd } }),
+    ),
+    on(
+      FeedingActions.setReplenishDays,
+      (state, { replenishDays }): FeedingState => ({ ...state, settings: { ...state.settings, replenishDays } }),
+    ),
   ),
   extraSelectors: ({ selectPlaces, selectPlaceType, selectPageIndex }) => {
     /** The places of the list, filtered and ordered */
@@ -115,6 +152,7 @@ export const feedingFeature = createFeature({
 });
 
 export const {
+  selectPlaces,
   selectLoading,
   selectLoadError,
   selectPlaceType,
@@ -124,9 +162,12 @@ export const {
   selectSaveError,
   selectDeleting,
   selectDeleteError,
+  selectReplenishing,
+  selectReplenishError,
   selectTotal,
   selectPageCount,
   selectCurrentPage,
   selectPage,
   selectLocated,
+  selectSettings,
 } = feedingFeature;
