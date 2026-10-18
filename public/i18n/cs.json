@@ -256,7 +256,6 @@
     "MISSING": "Fotografii se nepodařilo načíst."
   },
   "SHARE": {
-    "GOOGLE_MAPS": "Google Mapy",
     "MAPY_CZ": "Mapy.cz",
     "COPIED": "Událost byla zkopírována do schránky. Vložte ji do zprávy.",
     "FAILED": "Událost se nepodařilo sdílet.",

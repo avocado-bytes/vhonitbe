@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.28.1
+
+- The shared event message no longer includes a Google Maps link. Only the Mapy.cz link to the location is kept.
+
+## 0.28.0
+
+- The shared event message includes the sex and herd after the animal, e.g. "Sighting – Roe deer · Mixed · Herd of 7".
+- The note is no longer included in the shared message.
+
 ## 0.27.0
 
 - The event list shows the sex and herd next to the animal, separated by dots, e.g. "Roe deer · Mixed · Herd of 7". It shows just "Herd" when the herd size was not counted.

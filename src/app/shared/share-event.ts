@@ -6,32 +6,35 @@ export type ShareResult = 'shared' | 'copied' | 'cancelled';
 
 const JPEG_QUALITY = 0.85;
 
-export function googleMapsUrl({ latitude, longitude }: GeoPoint): string {
-  return `https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`;
-}
-
 /** Opens the outdoor map with a pin, which shows paths and terrain */
 export function mapyCzUrl({ latitude, longitude }: GeoPoint): string {
   return `https://mapy.cz/fnc/v1/showmap?mapset=outdoor&center=${longitude},${latitude}&zoom=15&marker=true`;
 }
 
 /**
- * The event as a plain text message. Messaging apps differ in what formatting they support,
+ * The event as a plain text message, without its note. Messaging apps differ in what formatting they support,
  * so it uses no markup, only line breaks and a few emoji; links are made clickable by the apps.
  */
 export function eventShareText(event: HuntingEvent, translate: TranslateService, dateFormat: Intl.DateTimeFormat): string {
-  const type = translate.instant(`ITEMS.${event.type}`);
-  const lines = [event.animal ? `${type} – ${translate.instant(`ANIMALS.${event.animal}`)}` : type];
-  lines.push(`📅 ${dateFormat.format(new Date(event.occurredAt))}`);
-  if (event.note) {
-    lines.push(`📝 ${event.note}`);
+  const details: string[] = [];
+  if (event.animal) {
+    details.push(translate.instant(`ANIMALS.${event.animal}`));
   }
+  if (event.sex) {
+    details.push(translate.instant(`SEXES.${event.sex}`));
+  }
+  if (event.herd) {
+    details.push(translate.instant(event.herdSize ? 'OVERVIEW.HERD_OF' : 'OVERVIEW.HERD', { count: event.herdSize }));
+  }
+  const type = translate.instant(`ITEMS.${event.type}`);
+  // The note is left out, as it may hold remarks meant only for the user
+  const lines = [details.length ? `${type} – ${details.join(' · ')}` : type];
+  lines.push(`📅 ${dateFormat.format(new Date(event.occurredAt))}`);
   if (event.location) {
     const { latitude, longitude } = event.location;
     lines.push(
       '',
       `📍 ${latitude.toFixed(5)}, ${longitude.toFixed(5)}`,
-      `${translate.instant('SHARE.GOOGLE_MAPS')}: ${googleMapsUrl(event.location)}`,
       `${translate.instant('SHARE.MAPY_CZ')}: ${mapyCzUrl(event.location)}`,
     );
   }

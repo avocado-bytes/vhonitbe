@@ -256,7 +256,6 @@
     "MISSING": "The photo could not be loaded."
   },
   "SHARE": {
-    "GOOGLE_MAPS": "Google Maps",
     "MAPY_CZ": "Mapy.cz",
     "COPIED": "The event was copied to the clipboard. Paste it into a message.",
     "FAILED": "The event could not be shared.",
