@@ -60,6 +60,20 @@
   }
 }
 
+// The phone action menu opens below its button, above the transparent backdrop that closes it
+.event-actions {
+  top: 100%;
+  right: 0;
+  z-index: 1001;
+  margin-top: 0.25rem;
+}
+
+.event-actions-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+}
+
 .item-action-danger:hover:not(:disabled) {
   color: var(--bs-danger);
   background-color: rgba(var(--bs-danger-rgb), 0.1);

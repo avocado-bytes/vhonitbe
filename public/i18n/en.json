@@ -156,7 +156,8 @@
     "CLEAR_FILTERS": "Clear filters",
     "SHOW_PHOTO": "Show photo",
     "PHOTO_CLOSE": "Close",
-    "SHARE": "Share event"
+    "SHARE": "Share event",
+    "ACTIONS": "Event actions"
   },
   "LOCATION_PICKER": {
     "MAP": "Map for choosing the location",

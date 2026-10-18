@@ -156,7 +156,8 @@
     "CLEAR_FILTERS": "Zrušit filtry",
     "SHOW_PHOTO": "Zobrazit fotografii",
     "PHOTO_CLOSE": "Zavřít",
-    "SHARE": "Sdílet událost"
+    "SHARE": "Sdílet událost",
+    "ACTIONS": "Akce události"
   },
   "LOCATION_PICKER": {
     "MAP": "Mapa pro výběr polohy",

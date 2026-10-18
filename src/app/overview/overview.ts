@@ -1,5 +1,5 @@
 import { afterNextRender, Component, computed, DestroyRef, DOCUMENT, ElementRef, inject, Injector, signal, viewChild } from '@angular/core';
-import { DecimalPipe, KeyValuePipe } from '@angular/common';
+import { DecimalPipe, KeyValuePipe, NgTemplateOutlet } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { EventMap } from '../event-map/event-map';
 import { EventPhoto } from '../event-photo/event-photo';
@@ -18,6 +18,7 @@ import {
   selectQuery,
   selectTotal,
 } from '../state/events/events.reducer';
+import { FocusTrap } from '../shared/focus-trap';
 import { moonIllumination, MoonIllumination, moonPhaseName, sunTimes } from '../shared/astronomy';
 import { LocationActions } from '../state/location/location.actions';
 import { selectPosition, selectStatus } from '../state/location/location.reducer';
@@ -52,10 +53,13 @@ function moonLitPath({ fraction, phase }: MoonIllumination): string {
 }
 
 @Component({
-  imports: [TranslatePipe, DecimalPipe, KeyValuePipe, EventMap, EventPhoto],
+  imports: [TranslatePipe, DecimalPipe, KeyValuePipe, NgTemplateOutlet, EventMap, EventPhoto, FocusTrap],
   selector: 'app-overview',
   styleUrl: './overview.scss',
   templateUrl: './overview.html',
+  host: {
+    '(document:keydown.escape)': 'closeActions()',
+  },
 })
 export class Overview {
   private readonly store = inject(Store);
@@ -155,6 +159,9 @@ export class Overview {
     return weather ? compassDirection(weather.windDirection) : null;
   });
 
+  /** Id of the event whose action menu is open on phones, if any */
+  protected readonly actionsFor = signal<string | null>(null);
+
   /** The event shown in the map dialog, if any */
   protected readonly mapEvent = signal<HuntingEvent | null>(null);
   private readonly mapDialog = viewChild.required<ElementRef<HTMLDialogElement>>('mapDialog');
@@ -199,6 +206,14 @@ export class Overview {
 
   protected goToPage(pageIndex: number): void {
     this.store.dispatch(EventsActions.loadPage({ pageIndex }));
+  }
+
+  protected toggleActions(id: string): void {
+    this.actionsFor.update((open) => (open === id ? null : id));
+  }
+
+  protected closeActions(): void {
+    this.actionsFor.set(null);
   }
 
   protected share(event: HuntingEvent): void {

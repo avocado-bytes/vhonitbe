@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.23.0
+
+- On phones each event in the list shows a single three dots button in place of its action icons. It opens a menu listing the actions with their names: show photo, show on map, share, edit and delete. The menu closes after choosing an action, on a tap outside it, or with Escape. Larger screens keep the icon buttons.
+
 ## 0.22.0
 
 - Share an event to a messaging app such as WhatsApp or Messenger, using a new share button in the event list or "Share item" in the map's menu for an event marker. The phone's share sheet opens with the event as a plain text message: the type and animal, the date, the note, the coordinates, and Google Maps and Mapy.cz links to the location. The photo is attached as a JPEG if there is one, but some apps may drop the text when a photo is attached.
