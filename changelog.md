@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.39.1
+
+- The feeding icon in the side navigation shows a plain red dot instead of a number while places need replenishing, so it stays round.
+
 ## 0.39.0
 
 - Feeding places are only marked as needing replenishing during the feeding season; outside of it no place gets the red band.

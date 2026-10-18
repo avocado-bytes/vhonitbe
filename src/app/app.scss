@@ -25,9 +25,10 @@
   }
 }
 
-// A small count on the corner of the feeding icon
-.nav-badge {
-  font-size: 0.625rem;
+// A small red dot on the corner of the feeding icon while feeding places need attention
+.nav-attention-dot {
+  width: 0.5rem;
+  height: 0.5rem;
 }
 
 // A small red dot on the menu button while feeding places need attention

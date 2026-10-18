@@ -27,7 +27,7 @@
     "MAP": "Mapa",
     "CLOSE": "Zavřít navigaci",
     "FEEDING": "Přikrmování",
-    "FEEDING_ATTENTION": "(počet míst přikrmování k doplnění)"
+    "FEEDING_ATTENTION": "Místa přikrmování potřebují doplnit"
   },
   "MAP": {
     "LOCATING": "Zjišťuji vaši polohu…",

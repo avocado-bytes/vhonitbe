@@ -352,12 +352,13 @@ describe('App', () => {
       return { ...app, burger, feedingLink };
     }
 
-    it('should mark the menu button and the feeding link while places need replenishing in the season', async () => {
+    it('should mark the menu button and the feeding link with a dot while places need replenishing in the season', async () => {
       const { burger, feedingLink } = await createWithPlaces(new Date('2026-10-20T12:00:00.000Z'));
 
       expect(burger.querySelector('.attention-dot')).not.toBeNull();
       expect(burger.getAttribute('aria-label')).toBe('Open menu, 2 feeding places need replenishing');
-      expect(feedingLink.querySelector('.nav-badge')?.textContent?.trim()).toMatch(/^2/);
+      expect(feedingLink.querySelector('.nav-attention-dot')).not.toBeNull();
+      expect(feedingLink.querySelector('.nav-attention-dot')?.textContent).not.toMatch(/\d/);
     });
 
     it('should not mark anything outside of the feeding season', async () => {
@@ -365,7 +366,7 @@ describe('App', () => {
 
       expect(burger.querySelector('.attention-dot')).toBeNull();
       expect(burger.getAttribute('aria-label')).toBe('Open menu');
-      expect(feedingLink.querySelector('.nav-badge')).toBeNull();
+      expect(feedingLink.querySelector('.nav-attention-dot')).toBeNull();
     });
   });
 });
