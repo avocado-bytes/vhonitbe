@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.39.0
+
+- Feeding places are only marked as needing replenishing during the feeding season; outside of it no place gets the red band.
+- While places need replenishing, the menu button in the header shows a red dot, and the feeding icon in the side navigation a red badge with their number. Screen readers hear the number in the button's label and with the badge.
+- The feeding places are loaded when the app starts, so the badges are shown without opening the feeding page first.
+
 ## 0.38.0
 
 - Every feeding place records when it was last replenished; it is empty for new places and for places stored before.
