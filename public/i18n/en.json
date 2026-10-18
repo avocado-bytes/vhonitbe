@@ -155,7 +155,8 @@
     "NO_MATCHES": "No events match the selected filters.",
     "CLEAR_FILTERS": "Clear filters",
     "SHOW_PHOTO": "Show photo",
-    "PHOTO_CLOSE": "Close"
+    "PHOTO_CLOSE": "Close",
+    "SHARE": "Share event"
   },
   "LOCATION_PICKER": {
     "MAP": "Map for choosing the location",
@@ -167,6 +168,7 @@
     "LABEL": "Map actions",
     "ITEMS": {
       "add-item": "Add item",
+      "share-item": "Share item",
       "edit-item": "Edit item",
       "delete-item": "Delete item",
       "manual-position": "Manual position"
@@ -238,5 +240,12 @@
     "ALT": "Photo of the event",
     "LOADING": "Loading photo…",
     "MISSING": "The photo could not be loaded."
+  },
+  "SHARE": {
+    "GOOGLE_MAPS": "Google Maps",
+    "MAPY_CZ": "Mapy.cz",
+    "COPIED": "The event was copied to the clipboard. Paste it into a message.",
+    "FAILED": "The event could not be shared.",
+    "CLOSE": "Close"
   }
 }

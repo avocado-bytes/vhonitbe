@@ -6,7 +6,7 @@ import { AddItem } from './add-item/add-item';
 import { Settings } from './settings/settings';
 import { FocusTrap } from './shared/focus-trap';
 import { EventsActions } from './state/events/events.actions';
-import { selectAddAt, selectEditing } from './state/events/events.reducer';
+import { selectAddAt, selectEditing, selectShareNotice } from './state/events/events.reducer';
 
 @Component({
   imports: [RouterOutlet, RouterLink, RouterLinkActive, TranslatePipe, Settings, FocusTrap, AddItem],
@@ -28,6 +28,8 @@ export class App {
   protected readonly editing = this.store.selectSignal(selectEditing);
   /** The location of a new event added from the map, if any */
   protected readonly addAt = this.store.selectSignal(selectAddAt);
+  /** Shown after sharing an event copied it to the clipboard or failed */
+  protected readonly shareNotice = this.store.selectSignal(selectShareNotice);
 
   private readonly injector = inject(Injector);
   private readonly router = inject(Router);
@@ -64,6 +66,10 @@ export class App {
     if (this.isRootActive()) {
       this.showAddItemDialog();
     }
+  }
+
+  protected dismissShareNotice(): void {
+    this.store.dispatch(EventsActions.dismissShareNotice());
   }
 
   protected closeAddItem(): void {

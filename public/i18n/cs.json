@@ -155,7 +155,8 @@
     "NO_MATCHES": "Vybraným filtrům neodpovídá žádná událost.",
     "CLEAR_FILTERS": "Zrušit filtry",
     "SHOW_PHOTO": "Zobrazit fotografii",
-    "PHOTO_CLOSE": "Zavřít"
+    "PHOTO_CLOSE": "Zavřít",
+    "SHARE": "Sdílet událost"
   },
   "LOCATION_PICKER": {
     "MAP": "Mapa pro výběr polohy",
@@ -167,6 +168,7 @@
     "LABEL": "Akce na mapě",
     "ITEMS": {
       "add-item": "Přidat položku",
+      "share-item": "Sdílet položku",
       "edit-item": "Upravit položku",
       "delete-item": "Smazat položku",
       "manual-position": "Ruční poloha"
@@ -238,5 +240,12 @@
     "ALT": "Fotografie události",
     "LOADING": "Načítám fotografii…",
     "MISSING": "Fotografii se nepodařilo načíst."
+  },
+  "SHARE": {
+    "GOOGLE_MAPS": "Google Mapy",
+    "MAPY_CZ": "Mapy.cz",
+    "COPIED": "Událost byla zkopírována do schránky. Vložte ji do zprávy.",
+    "FAILED": "Událost se nepodařilo sdílet.",
+    "CLOSE": "Zavřít"
   }
 }

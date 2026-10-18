@@ -30,6 +30,8 @@ export interface EventsState {
   /** Ids of events currently being deleted */
   deleting: string[];
   deleteError: string | null;
+  /** Tells the user the shared event was copied to the clipboard, or could not be shared */
+  shareNotice: 'copied' | 'failed' | null;
 }
 
 export const initialState: EventsState = {
@@ -47,6 +49,7 @@ export const initialState: EventsState = {
   saveError: null,
   deleting: [],
   deleteError: null,
+  shareNotice: null,
 };
 
 export const eventsFeature = createFeature({
@@ -101,6 +104,12 @@ export const eventsFeature = createFeature({
         deleteError: error,
       }),
     ),
+    on(EventsActions.shareEvent, EventsActions.dismissShareNotice, (state): EventsState => ({ ...state, shareNotice: null })),
+    on(
+      EventsActions.shareEventSuccess,
+      (state, { result }): EventsState => ({ ...state, shareNotice: result === 'copied' ? 'copied' : null }),
+    ),
+    on(EventsActions.shareEventFailure, (state): EventsState => ({ ...state, shareNotice: 'failed' })),
   ),
   extraSelectors: ({ selectTotal, selectPageSize }) => ({
     selectPageCount: createSelector(selectTotal, selectPageSize, (total, pageSize) =>
@@ -125,4 +134,5 @@ export const {
   selectSaveError,
   selectDeleting,
   selectDeleteError,
+  selectShareNotice,
 } = eventsFeature;

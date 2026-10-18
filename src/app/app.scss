@@ -71,3 +71,13 @@
     --bs-offcanvas-width: 100%;
   }
 }
+
+// Above the fab button and the map's controls
+.share-notice {
+  position: fixed;
+  bottom: 6rem;
+  left: 50%;
+  z-index: 1090;
+  max-width: calc(100% - 2rem);
+  transform: translateX(-50%);
+}

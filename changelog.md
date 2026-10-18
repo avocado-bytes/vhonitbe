@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.22.0
+
+- Share an event to a messaging app such as WhatsApp or Messenger, using a new share button in the event list or "Share item" in the map's menu for an event marker. The phone's share sheet opens with the event as a plain text message: the type and animal, the date, the note, the coordinates, and Google Maps and Mapy.cz links to the location. The photo is attached as a JPEG if there is one, but some apps may drop the text when a photo is attached.
+- Browsers without a share sheet, such as Firefox on desktop, copy the text to the clipboard instead and show a short notice.
+
 ## 0.21.1
 
 - On phones, tapping the map closes the open options and legend panel. That tap only closes the panel and does not open the map menu.

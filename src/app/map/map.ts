@@ -327,6 +327,11 @@ export class MapView {
         this.setFollowMe(false);
         this.store.dispatch(LocationActions.setManualPosition({ position: { ...menu.location, accuracy: 0 } }));
         break;
+      case 'share-item':
+        if (menu.event) {
+          this.store.dispatch(EventsActions.shareEvent({ event: menu.event }));
+        }
+        break;
       case 'edit-item':
         if (menu.event) {
           this.store.dispatch(EventsActions.startEdit({ event: menu.event }));

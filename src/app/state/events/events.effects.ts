@@ -1,10 +1,24 @@
-import { inject } from '@angular/core';
+import { DOCUMENT, inject } from '@angular/core';
 import { Actions, createEffect, ofType, ROOT_EFFECTS_INIT } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { catchError, concatMap, exhaustMap, from, map, mergeMap, of, switchMap, withLatestFrom } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
+import { catchError, concatMap, exhaustMap, filter, from, map, mergeMap, of, switchMap, timer, withLatestFrom } from 'rxjs';
+import { HuntingEvent } from '../../model/event';
+import { eventShareText, shareText, ShareResult, toJpeg } from '../../shared/share-event';
 import { EventStorage } from '../../storage/event-storage';
+import { selectLanguage } from '../settings/settings.reducer';
 import { EventsActions } from './events.actions';
-import { LATEST_EVENTS_COUNT, selectPageCount, selectPageIndex, selectPageSize, selectQuery } from './events.reducer';
+import {
+  LATEST_EVENTS_COUNT,
+  selectPageCount,
+  selectPageIndex,
+  selectPageSize,
+  selectQuery,
+  selectShareNotice,
+} from './events.reducer';
+
+/** How long the share notice stays visible */
+const SHARE_NOTICE_MS = 4000;
 
 /** Asks the browser to keep the database when it runs low on storage */
 export const requestPersistentStorage = createEffect(
@@ -146,6 +160,65 @@ export const reloadAfterDelete = createEffect(
       ofType(EventsActions.deleteEventSuccess),
       withLatestFrom(store.select(selectPageIndex), store.select(selectPageCount)),
       map(([, pageIndex, pageCount]) => EventsActions.loadPage({ pageIndex: Math.min(pageIndex, pageCount - 1) })),
+    ),
+  { functional: true },
+);
+
+/** Loads the event's photo, if any, as a JPEG file to attach to the message; a missing photo doesn't stop sharing */
+async function sharedPhoto(event: HuntingEvent, storage: EventStorage): Promise<File | null> {
+  if (!event.photoId) {
+    return null;
+  }
+  try {
+    const photo = await storage.getPhoto(event.photoId);
+    if (!photo) {
+      return null;
+    }
+    const jpeg = await toJpeg(photo);
+    return new File([jpeg], `${event.type}-${event.occurredAt.slice(0, 10)}.jpg`, { type: 'image/jpeg' });
+  } catch {
+    return null;
+  }
+}
+
+/** Shares an event as a text message with links to its location and its photo attached */
+export const shareEvent = createEffect(
+  (
+    actions$ = inject(Actions),
+    store = inject(Store),
+    storage = inject(EventStorage),
+    translate = inject(TranslateService),
+    navigator = inject(DOCUMENT).defaultView?.navigator,
+  ) =>
+    actions$.pipe(
+      ofType(EventsActions.shareEvent),
+      withLatestFrom(store.select(selectLanguage)),
+      // Only one share sheet can be open at a time
+      exhaustMap(([{ event }, language]) => {
+        const dateFormat = new Intl.DateTimeFormat(language, { dateStyle: 'medium', timeStyle: 'short' });
+        const share = async (): Promise<ShareResult> => {
+          if (!navigator) {
+            throw new Error('Sharing is not supported');
+          }
+          return shareText(navigator, eventShareText(event, translate, dateFormat), await sharedPhoto(event, storage));
+        };
+        return from(share()).pipe(
+          map((result) => EventsActions.shareEventSuccess({ result })),
+          catchError((error: unknown) => of(EventsActions.shareEventFailure({ error: String(error) }))),
+        );
+      }),
+    ),
+  { functional: true },
+);
+
+/** Hides the share notice after a while; a newer notice restarts the wait */
+export const dismissShareNotice = createEffect(
+  (actions$ = inject(Actions), store = inject(Store)) =>
+    actions$.pipe(
+      ofType(EventsActions.shareEventSuccess, EventsActions.shareEventFailure),
+      withLatestFrom(store.select(selectShareNotice)),
+      filter(([, notice]) => notice !== null),
+      switchMap(() => timer(SHARE_NOTICE_MS).pipe(map(() => EventsActions.dismissShareNotice()))),
     ),
   { functional: true },
 );

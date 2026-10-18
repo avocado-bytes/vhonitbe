@@ -1,4 +1,5 @@
 import { createActionGroup, emptyProps, props } from '@ngrx/store';
+import { ShareResult } from '../../shared/share-event';
 import { EventQuery, GeoPoint, HuntingEvent, NewHuntingEvent } from '../../model/event';
 
 export const EventsActions = createActionGroup({
@@ -24,5 +25,9 @@ export const EventsActions = createActionGroup({
     'Delete Event': props<{ id: string }>(),
     'Delete Event Success': props<{ id: string }>(),
     'Delete Event Failure': props<{ id: string; error: string }>(),
+    'Share Event': props<{ event: HuntingEvent }>(),
+    'Share Event Success': props<{ result: ShareResult }>(),
+    'Share Event Failure': props<{ error: string }>(),
+    'Dismiss Share Notice': emptyProps(),
   },
 });

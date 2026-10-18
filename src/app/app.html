@@ -129,3 +129,21 @@
     </div>
   }
 </dialog>
+
+<!-- Always rendered, so screen readers announce the notice when it appears -->
+<div class="toast-container share-notice" [attr.role]="shareNotice() === 'failed' ? 'alert' : 'status'">
+  @if (shareNotice(); as notice) {
+    <div class="toast show align-items-center" [class.text-bg-danger]="notice === 'failed'">
+      <div class="d-flex">
+        <div class="toast-body">{{ (notice === 'failed' ? 'SHARE.FAILED' : 'SHARE.COPIED') | translate }}</div>
+        <button
+          type="button"
+          class="btn-close me-2 m-auto"
+          [class.btn-close-white]="notice === 'failed'"
+          [attr.aria-label]="'SHARE.CLOSE' | translate"
+          (click)="dismissShareNotice()"
+        ></button>
+      </div>
+    </div>
+  }
+</div>

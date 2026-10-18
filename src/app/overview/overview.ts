@@ -201,6 +201,10 @@ export class Overview {
     this.store.dispatch(EventsActions.loadPage({ pageIndex }));
   }
 
+  protected share(event: HuntingEvent): void {
+    this.store.dispatch(EventsActions.shareEvent({ event }));
+  }
+
   protected edit(event: HuntingEvent): void {
     this.store.dispatch(EventsActions.startEdit({ event }));
   }
