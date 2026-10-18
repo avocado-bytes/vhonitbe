@@ -1,0 +1,81 @@
+<section class="container py-3 feeding">
+  <h1 class="h4 mb-3">{{ 'FEEDING.TITLE' | translate }}</h1>
+
+  <div class="row g-3">
+    <div class="col-12">
+      <section class="card" aria-labelledby="feeding-places">
+        <div class="card-body">
+          <h2 id="feeding-places" class="h6 card-title text-body-secondary">{{ 'FEEDING.PLACES' | translate }}</h2>
+          @if (located().length > 0) {
+            <app-feeding-map [events]="located()" />
+          } @else if (loading()) {
+            <p class="small text-body-secondary mb-0" role="status">{{ 'FEEDING.LOADING' | translate }}</p>
+          } @else {
+            <p class="small text-body-secondary mb-0">{{ 'FEEDING.NO_PLACES' | translate }}</p>
+          }
+        </div>
+      </section>
+    </div>
+
+    <div class="col-12">
+      <section class="card" aria-labelledby="feeding-events">
+        <div class="card-body">
+          <h2 id="feeding-events" class="h5 card-title mb-3">{{ 'FEEDING.EVENTS' | translate }}</h2>
+
+          <div class="row g-2 mb-3">
+            <div class="col-6">
+              <label for="feeding-sort" class="form-label small mb-1">{{ 'OVERVIEW.SORT' | translate }}</label>
+              <select id="feeding-sort" class="form-select form-select-sm" #sortSelect (change)="setSort(sortSelect.value)">
+                <option value="newest" [selected]="sort() === 'newest'">{{ 'OVERVIEW.SORT_NEWEST' | translate }}</option>
+                <option value="oldest" [selected]="sort() === 'oldest'">{{ 'OVERVIEW.SORT_OLDEST' | translate }}</option>
+              </select>
+            </div>
+            <div class="col-6">
+              <label for="feeding-item" class="form-label small mb-1">{{ 'OVERVIEW.FILTER_TYPE' | translate }}</label>
+              <select id="feeding-item" class="form-select form-select-sm" #itemSelect (change)="setItem(itemSelect.value)">
+                <option value="" [selected]="item() === null">{{ 'FEEDING.ALL_ITEMS' | translate }}</option>
+                @for (option of items; track option) {
+                  <option [value]="option" [selected]="item() === option">{{ 'ITEMS.' + option | translate }}</option>
+                }
+              </select>
+            </div>
+          </div>
+
+          @if (loadError()) {
+            <p class="text-danger" role="alert">{{ 'OVERVIEW.LOAD_FAILED' | translate }}</p>
+          } @else if (total() === 0) {
+            @if (loading()) {
+              <p class="text-body-secondary" role="status">{{ 'FEEDING.LOADING' | translate }}</p>
+            } @else {
+              <p class="text-body-secondary">{{ 'FEEDING.EMPTY' | translate }}</p>
+            }
+          } @else {
+            @if (deleteError()) {
+              <p class="text-danger" role="alert">{{ 'OVERVIEW.DELETE_FAILED' | translate }}</p>
+            }
+            <app-event-list [events]="events()" [busy]="loading()" />
+
+            @if (pageCount() > 1) {
+              <nav class="d-flex align-items-center justify-content-between gap-2" [attr.aria-label]="'OVERVIEW.PAGINATION' | translate">
+                <button type="button" class="btn btn-outline-primary" [disabled]="pageIndex() === 0" (click)="goToPage(pageIndex() - 1)">
+                  {{ 'OVERVIEW.PREVIOUS' | translate }}
+                </button>
+                <span class="small text-body-secondary" aria-live="polite">
+                  {{ 'OVERVIEW.PAGE' | translate: { page: pageIndex() + 1, pages: pageCount() } }}
+                </span>
+                <button
+                  type="button"
+                  class="btn btn-outline-primary"
+                  [disabled]="pageIndex() >= pageCount() - 1"
+                  (click)="goToPage(pageIndex() + 1)"
+                >
+                  {{ 'OVERVIEW.NEXT' | translate }}
+                </button>
+              </nav>
+            }
+          }
+        </div>
+      </section>
+    </div>
+  </div>
+</section>

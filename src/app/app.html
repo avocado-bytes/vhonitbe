@@ -92,6 +92,36 @@
           <span>{{ 'NAV.MAP' | translate }}</span>
         </a>
       </li>
+      <li class="nav-item">
+        <a
+          class="nav-link d-flex align-items-center gap-2"
+          routerLink="/feeding"
+          routerLinkActive="active"
+          ariaCurrentWhenActive="page"
+          (click)="closeSideNav()"
+        >
+          <!-- A hay rack (krmelec): roof on two posts over a slatted, V-shaped rack filled with hay -->
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            viewBox="0 0 16 16"
+            aria-hidden="true"
+          >
+            <path d="M.75 6 8 1.25 15.25 6" />
+            <path d="M3 4.75V15M13 4.75V15" />
+            <path d="M4.5 7.25c.5-1.2 1-1.2 1.5 0 .5-1.2 1-1.2 1.5 0 .5-1.2 1-1.2 1.5 0 .5-1.2 1-1.2 1.5 0 .5-1.2 1-1.2 1.5 0" />
+            <path d="M3 7.25h10L10 12.5H6z" />
+            <path d="M6 7.25 7 12.5M8 7.25v5.25M10 7.25 9 12.5" />
+          </svg>
+          <span>{{ 'NAV.FEEDING' | translate }}</span>
+        </a>
+      </li>
     </ul>
   </div>
 </nav>

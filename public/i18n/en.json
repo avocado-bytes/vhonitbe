@@ -24,7 +24,8 @@
   "NAV": {
     "HOME": "Home",
     "MAP": "Map",
-    "CLOSE": "Close navigation"
+    "CLOSE": "Close navigation",
+    "FEEDING": "Feeding"
   },
   "MAP": {
     "LOCATING": "Finding your location…",
@@ -264,5 +265,15 @@
     "COPIED": "The event was copied to the clipboard. Paste it into a message.",
     "FAILED": "The event could not be shared.",
     "CLOSE": "Close"
+  },
+  "FEEDING": {
+    "TITLE": "Feeding",
+    "PLACES": "Feeders and salt licks",
+    "MAP": "Map of feeders and salt licks",
+    "NO_PLACES": "No feeders or salt licks with a location yet. Add a \"Feeding\" or \"Salt lick\" event to see it here.",
+    "EVENTS": "Feeding events",
+    "ALL_ITEMS": "Feeding and salt licks",
+    "LOADING": "Loading feeding places…",
+    "EMPTY": "No feeding or salt lick events yet."
   }
 }

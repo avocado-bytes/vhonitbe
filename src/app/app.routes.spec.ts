@@ -6,6 +6,8 @@ import { provideTranslateService } from '@ngx-translate/core';
 import { routes } from './app.routes';
 import { MapView } from './map/map';
 import { Overview } from './overview/overview';
+import { Feeding } from './feeding/feeding';
+import { initialState as feedingInitialState } from './state/feeding/feeding.reducer';
 import { initialState as eventsInitialState } from './state/events/events.reducer';
 import { initialState as locationInitialState } from './state/location/location.reducer';
 
@@ -19,6 +21,7 @@ describe('routes', () => {
           initialState: {
             location: locationInitialState,
             events: eventsInitialState,
+            feeding: feedingInitialState,
             settings: { theme: 'light', language: 'en' },
           },
         }),
@@ -40,6 +43,14 @@ describe('routes', () => {
     const component = await harness.navigateByUrl('/map', MapView);
 
     expect(component).toBeInstanceOf(MapView);
+  });
+
+  it('should display the feeding dashboard on the /feeding url', async () => {
+    const harness = await RouterTestingHarness.create();
+
+    const component = await harness.navigateByUrl('/feeding', Feeding);
+
+    expect(component).toBeInstanceOf(Feeding);
   });
 
   it('should redirect unknown urls to the root url', async () => {

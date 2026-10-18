@@ -1,15 +1,13 @@
-import { afterNextRender, Component, computed, DestroyRef, DOCUMENT, ElementRef, inject, Injector, signal, viewChild } from '@angular/core';
-import { DecimalPipe, KeyValuePipe, NgTemplateOutlet } from '@angular/common';
+import { Component, computed, DestroyRef, inject, signal } from '@angular/core';
+import { DecimalPipe, KeyValuePipe } from '@angular/common';
 import { Store } from '@ngrx/store';
-import { EventMap } from '../event-map/event-map';
-import { EventPhoto } from '../event-photo/event-photo';
-import { EventSort, HuntingEvent } from '../model/event';
+import { EventList } from '../event-list/event-list';
+import { EventSort } from '../model/event';
 import { Animal, ANIMAL_GROUPS, Item, ITEMS } from '../model/item';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { EventsActions } from '../state/events/events.actions';
 import {
   selectDeleteError,
-  selectDeleting,
   selectEvents,
   selectLoadError,
   selectLoading,
@@ -18,8 +16,6 @@ import {
   selectQuery,
   selectTotal,
 } from '../state/events/events.reducer';
-import { FocusTrap } from '../shared/focus-trap';
-import { formatTagNumber } from '../shared/tag-number';
 import { moonIllumination, MoonIllumination, moonPhaseName, sunTimes } from '../shared/astronomy';
 import { LocationActions } from '../state/location/location.actions';
 import { selectPosition, selectStatus } from '../state/location/location.reducer';
@@ -54,18 +50,13 @@ function moonLitPath({ fraction, phase }: MoonIllumination): string {
 }
 
 @Component({
-  imports: [TranslatePipe, DecimalPipe, KeyValuePipe, NgTemplateOutlet, EventMap, EventPhoto, FocusTrap],
+  imports: [TranslatePipe, DecimalPipe, KeyValuePipe, EventList],
   selector: 'app-overview',
   styleUrl: './overview.scss',
   templateUrl: './overview.html',
-  host: {
-    '(document:keydown.escape)': 'closeActions()',
-  },
 })
 export class Overview {
   private readonly store = inject(Store);
-  private readonly translate = inject(TranslateService);
-  private readonly window = inject(DOCUMENT).defaultView;
 
   protected readonly events = this.store.selectSignal(selectEvents);
   protected readonly total = this.store.selectSignal(selectTotal);
@@ -74,7 +65,6 @@ export class Overview {
   protected readonly loading = this.store.selectSignal(selectLoading);
   protected readonly loadError = this.store.selectSignal(selectLoadError);
   protected readonly deleteError = this.store.selectSignal(selectDeleteError);
-  private readonly deleting = this.store.selectSignal(selectDeleting);
 
   protected readonly query = this.store.selectSignal(selectQuery);
   protected readonly filtered = computed(() => this.query().type !== null || this.query().animal !== null);
@@ -84,13 +74,9 @@ export class Overview {
   protected readonly keepOrder = () => 0;
 
   private readonly language = this.store.selectSignal(selectLanguage);
-  private readonly dateFormat = computed(
-    () => new Intl.DateTimeFormat(this.language(), { dateStyle: 'medium', timeStyle: 'short' }),
-  );
   private readonly timeFormat = computed(() => new Intl.DateTimeFormat(this.language(), { timeStyle: 'short' }));
 
   protected readonly icons = DASHBOARD_ICONS;
-  protected readonly formatTagNumber = formatTagNumber;
   protected readonly position = this.store.selectSignal(selectPosition);
   protected readonly locationStatus = this.store.selectSignal(selectStatus);
 
@@ -161,17 +147,6 @@ export class Overview {
     return weather ? compassDirection(weather.windDirection) : null;
   });
 
-  /** Id of the event whose action menu is open on phones, if any */
-  protected readonly actionsFor = signal<string | null>(null);
-
-  /** The event shown in the map dialog, if any */
-  protected readonly mapEvent = signal<HuntingEvent | null>(null);
-  private readonly mapDialog = viewChild.required<ElementRef<HTMLDialogElement>>('mapDialog');
-  /** The event shown in the photo dialog, if any */
-  protected readonly photoEvent = signal<HuntingEvent | null>(null);
-  private readonly photoDialog = viewChild.required<ElementRef<HTMLDialogElement>>('photoDialog');
-  private readonly injector = inject(Injector);
-
   constructor() {
     const clock = setInterval(() => this.now.set(Date.now()), 60_000);
     inject(DestroyRef).onDestroy(() => clearInterval(clock));
@@ -183,10 +158,6 @@ export class Overview {
 
   protected formatTime(date: Date | null): string {
     return date ? this.timeFormat().format(date) : '–';
-  }
-
-  protected formatDate(iso: string): string {
-    return this.dateFormat().format(new Date(iso));
   }
 
   protected setSort(value: string): void {
@@ -208,51 +179,5 @@ export class Overview {
 
   protected goToPage(pageIndex: number): void {
     this.store.dispatch(EventsActions.loadPage({ pageIndex }));
-  }
-
-  protected toggleActions(id: string): void {
-    this.actionsFor.update((open) => (open === id ? null : id));
-  }
-
-  protected closeActions(): void {
-    this.actionsFor.set(null);
-  }
-
-  protected share(event: HuntingEvent): void {
-    this.store.dispatch(EventsActions.shareEvent({ event }));
-  }
-
-  protected edit(event: HuntingEvent): void {
-    this.store.dispatch(EventsActions.startEdit({ event }));
-  }
-
-  protected showOnMap(event: HuntingEvent): void {
-    this.mapEvent.set(event);
-    // Open once the content is rendered, so focus moves to its close button
-    afterNextRender(() => this.mapDialog().nativeElement.showModal(), { injector: this.injector });
-  }
-
-  protected closeMap(): void {
-    this.mapDialog().nativeElement.close();
-  }
-
-  protected showPhoto(event: HuntingEvent): void {
-    this.photoEvent.set(event);
-    // Open once the content is rendered, so focus moves to its close button
-    afterNextRender(() => this.photoDialog().nativeElement.showModal(), { injector: this.injector });
-  }
-
-  protected closePhoto(): void {
-    this.photoDialog().nativeElement.close();
-  }
-
-  protected isDeleting(id: string): boolean {
-    return this.deleting().includes(id);
-  }
-
-  protected delete(id: string): void {
-    if (this.window?.confirm(this.translate.instant('OVERVIEW.DELETE_CONFIRM'))) {
-      this.store.dispatch(EventsActions.deleteEvent({ id }));
-    }
   }
 }

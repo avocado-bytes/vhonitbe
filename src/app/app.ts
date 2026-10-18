@@ -39,6 +39,12 @@ export class App {
     fragment: 'ignored',
     matrixParams: 'ignored',
   });
+  private readonly isFeedingActive = isActive('/feeding', this.router, {
+    paths: 'exact',
+    queryParams: 'ignored',
+    fragment: 'ignored',
+    matrixParams: 'ignored',
+  });
   /** The map adds items from its context menu instead of the fab button */
   protected readonly isMapActive = isActive('/map', this.router, {
     paths: 'exact',
@@ -61,9 +67,9 @@ export class App {
     });
   }
 
-  /** The add item dialog is only available on the root url */
+  /** The add item dialog is only available on the pages listing events */
   protected openAddItem(): void {
-    if (this.isRootActive()) {
+    if (this.isRootActive() || this.isFeedingActive()) {
       this.showAddItemDialog();
     }
   }

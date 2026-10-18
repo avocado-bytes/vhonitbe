@@ -22,6 +22,10 @@ export const ITEMS = [
 ] as const;
 export type Item = (typeof ITEMS)[number];
 
+/** Items about places where game is fed, shown together on the feeding page */
+export const FEEDING_ITEMS = ['feeding', 'salt-lick'] as const satisfies readonly Item[];
+export type FeedingItem = (typeof FEEDING_ITEMS)[number];
+
 /** Items about a place or a facility rather than an animal, so they are recorded without one */
 const ITEMS_WITHOUT_ANIMAL: readonly Item[] = ['feeding', 'salt-lick', 'hunting-stand', 'trail-camera'];
 

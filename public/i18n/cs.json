@@ -24,7 +24,8 @@
   "NAV": {
     "HOME": "Domů",
     "MAP": "Mapa",
-    "CLOSE": "Zavřít navigaci"
+    "CLOSE": "Zavřít navigaci",
+    "FEEDING": "Přikrmování"
   },
   "MAP": {
     "LOCATING": "Zjišťuji vaši polohu…",
@@ -264,5 +265,15 @@
     "COPIED": "Událost byla zkopírována do schránky. Vložte ji do zprávy.",
     "FAILED": "Událost se nepodařilo sdílet.",
     "CLOSE": "Zavřít"
+  },
+  "FEEDING": {
+    "TITLE": "Přikrmování",
+    "PLACES": "Krmelce a slaniska",
+    "MAP": "Mapa krmelců a slanisek",
+    "NO_PLACES": "Zatím žádné krmelce ani slaniska s polohou. Přidejte událost „Přikrmování“ nebo „Slanisko“, aby se zde zobrazila.",
+    "EVENTS": "Události přikrmování",
+    "ALL_ITEMS": "Přikrmování a slaniska",
+    "LOADING": "Načítání míst přikrmování…",
+    "EMPTY": "Zatím žádné události přikrmování ani slanisek."
   }
 }

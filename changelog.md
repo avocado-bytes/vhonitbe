@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.32.0
+
+- Add a "Feeding" section to the side navigation, with a hay rack (krmelec) icon. It opens a feeding dashboard with:
+  - a small map of all feeders and salt licks with a location, zoomed to fit them, with brown pins for feeding and blue pins for salt licks, a legend, and popups naming each place and its date;
+  - a list of the feeding and salt lick events, with sorting, a filter for one of the two types, and pages of 10, with the same details and actions as the main event list.
+- The add button also works on the feeding page.
+- The event list with its actions and photo and map dialogs is now a shared component, used by both the main dashboard and the feeding page.
+
 ## 0.31.0
 
 - A language selected in the settings is remembered in local storage and used on the next start ahead of the browser's languages. Without a stored choice, or when storage is unavailable, the browser's languages decide as before.

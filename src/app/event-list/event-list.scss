@@ -1,0 +1,68 @@
+:host {
+  display: block;
+}
+
+.map-dialog {
+  width: min(48rem, calc(100% - 2rem));
+  padding: 0;
+  color: var(--bs-body-color);
+  background-color: var(--bs-body-bg);
+  border: 0;
+  border-radius: var(--bs-border-radius-lg);
+  box-shadow: var(--bs-box-shadow-lg);
+
+  &::backdrop {
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+}
+
+.item-action {
+  display: inline-flex;
+  padding: 0.375rem;
+  margin: -0.375rem 0;
+  color: var(--bs-secondary-color);
+  background: transparent;
+  border: 0;
+  border-radius: var(--bs-border-radius);
+
+  &:last-child {
+    margin-right: -0.375rem;
+  }
+
+  &:hover:not(:disabled) {
+    color: var(--bs-primary-text-emphasis);
+    background-color: rgba(var(--bs-primary-rgb), 0.1);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--bs-focus-ring-color);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+  }
+}
+
+// The phone action menu opens below its button, above the transparent backdrop that closes it
+.event-actions {
+  top: 100%;
+  right: 0;
+  z-index: 1001;
+  margin-top: 0.25rem;
+}
+
+.event-actions-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+}
+
+// Animal, sex and herd on one line, separated by dots
+.event-details > span + span::before {
+  content: ' · ';
+}
+
+.item-action-danger:hover:not(:disabled) {
+  color: var(--bs-danger);
+  background-color: rgba(var(--bs-danger-rgb), 0.1);
+}

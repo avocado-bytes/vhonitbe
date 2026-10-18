@@ -15,7 +15,10 @@ describe('App', () => {
     await TestBed.configureTestingModule({
       imports: [App],
       providers: [
-        provideRouter([{ path: 'map', children: [] }]),
+        provideRouter([
+          { path: 'map', children: [] },
+          { path: 'feeding', children: [] },
+        ]),
         provideTranslateService({ lang: 'en' }),
         provideMockStore({
           initialState: {
@@ -31,7 +34,7 @@ describe('App', () => {
     TestBed.inject(TranslateService).setTranslation('en', {
       APP: { TITLE: 'vHonitbě', ADD: 'Add' },
       HEADER: { MENU: 'Open menu', SETTINGS: 'Settings' },
-      NAV: { HOME: 'Home', MAP: 'Map', CLOSE: 'Close navigation' },
+      NAV: { HOME: 'Home', MAP: 'Map', FEEDING: 'Feeding', CLOSE: 'Close navigation' },
       ADD_ITEM: { TITLE: 'Add item', EDIT_TITLE: 'Edit event', CLOSE: 'Close' },
     });
   });
@@ -150,12 +153,12 @@ describe('App', () => {
       fixture.nativeElement.remove();
     });
 
-    it('should link to the home and map routes', async () => {
+    it('should link to the home, map and feeding routes', async () => {
       const { sideNav } = await createAppWithSideNav();
       const links = Array.from(sideNav.querySelectorAll('a.nav-link'));
 
-      expect(links.map((link) => link.textContent?.trim())).toEqual(['Home', 'Map']);
-      expect(links.map((link) => link.getAttribute('href'))).toEqual(['/', '/map']);
+      expect(links.map((link) => link.textContent?.trim())).toEqual(['Home', 'Map', 'Feeding']);
+      expect(links.map((link) => link.getAttribute('href'))).toEqual(['/', '/map', '/feeding']);
     });
 
     it('should close when a link is clicked', async () => {
@@ -224,6 +227,16 @@ describe('App', () => {
       expect(dialog.open).toBe(true);
       expect(dialog.querySelector('app-add-item')).not.toBeNull();
       expect(dialog.querySelector('#add-item-title')?.textContent).toContain('Add item');
+    });
+
+    it('should open on the feeding page', async () => {
+      const { fixture, dialog, clickFab } = await createAppWithDialog();
+      await TestBed.inject(Router).navigateByUrl('/feeding');
+      await fixture.whenStable();
+
+      await clickFab();
+
+      expect(dialog.open).toBe(true);
     });
 
     it('should not open on other urls', async () => {

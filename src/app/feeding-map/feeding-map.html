@@ -1,0 +1,8 @@
+<div #map class="feeding-map" role="application" [attr.aria-label]="'FEEDING.MAP' | translate"></div>
+<ul class="list-inline small mt-2 mb-0">
+  @for (item of items; track item) {
+    <li class="list-inline-item d-inline-flex align-items-center gap-1">
+      <span class="pin-swatch" [style.background-color]="colors[item]" aria-hidden="true"></span>{{ 'ITEMS.' + item | translate }}
+    </li>
+  }
+</ul>

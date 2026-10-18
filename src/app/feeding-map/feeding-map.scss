@@ -1,0 +1,21 @@
+:host {
+  display: block;
+}
+
+.feeding-map {
+  height: 16rem;
+  // Keep Leaflet's z-indexes (up to 1000) contained in the map
+  isolation: isolate;
+  overflow: hidden;
+  border: var(--bs-border-width) solid var(--bs-border-color);
+  border-radius: var(--bs-border-radius);
+}
+
+.pin-swatch {
+  display: inline-block;
+  width: 0.75rem;
+  height: 0.75rem;
+  border: 1px solid #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px var(--bs-border-color);
+}
