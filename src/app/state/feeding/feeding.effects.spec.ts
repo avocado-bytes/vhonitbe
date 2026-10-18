@@ -1,56 +1,86 @@
+import { DOCUMENT } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Action } from '@ngrx/store';
-import { firstValueFrom, Subject } from 'rxjs';
-import { HuntingEvent } from '../../model/event';
-import { Item } from '../../model/item';
+import { TranslateService } from '@ngx-translate/core';
+import { firstValueFrom, Observable, Subject } from 'rxjs';
+import { FeedingPlace } from '../../model/feeding-place';
 import { EventStorage } from '../../storage/event-storage';
-import { EventsActions } from '../events/events.actions';
+import { FeedingPlaceStorage } from '../../storage/feeding-place-storage';
 import { FeedingActions } from './feeding.actions';
-import { loadFeeding, reloadFeedingAfterChange } from './feeding.effects';
+import { addPlace, deletePlace, loadFeeding, reloadFeedingAfterChange, sharePlace, updatePlace } from './feeding.effects';
 
 describe('feeding effects', () => {
   let actions$: Subject<Action>;
-  const getByType = vi.fn<(type: Item) => Promise<HuntingEvent[]>>();
-  const event = (id: string, type: Item, occurredAt: string) => ({ id, type, occurredAt }) as HuntingEvent;
+  const storage = {
+    getAll: vi.fn<() => Promise<FeedingPlace[]>>(),
+    add: vi.fn(),
+    update: vi.fn(),
+    delete: vi.fn(),
+  };
+  const share = vi.fn<(data: ShareData) => Promise<void>>();
+  const place: FeedingPlace = { id: 'a', type: 'salt-lick', location: null, note: 'Secret', photoId: null };
 
   beforeEach(() => {
     actions$ = new Subject<Action>();
-    getByType.mockReset();
+    Object.values(storage).forEach((mock) => mock.mockReset());
+    share.mockReset().mockResolvedValue(undefined);
     TestBed.configureTestingModule({
-      providers: [provideMockActions(() => actions$), { provide: EventStorage, useValue: { getByType } }],
+      providers: [
+        provideMockActions(() => actions$),
+        { provide: FeedingPlaceStorage, useValue: storage },
+        { provide: EventStorage, useValue: { getPhoto: vi.fn() } },
+        { provide: TranslateService, useValue: { instant: (key: string) => key } },
+        { provide: DOCUMENT, useValue: { defaultView: { navigator: { share } } } },
+      ],
     });
   });
 
-  it('should load the feeding and salt lick events, newest first', async () => {
-    getByType.mockImplementation(async (type) =>
-      type === 'feeding'
-        ? [event('old', 'feeding', '2026-01-01T00:00:00.000Z'), event('new', 'feeding', '2026-03-01T00:00:00.000Z')]
-        : [event('lick', 'salt-lick', '2026-02-01T00:00:00.000Z')],
-    );
-    const result = TestBed.runInInjectionContext(() => firstValueFrom(loadFeeding()));
+  const run = <T>(effect: () => Observable<T>, action: Action) => {
+    const result = TestBed.runInInjectionContext(() => firstValueFrom(effect()));
+    actions$.next(action);
+    return result;
+  };
 
-    actions$.next(FeedingActions.load());
+  it('should load all feeding places', async () => {
+    storage.getAll.mockResolvedValue([place]);
 
-    const action = (await result) as ReturnType<typeof FeedingActions.loadSuccess>;
-    expect(getByType.mock.calls.map(([type]) => type)).toEqual(['feeding', 'salt-lick']);
-    expect(action.events.map((e) => e.id)).toEqual(['new', 'lick', 'old']);
+    expect(await run(loadFeeding, FeedingActions.load())).toEqual(FeedingActions.loadSuccess({ places: [place] }));
   });
 
   it('should report a failure to load', async () => {
-    getByType.mockRejectedValue(new Error('boom'));
-    const result = TestBed.runInInjectionContext(() => firstValueFrom(loadFeeding()));
+    storage.getAll.mockRejectedValue(new Error('boom'));
 
-    actions$.next(FeedingActions.load());
-
-    expect(await result).toEqual(FeedingActions.loadFailure({ error: 'Error: boom' }));
+    expect(await run(loadFeeding, FeedingActions.load())).toEqual(FeedingActions.loadFailure({ error: 'Error: boom' }));
   });
 
-  it('should reload after an event was changed', async () => {
-    const result = TestBed.runInInjectionContext(() => firstValueFrom(reloadFeedingAfterChange()));
+  it('should add, update and delete a place', async () => {
+    storage.add.mockResolvedValue(place);
+    storage.update.mockResolvedValue(place);
+    storage.delete.mockResolvedValue(undefined);
+    const { id, ...fields } = place;
 
-    actions$.next(EventsActions.deleteEventSuccess({ id: 'a' }));
+    expect(await run(addPlace, FeedingActions.addPlace({ place: fields }))).toEqual(FeedingActions.addPlaceSuccess({ place }));
+    expect(await run(updatePlace, FeedingActions.updatePlace({ place }))).toEqual(FeedingActions.updatePlaceSuccess({ place }));
+    expect(await run(deletePlace, FeedingActions.deletePlace({ id }))).toEqual(FeedingActions.deletePlaceSuccess({ id }));
+  });
 
-    expect(await result).toEqual(FeedingActions.load());
+  it('should report a failure to save', async () => {
+    storage.update.mockRejectedValue(new Error('boom'));
+
+    expect(await run(updatePlace, FeedingActions.updatePlace({ place }))).toEqual(
+      FeedingActions.updatePlaceFailure({ error: 'Error: boom' }),
+    );
+  });
+
+  it('should reload after a place was changed', async () => {
+    expect(await run(reloadFeedingAfterChange, FeedingActions.deletePlaceSuccess({ id: 'a' }))).toEqual(FeedingActions.load());
+  });
+
+  it('should share the type without a date or the note', async () => {
+    expect(await run(sharePlace, FeedingActions.sharePlace({ place }))).toEqual(
+      FeedingActions.sharePlaceSuccess({ result: 'shared' }),
+    );
+    expect(share).toHaveBeenCalledWith({ text: 'FEEDING.TYPES.salt-lick' });
   });
 });

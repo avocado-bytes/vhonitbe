@@ -102,3 +102,41 @@ $primary-border-subtle-dark: $hunter-green-700;
 
 // 8. Utility classes (last, so they override component styles)
 @import 'bootstrap/scss/utilities/api';
+
+// Floating add button, on the dashboard and the feeding page
+.fab {
+  position: fixed;
+  right: 1.5rem;
+  bottom: 1.5rem;
+  z-index: 1030;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  border: 0;
+
+  &:hover {
+    filter: brightness(0.9);
+  }
+
+  &:focus-visible {
+    outline: 3px solid var(--bs-focus-ring-color);
+    outline-offset: 2px;
+  }
+}
+
+// Dialogs with a form, adding or editing an event or a feeding place
+.form-dialog {
+  width: min(32rem, calc(100% - 2rem));
+  padding: 0;
+  color: var(--bs-body-color);
+  background-color: var(--bs-body-bg);
+  border: 0;
+  border-radius: var(--bs-border-radius-lg);
+  box-shadow: var(--bs-box-shadow-lg);
+
+  &::backdrop {
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+}

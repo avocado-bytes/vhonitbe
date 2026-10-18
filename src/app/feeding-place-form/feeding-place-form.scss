@@ -1,0 +1,11 @@
+.photo-preview {
+  max-width: 100%;
+  max-height: 14rem;
+  object-fit: contain;
+}
+
+// Shows keyboard focus of the hidden file input on its visible label
+#feeding-place-photo:focus-visible + label {
+  outline: 2px solid var(--bs-focus-ring-color);
+  outline-offset: 2px;
+}

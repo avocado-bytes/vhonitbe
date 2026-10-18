@@ -12,8 +12,6 @@ export const ITEMS = [
   'found-dead', // uhynulá / sražená zvěř
   // Habitat & management
   'game-damage', // škody zvěří
-  'feeding', // přikrmování / krmelec
-  'salt-lick', // slanisko
   // Infrastructure
   'hunting-stand', // posed / kazatelna
   'trail-camera', // fotopast
@@ -22,12 +20,8 @@ export const ITEMS = [
 ] as const;
 export type Item = (typeof ITEMS)[number];
 
-/** Items about places where game is fed, shown together on the feeding page */
-export const FEEDING_ITEMS = ['feeding', 'salt-lick'] as const satisfies readonly Item[];
-export type FeedingItem = (typeof FEEDING_ITEMS)[number];
-
 /** Items about a place or a facility rather than an animal, so they are recorded without one */
-const ITEMS_WITHOUT_ANIMAL: readonly Item[] = ['feeding', 'salt-lick', 'hunting-stand', 'trail-camera'];
+const ITEMS_WITHOUT_ANIMAL: readonly Item[] = ['hunting-stand', 'trail-camera'];
 
 export function itemHasAnimal(item: Item): boolean {
   return !ITEMS_WITHOUT_ANIMAL.includes(item);

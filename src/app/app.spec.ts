@@ -229,14 +229,12 @@ describe('App', () => {
       expect(dialog.querySelector('#add-item-title')?.textContent).toContain('Add item');
     });
 
-    it('should open on the feeding page', async () => {
-      const { fixture, dialog, clickFab } = await createAppWithDialog();
+    it('should hide the add button on the feeding page, which has its own', async () => {
+      const { fixture, element } = await createAppWithDialog();
       await TestBed.inject(Router).navigateByUrl('/feeding');
       await fixture.whenStable();
 
-      await clickFab();
-
-      expect(dialog.open).toBe(true);
+      expect(element.querySelector('button.fab')).toBeNull();
     });
 
     it('should not open on other urls', async () => {

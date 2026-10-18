@@ -7,7 +7,7 @@
         <div class="card-body">
           <h2 id="feeding-places" class="h6 card-title text-body-secondary">{{ 'FEEDING.PLACES' | translate }}</h2>
           @if (located().length > 0) {
-            <app-feeding-map [events]="located()" />
+            <app-feeding-map [places]="located()" />
           } @else if (loading()) {
             <p class="small text-body-secondary mb-0" role="status">{{ 'FEEDING.LOADING' | translate }}</p>
           } @else {
@@ -18,31 +18,25 @@
     </div>
 
     <div class="col-12">
-      <section class="card" aria-labelledby="feeding-events">
+      <section class="card" aria-labelledby="feeding-list">
         <div class="card-body">
-          <h2 id="feeding-events" class="h5 card-title mb-3">{{ 'FEEDING.EVENTS' | translate }}</h2>
+          <h2 id="feeding-list" class="h5 card-title mb-3">{{ 'FEEDING.LIST' | translate }}</h2>
 
+          <!-- Places have no date, so the list is filtered by type but not sorted by date -->
           <div class="row g-2 mb-3">
             <div class="col-6">
-              <label for="feeding-sort" class="form-label small mb-1">{{ 'OVERVIEW.SORT' | translate }}</label>
-              <select id="feeding-sort" class="form-select form-select-sm" #sortSelect (change)="setSort(sortSelect.value)">
-                <option value="newest" [selected]="sort() === 'newest'">{{ 'OVERVIEW.SORT_NEWEST' | translate }}</option>
-                <option value="oldest" [selected]="sort() === 'oldest'">{{ 'OVERVIEW.SORT_OLDEST' | translate }}</option>
-              </select>
-            </div>
-            <div class="col-6">
-              <label for="feeding-item" class="form-label small mb-1">{{ 'OVERVIEW.FILTER_TYPE' | translate }}</label>
-              <select id="feeding-item" class="form-select form-select-sm" #itemSelect (change)="setItem(itemSelect.value)">
-                <option value="" [selected]="item() === null">{{ 'FEEDING.ALL_ITEMS' | translate }}</option>
-                @for (option of items; track option) {
-                  <option [value]="option" [selected]="item() === option">{{ 'ITEMS.' + option | translate }}</option>
+              <label for="feeding-type" class="form-label small mb-1">{{ 'FEEDING.FILTER_TYPE' | translate }}</label>
+              <select id="feeding-type" class="form-select form-select-sm" #typeSelect (change)="setType(typeSelect.value)">
+                <option value="" [selected]="placeType() === null">{{ 'FEEDING.ALL_ITEMS' | translate }}</option>
+                @for (option of types; track option) {
+                  <option [value]="option" [selected]="placeType() === option">{{ 'FEEDING.TYPES.' + option | translate }}</option>
                 }
               </select>
             </div>
           </div>
 
           @if (loadError()) {
-            <p class="text-danger" role="alert">{{ 'OVERVIEW.LOAD_FAILED' | translate }}</p>
+            <p class="text-danger" role="alert">{{ 'FEEDING.LOAD_FAILED' | translate }}</p>
           } @else if (total() === 0) {
             @if (loading()) {
               <p class="text-body-secondary" role="status">{{ 'FEEDING.LOADING' | translate }}</p>
@@ -51,9 +45,9 @@
             }
           } @else {
             @if (deleteError()) {
-              <p class="text-danger" role="alert">{{ 'OVERVIEW.DELETE_FAILED' | translate }}</p>
+              <p class="text-danger" role="alert">{{ 'FEEDING.DELETE_FAILED' | translate }}</p>
             }
-            <app-event-list [events]="events()" [busy]="loading()" />
+            <app-feeding-place-list [places]="places()" [busy]="loading()" />
 
             @if (pageCount() > 1) {
               <nav class="d-flex align-items-center justify-content-between gap-2" [attr.aria-label]="'OVERVIEW.PAGINATION' | translate">
@@ -79,3 +73,28 @@
     </div>
   </div>
 </section>
+
+<!-- Feeders and salt licks are added here rather than with the events -->
+<button
+  type="button"
+  class="fab rounded-circle bg-primary text-white shadow"
+  aria-haspopup="dialog"
+  [attr.aria-label]="'FEEDING.ADD' | translate"
+  (click)="add()"
+>
+  <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+    <path d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2" />
+  </svg>
+</button>
+
+<dialog #formDialog class="form-dialog" aria-labelledby="feeding-form-title" (close)="onFormClosed()">
+  @if (formOpen()) {
+    <div class="d-flex align-items-center justify-content-between p-3 border-bottom">
+      <h2 id="feeding-form-title" class="h5 mb-0">{{ (editing() ? 'FEEDING.FORM.EDIT_TITLE' : 'FEEDING.FORM.ADD_TITLE') | translate }}</h2>
+      <button type="button" class="btn-close" [attr.aria-label]="'FEEDING.FORM.CLOSE' | translate" (click)="closeForm()"></button>
+    </div>
+    <div class="p-3">
+      <app-feeding-place-form [place]="editing()" />
+    </div>
+  }
+</dialog>

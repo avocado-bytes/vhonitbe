@@ -39,7 +39,8 @@ export class App {
     fragment: 'ignored',
     matrixParams: 'ignored',
   });
-  private readonly isFeedingActive = isActive('/feeding', this.router, {
+  /** The feeding page has its own add button for feeding places */
+  protected readonly isFeedingActive = isActive('/feeding', this.router, {
     paths: 'exact',
     queryParams: 'ignored',
     fragment: 'ignored',
@@ -67,9 +68,9 @@ export class App {
     });
   }
 
-  /** The add item dialog is only available on the pages listing events */
+  /** The add item dialog is only available on the page listing events */
   protected openAddItem(): void {
-    if (this.isRootActive() || this.isFeedingActive()) {
+    if (this.isRootActive()) {
       this.showAddItemDialog();
     }
   }

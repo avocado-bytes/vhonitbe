@@ -92,8 +92,6 @@
     "wounded-game": "Nástřel / dohledávka",
     "found-dead": "Uhynulá / sražená zvěř",
     "game-damage": "Škody zvěří",
-    "feeding": "Přikrmování",
-    "salt-lick": "Slanisko",
     "hunting-stand": "Posed / kazatelna",
     "trail-camera": "Fotopast",
     "poaching": "Pytláctví"
@@ -267,13 +265,35 @@
     "CLOSE": "Zavřít"
   },
   "FEEDING": {
+    "ADD": "Přidat krmelec nebo slanisko",
     "TITLE": "Přikrmování",
     "PLACES": "Krmelce a slaniska",
     "MAP": "Mapa krmelců a slanisek",
-    "NO_PLACES": "Zatím žádné krmelce ani slaniska s polohou. Přidejte událost „Přikrmování“ nebo „Slanisko“, aby se zde zobrazila.",
-    "EVENTS": "Události přikrmování",
+    "NO_PLACES": "Zatím žádné krmelce ani slaniska s polohou. Přidejte je tlačítkem pro přidání, aby se zde zobrazily.",
     "ALL_ITEMS": "Přikrmování a slaniska",
     "LOADING": "Načítání míst přikrmování…",
-    "EMPTY": "Zatím žádné události přikrmování ani slanisek."
+    "EMPTY": "Zatím žádné krmelce ani slaniska.",
+    "TYPES": {
+      "feeding": "Krmelec",
+      "feed-pile": "Hromada",
+      "bait-site": "Zásyp",
+      "salt-lick": "Slanisko"
+    },
+    "LIST": "Všechna místa",
+    "FILTER_TYPE": "Typ",
+    "LOAD_FAILED": "Místa přikrmování se nepodařilo načíst.",
+    "DELETE_FAILED": "Místo se nepodařilo smazat. Zkuste to prosím znovu.",
+    "DELETE_CONFIRM": "Smazat toto místo? Tuto akci nelze vrátit.",
+    "FORM": {
+      "ADD_TITLE": "Přidat místo přikrmování",
+      "EDIT_TITLE": "Upravit místo přikrmování",
+      "CLOSE": "Zavřít",
+      "TYPE": "Typ",
+      "TYPE_PLACEHOLDER": "Vyberte druh krmeliště",
+      "NO_LOCATION": "U tohoto místa nebyla zaznamenána poloha.",
+      "LOCATION_UNAVAILABLE": "Vaše poloha není k dispozici. Místo bude uloženo bez polohy.",
+      "PHOTO_PREVIEW": "Fotografie místa",
+      "SAVE_FAILED": "Místo se nepodařilo uložit. Zkuste to prosím znovu."
+    }
   }
 }

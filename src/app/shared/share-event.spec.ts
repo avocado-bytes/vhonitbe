@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { provideTranslateService, TranslateService } from '@ngx-translate/core';
 import { HuntingEvent } from '../model/event';
-import { eventShareText } from './share-event';
+import { eventShareText, placeShareText } from './share-event';
 
 describe('eventShareText', () => {
   let translate: TranslateService;
@@ -23,10 +23,11 @@ describe('eventShareText', () => {
     TestBed.configureTestingModule({ providers: [provideTranslateService({ lang: 'en' })] });
     translate = TestBed.inject(TranslateService);
     translate.setTranslation('en', {
-      ITEMS: { spotting: 'Sighting', feeding: 'Feeding' },
+      ITEMS: { spotting: 'Sighting', 'hunting-stand': 'Hunting stand' },
       ANIMALS: { 'roe-deer': 'Roe deer' },
       SEXES: { mixed: 'Mixed', female: 'Female' },
       OVERVIEW: { HERD: 'Herd', HERD_OF: 'Herd of {{count}}', TAG_NUMBER: 'Tag number' },
+      FEEDING: { TYPES: { 'salt-lick': 'Salt lick' } },
       SHARE: { MAPY_CZ: 'Mapy.cz' },
     });
     translate.use('en');
@@ -45,15 +46,26 @@ describe('eventShareText', () => {
   });
 
   it('should show only the type without animal details', () => {
-    const text = eventShareText(event({ type: 'feeding', animal: null }), translate, dateFormat);
+    const text = eventShareText(event({ type: 'hunting-stand', animal: null }), translate, dateFormat);
 
-    expect(text.split('\n')[0]).toBe('Feeding');
+    expect(text.split('\n')[0]).toBe('Hunting stand');
   });
 
   it('should add the tag number after the date', () => {
     const lines = eventShareText(event({ tagNumber: '12345678' }), translate, dateFormat).split('\n');
 
     expect(lines[2]).toBe('🏷️ Tag number 12 345678');
+  });
+
+  it('should share a feeding place without a date or its note', () => {
+    const place = { id: 'b', type: 'salt-lick' as const, location: { latitude: 49, longitude: 13.5 }, note: 'Private remark', photoId: null };
+
+    expect(placeShareText(place, translate).split('\n')).toEqual([
+      'Salt lick',
+      '',
+      '📍 49.00000, 13.50000',
+      expect.stringMatching(/^Mapy\.cz: https:\/\/mapy\.cz\//),
+    ]);
   });
 
   it('should leave out the note', () => {

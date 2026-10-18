@@ -134,7 +134,7 @@
   <router-outlet />
 </main>
 
-@if (!isMapActive()) {
+@if (!isMapActive() && !isFeedingActive()) {
   <button
     type="button"
     class="fab rounded-circle bg-primary text-white shadow"
@@ -148,7 +148,7 @@
   </button>
 }
 
-<dialog #addItemDialog class="add-item-dialog" aria-labelledby="add-item-title" (close)="onAddItemClosed()">
+<dialog #addItemDialog class="add-item-dialog form-dialog" aria-labelledby="add-item-title" (close)="onAddItemClosed()">
   @if (addItemOpen()) {
     <div class="d-flex align-items-center justify-content-between p-3 border-bottom">
       <h2 id="add-item-title" class="h5 mb-0">{{ (editing() ? 'ADD_ITEM.EDIT_TITLE' : 'ADD_ITEM.TITLE') | translate }}</h2>

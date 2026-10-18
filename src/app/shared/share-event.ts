@@ -1,5 +1,7 @@
 import { TranslateService } from '@ngx-translate/core';
 import { GeoPoint, HuntingEvent } from '../model/event';
+import { FeedingPlace } from '../model/feeding-place';
+import { EventStorage } from '../storage/event-storage';
 import { formatTagNumber } from './tag-number';
 
 /** How sharing an event ended: sent through the share sheet, copied as a fallback, or dismissed by the user */
@@ -13,9 +15,24 @@ export function mapyCzUrl({ latitude, longitude }: GeoPoint): string {
 }
 
 /**
- * The event as a plain text message, without its note. Messaging apps differ in what formatting they support,
- * so it uses no markup, only line breaks and a few emoji; links are made clickable by the apps.
+ * A plain text message: the title, further lines such as the date, and the location with a link to the map.
+ * Messaging apps differ in what formatting they support, so it uses no markup, only line breaks and a few emoji;
+ * links are made clickable by the apps. A line that doesn't apply, such as a missing date, is simply left out.
  */
+function shareMessage(title: string, lines: string[], location: GeoPoint | null, translate: TranslateService): string {
+  const message = [title, ...lines];
+  if (location) {
+    const { latitude, longitude } = location;
+    message.push(
+      '',
+      `📍 ${latitude.toFixed(5)}, ${longitude.toFixed(5)}`,
+      `${translate.instant('SHARE.MAPY_CZ')}: ${mapyCzUrl(location)}`,
+    );
+  }
+  return message.join('\n');
+}
+
+/** The event as a plain text message, without its note */
 export function eventShareText(event: HuntingEvent, translate: TranslateService, dateFormat: Intl.DateTimeFormat): string {
   const details: string[] = [];
   if (event.animal) {
@@ -29,20 +46,33 @@ export function eventShareText(event: HuntingEvent, translate: TranslateService,
   }
   const type = translate.instant(`ITEMS.${event.type}`);
   // The note is left out, as it may hold remarks meant only for the user
-  const lines = [details.length ? `${type} – ${details.join(' · ')}` : type];
-  lines.push(`📅 ${dateFormat.format(new Date(event.occurredAt))}`);
+  const lines = [`📅 ${dateFormat.format(new Date(event.occurredAt))}`];
   if (event.tagNumber) {
     lines.push(`🏷️ ${translate.instant('OVERVIEW.TAG_NUMBER')} ${formatTagNumber(event.tagNumber)}`);
   }
-  if (event.location) {
-    const { latitude, longitude } = event.location;
-    lines.push(
-      '',
-      `📍 ${latitude.toFixed(5)}, ${longitude.toFixed(5)}`,
-      `${translate.instant('SHARE.MAPY_CZ')}: ${mapyCzUrl(event.location)}`,
-    );
+  return shareMessage(details.length ? `${type} – ${details.join(' · ')}` : type, lines, event.location, translate);
+}
+
+/** The feeding place as a plain text message; it has no date, so only its type and location are shared, without its note */
+export function placeShareText(place: FeedingPlace, translate: TranslateService): string {
+  return shareMessage(translate.instant(`FEEDING.TYPES.${place.type}`), [], place.location, translate);
+}
+
+/** Loads a photo as a JPEG file to attach to the message; a missing photo doesn't stop sharing */
+export async function sharedPhoto(photoId: string | null | undefined, fileName: string, storage: EventStorage): Promise<File | null> {
+  if (!photoId) {
+    return null;
   }
-  return lines.join('\n');
+  try {
+    const photo = await storage.getPhoto(photoId);
+    if (!photo) {
+      return null;
+    }
+    const jpeg = await toJpeg(photo);
+    return new File([jpeg], `${fileName}.jpg`, { type: 'image/jpeg' });
+  } catch {
+    return null;
+  }
 }
 
 /** Some messaging apps don't accept WebP photos, so they are shared as JPEG */

@@ -1,5 +1,6 @@
 import { createFeature, createReducer, createSelector, on } from '@ngrx/store';
 import { DEFAULT_EVENT_QUERY, EventQuery, GeoPoint, HuntingEvent } from '../../model/event';
+import { FeedingActions } from '../feeding/feeding.actions';
 import { EventsActions } from './events.actions';
 
 export const EVENTS_PAGE_SIZE = 10;
@@ -30,7 +31,7 @@ export interface EventsState {
   /** Ids of events currently being deleted */
   deleting: string[];
   deleteError: string | null;
-  /** Tells the user the shared event was copied to the clipboard, or could not be shared */
+  /** Tells the user the shared event or feeding place was copied to the clipboard, or could not be shared */
   shareNotice: 'copied' | 'failed' | null;
 }
 
@@ -104,12 +105,19 @@ export const eventsFeature = createFeature({
         deleteError: error,
       }),
     ),
-    on(EventsActions.shareEvent, EventsActions.dismissShareNotice, (state): EventsState => ({ ...state, shareNotice: null })),
+    // Sharing a feeding place shows the same notice
+    on(
+      EventsActions.shareEvent,
+      FeedingActions.sharePlace,
+      EventsActions.dismissShareNotice,
+      (state): EventsState => ({ ...state, shareNotice: null }),
+    ),
     on(
       EventsActions.shareEventSuccess,
+      FeedingActions.sharePlaceSuccess,
       (state, { result }): EventsState => ({ ...state, shareNotice: result === 'copied' ? 'copied' : null }),
     ),
-    on(EventsActions.shareEventFailure, (state): EventsState => ({ ...state, shareNotice: 'failed' })),
+    on(EventsActions.shareEventFailure, FeedingActions.sharePlaceFailure, (state): EventsState => ({ ...state, shareNotice: 'failed' })),
   ),
   extraSelectors: ({ selectTotal, selectPageSize }) => ({
     selectPageCount: createSelector(selectTotal, selectPageSize, (total, pageSize) =>

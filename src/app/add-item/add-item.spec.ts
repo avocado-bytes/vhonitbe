@@ -146,7 +146,7 @@ describe('AddItem', () => {
     it('should be hidden for event types without an animal', async () => {
       expect(animalSelect()).not.toBeNull();
 
-      await choose(typeSelect(), 'feeding');
+      await choose(typeSelect(), 'hunting-stand');
 
       expect(animalSelect()).toBeNull();
     });
@@ -192,7 +192,7 @@ describe('AddItem', () => {
       expect(Array.from(sexSelect().options).map((option) => option.value)).toEqual(['', 'male', 'female']);
       expect(sexSelect().value).toBe('');
 
-      await choose(typeSelect(), 'feeding');
+      await choose(typeSelect(), 'hunting-stand');
 
       expect(sexSelect()).toBeNull();
     });
@@ -211,7 +211,7 @@ describe('AddItem', () => {
     it('should not store a sex chosen before switching to a type without an animal', async () => {
       await choose(typeSelect(), 'harvest');
       await choose(sexSelect(), 'male');
-      await choose(typeSelect(), 'salt-lick');
+      await choose(typeSelect(), 'trail-camera');
       dispatch.mockClear();
 
       submitButton().click();

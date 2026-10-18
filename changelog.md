@@ -1,5 +1,34 @@
 # Changelog
 
+## 0.36.1
+
+- The type placeholder in the feeding place form reads "Vyberte druh krmeliště" / "Select the kind of feeding site".
+
+## 0.36.0
+
+- New types of feeding places: feed pile (hromada) and baiting spot (zásyp), next to the feeder (krmelec) and the salt lick (slanisko). They have their own pin colors on the feeding map and legend: ochre for feed piles and plum for baiting spots.
+- The feeder type is now called "Feeder" / "Krmelec" instead of "Feeding" / "Přikrmování"; places already stored keep their type.
+- The type placeholder in the form reads "Select the type of place" / "Vyberte typ místa", and the list is ordered feeder, feed pile, baiting spot, salt lick.
+
+## 0.35.0
+
+- Feeders and salt licks are now feeding places, a model of their own apart from the events: a type, location, note and photo, with no date. They are kept in their own database store; existing feeders and salt licks recorded as events are moved there automatically on the first start of this version, keeping their location, note and photo.
+- The event list, its count and filter, and the main map's latest events only ever contain events, without having to leave feeding places out.
+- The feeding page has its own form and list for feeding places. The list is filtered by type and ordered by type and note, as places have no date; each place can be shown on a map or with its photo, shared, edited and deleted.
+- Sharing a feeding place sends its type and location with its photo; the date is left out, as places have none.
+- The map popups of feeding places show only their type.
+
+## 0.34.0
+
+- Feeders and salt licks no longer appear on the main overview: they are left out of its event list, its count and pages, and its type filter.
+- The main map's latest 10 events no longer include feeders and salt licks either; they are shown on the feeding page's map.
+
+## 0.33.0
+
+- Feeders and salt licks are no longer offered as event types in the add dialog. They are added on the feeding page with its own add button, which offers only these two types; the general add button is hidden there.
+- A feeder or salt lick is recorded without a date: the date field is left out and the time it was first saved is kept. Editing an existing feeder or salt lick, from any list or the map, offers only these two types and keeps its date.
+- The add dialog is titled "Add feeding place" / "Edit feeding place" for feeders and salt licks.
+
 ## 0.32.0
 
 - Add a "Feeding" section to the side navigation, with a hay rack (krmelec) icon. It opens a feeding dashboard with:

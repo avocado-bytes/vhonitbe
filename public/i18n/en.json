@@ -92,8 +92,6 @@
     "wounded-game": "Wounded game",
     "found-dead": "Found dead / roadkill",
     "game-damage": "Game damage",
-    "feeding": "Feeding",
-    "salt-lick": "Salt lick",
     "hunting-stand": "Hunting stand",
     "trail-camera": "Trail camera",
     "poaching": "Poaching"
@@ -267,13 +265,35 @@
     "CLOSE": "Close"
   },
   "FEEDING": {
+    "ADD": "Add feeder or salt lick",
     "TITLE": "Feeding",
     "PLACES": "Feeders and salt licks",
     "MAP": "Map of feeders and salt licks",
-    "NO_PLACES": "No feeders or salt licks with a location yet. Add a \"Feeding\" or \"Salt lick\" event to see it here.",
-    "EVENTS": "Feeding events",
+    "NO_PLACES": "No feeders or salt licks with a location yet. Add one with the add button to see it here.",
     "ALL_ITEMS": "Feeding and salt licks",
     "LOADING": "Loading feeding places…",
-    "EMPTY": "No feeding or salt lick events yet."
+    "EMPTY": "No feeders or salt licks yet.",
+    "TYPES": {
+      "feeding": "Feeder",
+      "feed-pile": "Feed pile",
+      "bait-site": "Baiting spot",
+      "salt-lick": "Salt lick"
+    },
+    "LIST": "All places",
+    "FILTER_TYPE": "Type",
+    "LOAD_FAILED": "The feeding places could not be loaded.",
+    "DELETE_FAILED": "The place could not be deleted. Please try again.",
+    "DELETE_CONFIRM": "Delete this place? This cannot be undone.",
+    "FORM": {
+      "ADD_TITLE": "Add feeding place",
+      "EDIT_TITLE": "Edit feeding place",
+      "CLOSE": "Close",
+      "TYPE": "Type",
+      "TYPE_PLACEHOLDER": "Select the kind of feeding site",
+      "NO_LOCATION": "No location was recorded for this place.",
+      "LOCATION_UNAVAILABLE": "Your location is not available. The place will be saved without a position.",
+      "PHOTO_PREVIEW": "Photo of the place",
+      "SAVE_FAILED": "The place could not be saved. Please try again."
+    }
   }
 }

@@ -3,9 +3,9 @@ import { Actions, createEffect, ofType, ROOT_EFFECTS_INIT } from '@ngrx/effects'
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { catchError, concatMap, exhaustMap, filter, from, map, mergeMap, of, switchMap, timer, withLatestFrom } from 'rxjs';
-import { HuntingEvent } from '../../model/event';
-import { eventShareText, shareText, ShareResult, toJpeg } from '../../shared/share-event';
+import { eventShareText, sharedPhoto, shareText, ShareResult } from '../../shared/share-event';
 import { EventStorage } from '../../storage/event-storage';
+import { FeedingActions } from '../feeding/feeding.actions';
 import { selectLanguage } from '../settings/settings.reducer';
 import { EventsActions } from './events.actions';
 import {
@@ -164,23 +164,6 @@ export const reloadAfterDelete = createEffect(
   { functional: true },
 );
 
-/** Loads the event's photo, if any, as a JPEG file to attach to the message; a missing photo doesn't stop sharing */
-async function sharedPhoto(event: HuntingEvent, storage: EventStorage): Promise<File | null> {
-  if (!event.photoId) {
-    return null;
-  }
-  try {
-    const photo = await storage.getPhoto(event.photoId);
-    if (!photo) {
-      return null;
-    }
-    const jpeg = await toJpeg(photo);
-    return new File([jpeg], `${event.type}-${event.occurredAt.slice(0, 10)}.jpg`, { type: 'image/jpeg' });
-  } catch {
-    return null;
-  }
-}
-
 /** Shares an event as a text message with links to its location and its photo attached */
 export const shareEvent = createEffect(
   (
@@ -200,7 +183,8 @@ export const shareEvent = createEffect(
           if (!navigator) {
             throw new Error('Sharing is not supported');
           }
-          return shareText(navigator, eventShareText(event, translate, dateFormat), await sharedPhoto(event, storage));
+          const photo = await sharedPhoto(event.photoId, `${event.type}-${event.occurredAt.slice(0, 10)}`, storage);
+          return shareText(navigator, eventShareText(event, translate, dateFormat), photo);
         };
         return from(share()).pipe(
           map((result) => EventsActions.shareEventSuccess({ result })),
@@ -215,7 +199,12 @@ export const shareEvent = createEffect(
 export const dismissShareNotice = createEffect(
   (actions$ = inject(Actions), store = inject(Store)) =>
     actions$.pipe(
-      ofType(EventsActions.shareEventSuccess, EventsActions.shareEventFailure),
+      ofType(
+        EventsActions.shareEventSuccess,
+        EventsActions.shareEventFailure,
+        FeedingActions.sharePlaceSuccess,
+        FeedingActions.sharePlaceFailure,
+      ),
       withLatestFrom(store.select(selectShareNotice)),
       filter(([, notice]) => notice !== null),
       switchMap(() => timer(SHARE_NOTICE_MS).pipe(map(() => EventsActions.dismissShareNotice()))),
