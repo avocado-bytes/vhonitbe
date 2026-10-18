@@ -1,12 +1,13 @@
 {
   "name": "vhonitbe",
-  "version": "0.28.1",
+  "version": "0.31.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
     "build:prod": "ng build --configuration production",
-    "deploy": "rsync -avz --delete ./ avocado@vhonitbe.cloud:/var/www/vhonitbe/",
+    "clear:build": "rm -rf dist/",
+    "deploy": "npm run clear:build && npm run build:prod && ./deploy.sh",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },

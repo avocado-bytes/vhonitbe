@@ -19,6 +19,7 @@ import {
   selectTotal,
 } from '../state/events/events.reducer';
 import { FocusTrap } from '../shared/focus-trap';
+import { formatTagNumber } from '../shared/tag-number';
 import { moonIllumination, MoonIllumination, moonPhaseName, sunTimes } from '../shared/astronomy';
 import { LocationActions } from '../state/location/location.actions';
 import { selectPosition, selectStatus } from '../state/location/location.reducer';
@@ -89,6 +90,7 @@ export class Overview {
   private readonly timeFormat = computed(() => new Intl.DateTimeFormat(this.language(), { timeStyle: 'short' }));
 
   protected readonly icons = DASHBOARD_ICONS;
+  protected readonly formatTagNumber = formatTagNumber;
   protected readonly position = this.store.selectSignal(selectPosition);
   protected readonly locationStatus = this.store.selectSignal(selectStatus);
 

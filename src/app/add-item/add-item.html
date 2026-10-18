@@ -73,6 +73,23 @@
           }
         </select>
       </div>
+
+      @if (hasTagNumber()) {
+        <div class="mb-3">
+          <label for="add-item-tag-number" class="form-label fw-semibold">{{ 'ADD_ITEM.TAG_NUMBER' | translate }}</label>
+          <app-tag-number-input
+            inputId="add-item-tag-number"
+            describedBy="add-item-tag-number-hint add-item-tag-number-error"
+            [(value)]="tagNumber"
+            [invalid]="showTagNumberError()"
+            (blurred)="tagNumberTouched.set(true)"
+          />
+          @if (showTagNumberError()) {
+            <div id="add-item-tag-number-error" class="invalid-feedback d-block">{{ 'ADD_ITEM.TAG_NUMBER_INVALID' | translate }}</div>
+          }
+          <div id="add-item-tag-number-hint" class="form-text">{{ 'ADD_ITEM.TAG_NUMBER_HINT' | translate }}</div>
+        </div>
+      }
     }
 
     <div>

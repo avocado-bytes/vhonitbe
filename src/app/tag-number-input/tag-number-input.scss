@@ -1,0 +1,40 @@
+:host {
+  display: block;
+}
+
+// The mask sits behind the transparent input, so both need the same font, spacing and padding
+.tag-field {
+  position: relative;
+  max-width: 15rem;
+  background-color: var(--bs-body-bg);
+  border-radius: var(--bs-border-radius);
+}
+
+.tag-input,
+.tag-ghost {
+  font-family: var(--bs-font-monospace);
+  font-size: 1.25rem;
+  letter-spacing: 0.12em;
+}
+
+.tag-input {
+  position: relative;
+  background-color: transparent;
+}
+
+.tag-ghost {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  padding: 0 calc(0.75rem + var(--bs-border-width));
+  color: var(--bs-secondary-color);
+  opacity: 0.5;
+  white-space: pre;
+  pointer-events: none;
+}
+
+// Keeps the space of the typed digits, which the input itself shows
+.tag-typed {
+  visibility: hidden;
+}

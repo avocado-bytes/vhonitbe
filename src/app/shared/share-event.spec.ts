@@ -26,7 +26,7 @@ describe('eventShareText', () => {
       ITEMS: { spotting: 'Sighting', feeding: 'Feeding' },
       ANIMALS: { 'roe-deer': 'Roe deer' },
       SEXES: { mixed: 'Mixed', female: 'Female' },
-      OVERVIEW: { HERD: 'Herd', HERD_OF: 'Herd of {{count}}' },
+      OVERVIEW: { HERD: 'Herd', HERD_OF: 'Herd of {{count}}', TAG_NUMBER: 'Tag number' },
       SHARE: { MAPY_CZ: 'Mapy.cz' },
     });
     translate.use('en');
@@ -48,6 +48,12 @@ describe('eventShareText', () => {
     const text = eventShareText(event({ type: 'feeding', animal: null }), translate, dateFormat);
 
     expect(text.split('\n')[0]).toBe('Feeding');
+  });
+
+  it('should add the tag number after the date', () => {
+    const lines = eventShareText(event({ tagNumber: '12345678' }), translate, dateFormat).split('\n');
+
+    expect(lines[2]).toBe('🏷️ Tag number 12 345678');
   });
 
   it('should leave out the note', () => {

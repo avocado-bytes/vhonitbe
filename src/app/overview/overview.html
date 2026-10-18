@@ -348,6 +348,11 @@
                     }
                   </div>
                 }
+                @if (event.tagNumber) {
+                  <div class="small">
+                    {{ 'OVERVIEW.TAG_NUMBER' | translate }} <span class="font-monospace">{{ formatTagNumber(event.tagNumber) }}</span>
+                  </div>
+                }
                 @if (event.location) {
                   <div class="small text-body-secondary">
                     {{ event.location.latitude | number: '1.5-5' }}, {{ event.location.longitude | number: '1.5-5' }}

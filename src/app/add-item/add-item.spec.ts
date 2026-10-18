@@ -27,6 +27,12 @@ describe('AddItem', () => {
   const sexSelect = () => element().querySelector('#add-item-sex') as HTMLSelectElement;
   const herdSizeInput = () => element().querySelector('#add-item-herd-size') as HTMLInputElement;
   const herdCheckbox = () => element().querySelector('#add-item-herd') as HTMLInputElement;
+  const tagInput = () => element().querySelector('#add-item-tag-number') as HTMLInputElement;
+  const enterTag = async (value: string) => {
+    tagInput().value = value;
+    tagInput().dispatchEvent(new InputEvent('input', { inputType: 'insertText' }));
+    await fixture.whenStable();
+  };
   const submitButton = () => element().querySelector('button[type="submit"]') as HTMLButtonElement;
   const dateInput = () => element().querySelector('#add-item-occurred-at') as HTMLInputElement;
   const noteInput = () => element().querySelector('#add-item-note') as HTMLTextAreaElement;
@@ -326,6 +332,70 @@ describe('AddItem', () => {
     });
   });
 
+  describe('tag number', () => {
+    it('should only be asked for harvested hoofed game', async () => {
+      await choose(typeSelect(), 'harvest');
+      expect(tagInput()).toBeNull();
+
+      await choose(animalSelect(), 'roe-deer');
+      expect(tagInput()).not.toBeNull();
+
+      await choose(animalSelect(), 'mallard');
+      expect(tagInput()).toBeNull();
+
+      await choose(animalSelect(), 'red-fox');
+      expect(tagInput()).toBeNull();
+
+      await choose(animalSelect(), 'raccoon');
+      expect(tagInput()).toBeNull();
+
+      await choose(animalSelect(), 'wild-boar');
+      expect(tagInput()).not.toBeNull();
+
+      await choose(typeSelect(), 'spotting');
+      expect(tagInput()).toBeNull();
+    });
+
+    it('should store the digits of the tag number', async () => {
+      await choose(typeSelect(), 'harvest');
+      await choose(animalSelect(), 'roe-deer');
+      await enterTag('12 345678');
+      dispatch.mockClear();
+
+      submitButton().click();
+
+      const { event } = dispatch.mock.calls[0][0] as ReturnType<typeof EventsActions.addEvent>;
+      expect(event.tagNumber).toBe('12345678');
+    });
+
+    it('should block saving an incomplete tag number and point it out once the field is left', async () => {
+      await choose(typeSelect(), 'harvest');
+      await choose(animalSelect(), 'roe-deer');
+      await enterTag('12 345');
+
+      expect(submitButton().disabled).toBe(true);
+      expect(tagInput().classList).not.toContain('is-invalid');
+
+      tagInput().dispatchEvent(new Event('blur'));
+      await fixture.whenStable();
+
+      expect(tagInput().classList).toContain('is-invalid');
+    });
+
+    it('should not store a tag number once the animal is no longer hoofed game', async () => {
+      await choose(typeSelect(), 'harvest');
+      await choose(animalSelect(), 'roe-deer');
+      await enterTag('12345678');
+      await choose(animalSelect(), 'mallard');
+      dispatch.mockClear();
+
+      submitButton().click();
+
+      const { event } = dispatch.mock.calls[0][0] as ReturnType<typeof EventsActions.addEvent>;
+      expect(event.tagNumber).toBeNull();
+    });
+  });
+
   describe('date and time', () => {
     beforeEach(async () => {
       await choose(typeSelect(), 'tracks');
@@ -452,6 +522,7 @@ describe('AddItem', () => {
         herd: false,
         herdSize: null,
         sex: null,
+        tagNumber: null,
         location: { latitude: 49.0, longitude: 13.5 },
         note: 'Clean shot, 80 m',
         occurredAt: expect.any(String),
@@ -498,6 +569,7 @@ describe('AddItem', () => {
     herd: false,
     herdSize: null,
     sex: 'male',
+    tagNumber: '12345678',
     location: { latitude: 49, longitude: 13.5 },
     note: 'Clean shot',
     occurredAt: '2026-10-01T06:30:00.000Z',
@@ -517,6 +589,7 @@ describe('AddItem', () => {
       expect(typeSelect().value).toBe('harvest');
       expect(animalSelect().value).toBe('wild-boar');
       expect(sexSelect().value).toBe('male');
+      expect(tagInput().value).toBe('12 345678');
       expect(dateInput().value).toBe(toDateTimeLocal(new Date(existing.occurredAt)));
       expect(submitButton().disabled).toBe(false);
     });
@@ -572,7 +645,7 @@ describe('AddItem', () => {
       submitButton().click();
 
       expect(dispatch).toHaveBeenCalledWith(
-        EventsActions.updateEvent({ event: { ...existing, type: 'spotting', animal: 'roe-deer' } }),
+        EventsActions.updateEvent({ event: { ...existing, type: 'spotting', animal: 'roe-deer', tagNumber: null } }),
       );
       expect(dispatch).not.toHaveBeenCalledWith(expect.objectContaining({ type: EventsActions.addEvent.type }));
     });

@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.31.0
+
+- A language selected in the settings is remembered in local storage and used on the next start ahead of the browser's languages. Without a stored choice, or when storage is unavailable, the browser's languages decide as before.
+
+## 0.30.0
+
+- The tag number is only asked for when harvesting hoofed game (fallow, red, white-tailed and sika deer, roe deer, chamois, wild goat, mouflon and wild boar). Other game mammals and regulated species such as raccoon don't get tags.
+- The event list shows the tag number below the animal, e.g. "Tag number 12 345678".
+- The shared event message includes the tag number after the date.
+
+## 0.29.0
+
+- Add an optional tag number to harvest events of a mammal: game mammals and regulated mammals such as raccoon or coypu.
+- The field opens the numeric keyboard, accepts only digits (also when pasted), adds the space between the 2 digit and 6 digit sections on its own, and shows the digits still missing as a faint "00 000000" mask in a large monospace font. Backspace after the space deletes the digit before it.
+- An incomplete number blocks saving and is pointed out once the field is left. The digits are stored without the space, and are not saved once the event is no longer a harvested mammal.
+
 ## 0.28.1
 
 - The shared event message no longer includes a Google Maps link. Only the Mapy.cz link to the location is kept.

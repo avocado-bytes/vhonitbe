@@ -99,3 +99,22 @@ export const ANIMAL_GROUPS = {
   'regulated-species': REGULATED_SPECIES,
 } as const satisfies Record<string, readonly Animal[]>;
 export type AnimalGroup = keyof typeof ANIMAL_GROUPS;
+
+/** Hoofed game (spárkatá zvěř), which is marked with a numbered tag (plomba) once harvested */
+const HOOFED_GAME: readonly GameMammal[] = [
+  'fallow-deer',
+  'red-deer',
+  'white-tailed-deer',
+  'chamois',
+  'wild-goat',
+  'mouflon',
+  'wild-boar',
+  'dybowski-sika-deer',
+  'japanese-sika-deer',
+  'roe-deer',
+];
+
+/** A harvested animal of hoofed game is marked with a tag, whose number can be recorded */
+export function hasTagNumber(item: Item, animal: Animal | null): boolean {
+  return item === 'harvest' && animal !== null && HOOFED_GAME.includes(animal as GameMammal);
+}

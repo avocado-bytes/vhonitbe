@@ -5,9 +5,11 @@ import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { TranslatePipe } from '@ngx-translate/core';
 import { GeoPoint, HuntingEvent, NewHuntingEvent, Sex, SEXES } from '../model/event';
-import { Animal, ANIMAL_GROUPS, Item, itemHasAnimal, itemHasHerd, ITEMS } from '../model/item';
+import { Animal, ANIMAL_GROUPS, hasTagNumber, Item, itemHasAnimal, itemHasHerd, ITEMS } from '../model/item';
 import { LocationPicker } from '../location-picker/location-picker';
 import { compressImage } from '../shared/compress-image';
+import { TAG_DIGITS } from '../shared/tag-number';
+import { TagNumberInput } from '../tag-number-input/tag-number-input';
 import { fromDateTimeLocal, toDateTimeLocal } from '../shared/datetime-local';
 import { EventStorage } from '../storage/event-storage';
 import { EventsActions } from '../state/events/events.actions';
@@ -19,7 +21,7 @@ import { selectPosition, selectStatus } from '../state/location/location.reducer
 const MIN_HERD_SIZE = 2;
 
 @Component({
-  imports: [TranslatePipe, KeyValuePipe, LocationPicker],
+  imports: [TranslatePipe, KeyValuePipe, LocationPicker, TagNumberInput],
   selector: 'app-add-item',
   styleUrl: './add-item.scss',
   templateUrl: './add-item.html',
@@ -60,6 +62,19 @@ export class AddItem implements OnInit {
   });
   /** Mixed sex is only offered for a herd */
   protected readonly sexOptions = computed(() => (this.isHerd() ? SEXES : SEXES.filter((sex) => sex !== 'mixed')));
+  protected readonly hasTagNumber = computed(() => {
+    const type = this.type();
+    return type !== null && this.hasAnimal() && hasTagNumber(type, this.animal());
+  });
+  /** The digits of the tag number entered so far */
+  readonly tagNumber = linkedSignal<string>(() => this.event()?.tagNumber ?? '');
+  /** The tag number is optional, but once started all its digits are needed */
+  protected readonly tagNumberInvalid = computed(
+    () => this.hasTagNumber() && this.tagNumber() !== '' && this.tagNumber().length !== TAG_DIGITS,
+  );
+  /** The user left the tag number field, so an incomplete number is pointed out */
+  protected readonly tagNumberTouched = signal(false);
+  protected readonly showTagNumberError = computed(() => this.tagNumberInvalid() && this.tagNumberTouched());
   readonly note = linkedSignal<string>(() => this.event()?.note ?? '');
   /** Where a new event starts instead of the user's current location */
   readonly initialLocation = input<GeoPoint | null>(null);
@@ -99,6 +114,7 @@ export class AddItem implements OnInit {
       fromDateTimeLocal(this.occurredAt()) !== null &&
       !this.isFuture() &&
       !this.herdSizeInvalid() &&
+      !this.tagNumberInvalid() &&
       !this.saving() &&
       !this.photoBusy(),
   );
@@ -192,7 +208,7 @@ export class AddItem implements OnInit {
     event.preventDefault();
     const type = this.type();
     const occurredAt = fromDateTimeLocal(this.occurredAt());
-    if (!type || !occurredAt || this.isFuture() || this.herdSizeInvalid() || this.saving()) {
+    if (!type || !occurredAt || this.isFuture() || this.herdSizeInvalid() || this.tagNumberInvalid() || this.saving()) {
       return;
     }
 
@@ -203,6 +219,7 @@ export class AddItem implements OnInit {
       herd: this.isHerd(),
       herdSize: this.isHerd() && this.herdSize().trim() ? Number(this.herdSize()) : null,
       sex: this.hasAnimal() && (this.isHerd() || this.sex() !== 'mixed') ? this.sex() : null,
+      tagNumber: this.hasTagNumber() && this.tagNumber() ? this.tagNumber() : null,
       location: this.location(),
       note: this.note().trim(),
       occurredAt,

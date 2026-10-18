@@ -1,0 +1,20 @@
+<div class="tag-field">
+  <div class="tag-ghost" aria-hidden="true"><span class="tag-typed">{{ formatted() }}</span>{{ ghost() }}</div>
+  <input
+    type="text"
+    class="form-control tag-input"
+    inputmode="numeric"
+    autocomplete="off"
+    enterkeyhint="next"
+    spellcheck="false"
+    #tagInput
+    [id]="inputId()"
+    [maxLength]="maxLength"
+    [value]="formatted()"
+    [class.is-invalid]="invalid()"
+    [attr.aria-invalid]="invalid()"
+    [attr.aria-describedby]="describedBy()"
+    (input)="onInput(tagInput, $event)"
+    (blur)="blurred.emit()"
+  />
+</div>

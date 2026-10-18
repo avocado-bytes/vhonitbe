@@ -64,6 +64,7 @@ describe('Overview', () => {
         DELETE_FAILED: 'Delete failed',
         HERD: 'Herd',
         HERD_OF: 'Herd of {{count}}',
+        TAG_NUMBER: 'Tag number',
       },
       SEXES: { male: 'Male', female: 'Female', mixed: 'Mixed' },
       ITEMS: { spotting: 'Sighting', harvest: 'Harvest' },
@@ -126,6 +127,14 @@ describe('Overview', () => {
       return line ? Array.from(line.querySelectorAll('span')).map((part) => part.textContent?.trim()) : null;
     });
     expect(details).toEqual([['Roe deer', 'Mixed', 'Herd of 7'], ['Roe deer', 'Female'], ['Roe deer', 'Herd'], null]);
+  });
+
+  it('should show the tag number with a space between its sections', async () => {
+    await setState({ events: [event('a', { type: 'harvest', tagNumber: '12345678' }), event('b')], total: 2 });
+
+    const items = element().querySelectorAll('.event');
+    expect(items[0].textContent).toContain('Tag number 12 345678');
+    expect(items[1].textContent).not.toContain('Tag number');
   });
 
   it('should hide the pagination when everything fits on one page', async () => {

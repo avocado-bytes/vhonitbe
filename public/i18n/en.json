@@ -75,7 +75,10 @@
     "HERD": "Herd (several animals together)",
     "HERD_SIZE": "Number of animals",
     "HERD_SIZE_PLACEHOLDER": "Not counted",
-    "HERD_SIZE_INVALID": "Enter a whole number of at least {{min}}."
+    "HERD_SIZE_INVALID": "Enter a whole number of at least {{min}}.",
+    "TAG_NUMBER": "Tag number",
+    "TAG_NUMBER_HINT": "Optional. The 2 + 6 digits from the tag.",
+    "TAG_NUMBER_INVALID": "Enter all 8 digits of the tag number."
   },
   "ITEMS": {
     "spotting": "Sighting",
@@ -170,7 +173,8 @@
     "SHARE": "Share event",
     "ACTIONS": "Event actions",
     "HERD": "Herd",
-    "HERD_OF": "Herd of {{count}}"
+    "HERD_OF": "Herd of {{count}}",
+    "TAG_NUMBER": "Tag number"
   },
   "LOCATION_PICKER": {
     "MAP": "Map for choosing the location",

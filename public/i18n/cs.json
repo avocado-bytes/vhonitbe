@@ -75,7 +75,10 @@
     "HERD": "Stádo (více kusů pohromadě)",
     "HERD_SIZE": "Počet kusů",
     "HERD_SIZE_PLACEHOLDER": "Nespočítáno",
-    "HERD_SIZE_INVALID": "Zadejte celé číslo, alespoň {{min}}."
+    "HERD_SIZE_INVALID": "Zadejte celé číslo, alespoň {{min}}.",
+    "TAG_NUMBER": "Číslo plomby",
+    "TAG_NUMBER_HINT": "Nepovinné. 2 + 6 číslic z plomby.",
+    "TAG_NUMBER_INVALID": "Zadejte všech 8 číslic čísla plomby."
   },
   "ITEMS": {
     "spotting": "Pozorování",
@@ -170,7 +173,8 @@
     "SHARE": "Sdílet událost",
     "ACTIONS": "Akce události",
     "HERD": "Stádo",
-    "HERD_OF": "Stádo ({{count}} ks)"
+    "HERD_OF": "Stádo ({{count}} ks)",
+    "TAG_NUMBER": "Číslo plomby"
   },
   "LOCATION_PICKER": {
     "MAP": "Mapa pro výběr polohy",

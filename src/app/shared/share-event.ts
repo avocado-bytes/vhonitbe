@@ -1,5 +1,6 @@
 import { TranslateService } from '@ngx-translate/core';
 import { GeoPoint, HuntingEvent } from '../model/event';
+import { formatTagNumber } from './tag-number';
 
 /** How sharing an event ended: sent through the share sheet, copied as a fallback, or dismissed by the user */
 export type ShareResult = 'shared' | 'copied' | 'cancelled';
@@ -30,6 +31,9 @@ export function eventShareText(event: HuntingEvent, translate: TranslateService,
   // The note is left out, as it may hold remarks meant only for the user
   const lines = [details.length ? `${type} – ${details.join(' · ')}` : type];
   lines.push(`📅 ${dateFormat.format(new Date(event.occurredAt))}`);
+  if (event.tagNumber) {
+    lines.push(`🏷️ ${translate.instant('OVERVIEW.TAG_NUMBER')} ${formatTagNumber(event.tagNumber)}`);
+  }
   if (event.location) {
     const { latitude, longitude } = event.location;
     lines.push(

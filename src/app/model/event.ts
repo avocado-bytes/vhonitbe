@@ -26,6 +26,8 @@ export interface HuntingEvent {
   herdSize?: number | null;
   /** Optional for types with an animal; missing in older events */
   sex?: Sex | null;
+  /** The 8 digits of the tag of a harvested mammal, without the space; missing in older events */
+  tagNumber?: string | null;
   location: GeoPoint | null;
   note: string;
   /** Key of the event's photo in the photo store; missing or null without a photo */
