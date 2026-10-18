@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.21.1
+
+- On phones, tapping the map closes the open options and legend panel. That tap only closes the panel and does not open the map menu.
+
 ## 0.21.0
 
 - On phones the map's options and legend panel is collapsed behind a small round button in the top right corner of the map, which shows and hides it. When open, the panel scrolls if it is taller than the map. On larger screens the panel is always shown as before.

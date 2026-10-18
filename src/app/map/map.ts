@@ -60,6 +60,9 @@ const WIND_CONE_STYLE: L.PathOptions = {
 };
 
 
+/** Matches the breakpoint in map.scss below which the panel is collapsed behind its toggle button */
+const PHONE_MEDIA_QUERY = '(max-width: 767.98px)';
+
 /** ~10 cm; avoids noise like 49.00000000001 from map projections */
 const PRECISION = 1e6;
 
@@ -266,6 +269,11 @@ export class MapView {
     map.on('contextmenu', (event: L.LeafletMouseEvent) => this.openMenu(event));
     // Touch devices have no right click, so a plain tap opens the menu as well
     map.on('click', (event: L.LeafletMouseEvent) => {
+      // On phones the open panel covers the map, so a tap on the map only closes it
+      if (this.panelOpen() && typeof matchMedia !== 'undefined' && matchMedia(PHONE_MEDIA_QUERY).matches) {
+        this.store.dispatch(MapOptionsActions.setPanelOpen({ open: false }));
+        return;
+      }
       if (typeof matchMedia !== 'undefined' && matchMedia('(pointer: coarse)').matches) {
         this.openMenu(event);
       }

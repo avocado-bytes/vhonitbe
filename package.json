@@ -1,12 +1,12 @@
 {
   "name": "vhonitbe",
-  "version": "0.21.0",
+  "version": "0.21.1",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
     "build:prod": "ng build --configuration production",
-    "deploy": "rsync -avz --delete ./dist/vhonitbe/browser avocado@vhonitbe.cloud:/var/www/vhonitbe/",
+    "deploy": "rsync -avz --delete ./ avocado@vhonitbe.cloud:/var/www/vhonitbe/",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
