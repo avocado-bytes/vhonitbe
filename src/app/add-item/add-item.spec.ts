@@ -24,6 +24,9 @@ describe('AddItem', () => {
   const element = () => fixture.nativeElement as HTMLElement;
   const typeSelect = () => element().querySelector('#add-item-type') as HTMLSelectElement;
   const animalSelect = () => element().querySelector('#add-item-animal') as HTMLSelectElement;
+  const sexSelect = () => element().querySelector('#add-item-sex') as HTMLSelectElement;
+  const herdSizeInput = () => element().querySelector('#add-item-herd-size') as HTMLInputElement;
+  const herdCheckbox = () => element().querySelector('#add-item-herd') as HTMLInputElement;
   const submitButton = () => element().querySelector('button[type="submit"]') as HTMLButtonElement;
   const dateInput = () => element().querySelector('#add-item-occurred-at') as HTMLInputElement;
   const noteInput = () => element().querySelector('#add-item-note') as HTMLTextAreaElement;
@@ -31,6 +34,11 @@ describe('AddItem', () => {
   const enterNote = async (value: string) => {
     noteInput().value = value;
     noteInput().dispatchEvent(new Event('input'));
+    await fixture.whenStable();
+  };
+  const enterHerdSize = async (value: string) => {
+    herdSizeInput().value = value;
+    herdSizeInput().dispatchEvent(new Event('input'));
     await fixture.whenStable();
   };
   const enterDate = async (value: string) => {
@@ -111,7 +119,43 @@ describe('AddItem', () => {
     });
   });
 
+  it('should only show the other fields once an event type is selected', async () => {
+    expect(animalSelect()).toBeNull();
+    expect(dateInput()).toBeNull();
+    expect(noteInput()).toBeNull();
+    expect(submitButton()).toBeNull();
+
+    await choose(typeSelect(), 'tracks');
+
+    expect(dateInput()).not.toBeNull();
+    expect(noteInput()).not.toBeNull();
+    expect(submitButton()).not.toBeNull();
+  });
+
   describe('animal', () => {
+    beforeEach(async () => {
+      await choose(typeSelect(), 'spotting');
+    });
+
+    it('should be hidden for event types without an animal', async () => {
+      expect(animalSelect()).not.toBeNull();
+
+      await choose(typeSelect(), 'feeding');
+
+      expect(animalSelect()).toBeNull();
+    });
+
+    it('should not store an animal chosen before switching to a type without one', async () => {
+      await choose(animalSelect(), 'roe-deer');
+      await choose(typeSelect(), 'hunting-stand');
+      dispatch.mockClear();
+
+      submitButton().click();
+
+      const { event } = dispatch.mock.calls[0][0] as ReturnType<typeof EventsActions.addEvent>;
+      expect(event.animal).toBeNull();
+    });
+
     it('should group the animals in their declared order', () => {
       const groups = Array.from(animalSelect().querySelectorAll('optgroup'));
 
@@ -136,7 +180,157 @@ describe('AddItem', () => {
     });
   });
 
+  describe('sex', () => {
+    it('should be optional and offered only for event types with an animal', async () => {
+      await choose(typeSelect(), 'harvest');
+      expect(Array.from(sexSelect().options).map((option) => option.value)).toEqual(['', 'male', 'female']);
+      expect(sexSelect().value).toBe('');
+
+      await choose(typeSelect(), 'feeding');
+
+      expect(sexSelect()).toBeNull();
+    });
+
+    it('should store the selected sex', async () => {
+      await choose(typeSelect(), 'harvest');
+      await choose(sexSelect(), 'female');
+      dispatch.mockClear();
+
+      submitButton().click();
+
+      const { event } = dispatch.mock.calls[0][0] as ReturnType<typeof EventsActions.addEvent>;
+      expect(event.sex).toBe('female');
+    });
+
+    it('should not store a sex chosen before switching to a type without an animal', async () => {
+      await choose(typeSelect(), 'harvest');
+      await choose(sexSelect(), 'male');
+      await choose(typeSelect(), 'salt-lick');
+      dispatch.mockClear();
+
+      submitButton().click();
+
+      const { event } = dispatch.mock.calls[0][0] as ReturnType<typeof EventsActions.addEvent>;
+      expect(event.sex).toBeNull();
+    });
+  });
+
+  describe('herd', () => {
+    const check = async (checked: boolean) => {
+      herdCheckbox().checked = checked;
+      herdCheckbox().dispatchEvent(new Event('change'));
+      await fixture.whenStable();
+    };
+
+    it('should only be offered for sightings, unchecked by default', async () => {
+      await choose(typeSelect(), 'harvest');
+      expect(herdCheckbox()).toBeNull();
+
+      await choose(typeSelect(), 'spotting');
+
+      expect(herdCheckbox().checked).toBe(false);
+    });
+
+    it('should store whether a sighting was of a herd', async () => {
+      await choose(typeSelect(), 'spotting');
+      await check(true);
+      dispatch.mockClear();
+
+      submitButton().click();
+
+      const { event } = dispatch.mock.calls[0][0] as ReturnType<typeof EventsActions.addEvent>;
+      expect(event.herd).toBe(true);
+    });
+
+    it('should ask for the number of animals only for a herd', async () => {
+      await choose(typeSelect(), 'spotting');
+      expect(herdSizeInput()).toBeNull();
+
+      await check(true);
+
+      expect(herdSizeInput()).not.toBeNull();
+      expect(herdSizeInput().value).toBe('');
+    });
+
+    it('should store the number of animals in the herd', async () => {
+      await choose(typeSelect(), 'spotting');
+      await check(true);
+      await enterHerdSize('7');
+      dispatch.mockClear();
+
+      submitButton().click();
+
+      const { event } = dispatch.mock.calls[0][0] as ReturnType<typeof EventsActions.addEvent>;
+      expect(event.herdSize).toBe(7);
+    });
+
+    it('should reject a number of animals below two or not whole', async () => {
+      await choose(typeSelect(), 'spotting');
+      await check(true);
+
+      for (const value of ['1', '2.5']) {
+        await enterHerdSize(value);
+        expect(submitButton().disabled).toBe(true);
+        expect(herdSizeInput().classList).toContain('is-invalid');
+      }
+
+      await enterHerdSize('2');
+      expect(submitButton().disabled).toBe(false);
+    });
+
+    it('should drop the number of animals when the sighting is no longer a herd', async () => {
+      await choose(typeSelect(), 'spotting');
+      await check(true);
+      await enterHerdSize('1');
+      await check(false);
+      dispatch.mockClear();
+
+      submitButton().click();
+
+      const { event } = dispatch.mock.calls[0][0] as ReturnType<typeof EventsActions.addEvent>;
+      expect(event.herdSize).toBeNull();
+    });
+
+    it('should offer mixed sex only for a herd', async () => {
+      await choose(typeSelect(), 'spotting');
+      expect(Array.from(sexSelect().options).map((option) => option.value)).not.toContain('mixed');
+
+      await check(true);
+
+      expect(Array.from(sexSelect().options).map((option) => option.value)).toEqual(['', 'male', 'female', 'mixed']);
+    });
+
+    it('should not store mixed sex once the sighting is no longer a herd', async () => {
+      await choose(typeSelect(), 'spotting');
+      await check(true);
+      await choose(sexSelect(), 'mixed');
+      await check(false);
+      dispatch.mockClear();
+
+      submitButton().click();
+
+      const { event } = dispatch.mock.calls[0][0] as ReturnType<typeof EventsActions.addEvent>;
+      expect(event.sex).toBeNull();
+    });
+
+    it('should not store a herd for other event types', async () => {
+      await choose(typeSelect(), 'spotting');
+      await check(true);
+      await choose(typeSelect(), 'tracks');
+      dispatch.mockClear();
+
+      submitButton().click();
+
+      const { event } = dispatch.mock.calls[0][0] as ReturnType<typeof EventsActions.addEvent>;
+      expect(event.herd).toBe(false);
+    });
+  });
+
   describe('date and time', () => {
+    beforeEach(async () => {
+      await choose(typeSelect(), 'tracks');
+    });
+
     it('should preselect the current date and time', () => {
       const shown = new Date(dateInput().value).getTime();
 
@@ -194,6 +388,10 @@ describe('AddItem', () => {
   });
 
   describe('location', () => {
+    beforeEach(async () => {
+      await choose(typeSelect(), 'tracks');
+    });
+
     it('should wait for the current location', () => {
       expect(picker()).toBeNull();
       expect(element().querySelector('[role="status"]')?.textContent).toContain('Finding your location…');
@@ -224,9 +422,7 @@ describe('AddItem', () => {
   });
 
   describe('submit', () => {
-    it('should be disabled until an event type is selected', async () => {
-      expect(submitButton().disabled).toBe(true);
-
+    it('should be enabled once an event type is selected', async () => {
       await choose(typeSelect(), 'tracks');
 
       expect(submitButton().disabled).toBe(false);
@@ -253,6 +449,9 @@ describe('AddItem', () => {
       expect(event).toEqual({
         type: 'harvest',
         animal: 'wild-boar',
+        herd: false,
+        herdSize: null,
+        sex: null,
         location: { latitude: 49.0, longitude: 13.5 },
         note: 'Clean shot, 80 m',
         occurredAt: expect.any(String),
@@ -282,6 +481,7 @@ describe('AddItem', () => {
     });
 
     it('should show an error when saving failed', async () => {
+      await choose(typeSelect(), 'tracks');
       expect(element().querySelector('[role="alert"]')).toBeNull();
 
       await setState({ events: { saveError: 'QuotaExceededError' } });
@@ -295,6 +495,9 @@ describe('AddItem', () => {
     id: 'id-1',
     type: 'harvest',
     animal: 'wild-boar',
+    herd: false,
+    herdSize: null,
+    sex: 'male',
     location: { latitude: 49, longitude: 13.5 },
     note: 'Clean shot',
     occurredAt: '2026-10-01T06:30:00.000Z',
@@ -313,6 +516,7 @@ describe('AddItem', () => {
     it('should prefill the selection and date from the event', () => {
       expect(typeSelect().value).toBe('harvest');
       expect(animalSelect().value).toBe('wild-boar');
+      expect(sexSelect().value).toBe('male');
       expect(dateInput().value).toBe(toDateTimeLocal(new Date(existing.occurredAt)));
       expect(submitButton().disabled).toBe(false);
     });

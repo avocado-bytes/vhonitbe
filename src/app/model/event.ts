@@ -1,5 +1,9 @@
 import { Animal, Item } from './item';
 
+/** 'mixed' only applies to a herd of both sexes */
+export const SEXES = ['male', 'female', 'mixed'] as const;
+export type Sex = (typeof SEXES)[number];
+
 export interface GeoPoint {
   latitude: number;
   longitude: number;
@@ -16,6 +20,12 @@ export interface HuntingEvent {
   id: string;
   type: Item;
   animal: Animal | null;
+  /** Several animals were seen together rather than an individual; only for sightings, missing in older events */
+  herd?: boolean;
+  /** How many animals the herd had, if counted; at least 2 */
+  herdSize?: number | null;
+  /** Optional for types with an animal; missing in older events */
+  sex?: Sex | null;
   location: GeoPoint | null;
   note: string;
   /** Key of the event's photo in the photo store; missing or null without a photo */

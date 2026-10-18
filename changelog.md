@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.27.0
+
+- The event list shows the sex and herd next to the animal, separated by dots, e.g. "Roe deer · Mixed · Herd of 7". It shows just "Herd" when the herd size was not counted.
+
+## 0.26.0
+
+- A sighting marked as a herd can record the number of animals: an optional whole number of at least 2, stored as the event's herd size.
+- The sex dropdown offers "Mixed" for a herd. The herd checkbox now comes right after the animal, before the sex.
+- A herd size or mixed sex entered for a herd is not saved once the sighting is no longer marked as a herd.
+
+## 0.25.0
+
+- Add an optional sex (male or female) to the add and edit item form for event types with an animal.
+- Add a "Herd" checkbox for sightings, to record whether several animals were seen together or an individual.
+- Both are stored with the event. Older events without them work as before. A sex or herd entered before switching to a type that doesn't offer it is not saved.
+
+## 0.24.0
+
+- The add and edit item form first shows only the event type. The other fields and the save button appear once a type is selected.
+- The animal field is only shown for event types that concern an animal. It is hidden for feeding, salt lick, hunting stand and trail camera, and such events are saved without an animal, even if one was chosen before switching the type.
+
 ## 0.23.0
 
 - On phones each event in the list shows a single three dots button in place of its action icons. It opens a menu listing the actions with their names: show photo, show on map, share, edit and delete. The menu closes after choosing an action, on a tap outside it, or with Escape. Larger screens keep the icon buttons.

@@ -22,6 +22,18 @@ export const ITEMS = [
 ] as const;
 export type Item = (typeof ITEMS)[number];
 
+/** Items about a place or a facility rather than an animal, so they are recorded without one */
+const ITEMS_WITHOUT_ANIMAL: readonly Item[] = ['feeding', 'salt-lick', 'hunting-stand', 'trail-camera'];
+
+export function itemHasAnimal(item: Item): boolean {
+  return !ITEMS_WITHOUT_ANIMAL.includes(item);
+}
+
+/** Only a sighting can be of a herd or an individual */
+export function itemHasHerd(item: Item): boolean {
+  return item === 'spotting';
+}
+
 /** Srstnatá zvěř – Vyhláška č. 245/2002 Sb., § 1 */
 export const GAME_MAMMALS = [
   'fallow-deer', // daněk skvrnitý

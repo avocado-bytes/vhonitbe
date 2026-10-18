@@ -4,8 +4,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { TranslatePipe } from '@ngx-translate/core';
-import { GeoPoint, HuntingEvent, NewHuntingEvent } from '../model/event';
-import { Animal, ANIMAL_GROUPS, Item, ITEMS } from '../model/item';
+import { GeoPoint, HuntingEvent, NewHuntingEvent, Sex, SEXES } from '../model/event';
+import { Animal, ANIMAL_GROUPS, Item, itemHasAnimal, itemHasHerd, ITEMS } from '../model/item';
 import { LocationPicker } from '../location-picker/location-picker';
 import { compressImage } from '../shared/compress-image';
 import { fromDateTimeLocal, toDateTimeLocal } from '../shared/datetime-local';
@@ -14,6 +14,9 @@ import { EventsActions } from '../state/events/events.actions';
 import { selectSaveError, selectSaving } from '../state/events/events.reducer';
 import { LocationActions } from '../state/location/location.actions';
 import { selectPosition, selectStatus } from '../state/location/location.reducer';
+
+/** A herd has at least two animals */
+const MIN_HERD_SIZE = 2;
 
 @Component({
   imports: [TranslatePipe, KeyValuePipe, LocationPicker],
@@ -26,6 +29,7 @@ export class AddItem implements OnInit {
   private readonly storage = inject(EventStorage);
 
   protected readonly items = ITEMS;
+  protected readonly minHerdSize = MIN_HERD_SIZE;
   protected readonly animalGroups = ANIMAL_GROUPS;
   /** Keeps the groups in their declared order instead of KeyValuePipe's alphabetical order */
   protected readonly keepOrder = () => 0;
@@ -35,6 +39,27 @@ export class AddItem implements OnInit {
 
   readonly type = linkedSignal<Item | null>(() => this.event()?.type ?? null);
   readonly animal = linkedSignal<Animal | null>(() => this.event()?.animal ?? null);
+  /** The animal is only asked for, and stored, for types that concern one */
+  protected readonly hasAnimal = computed(() => {
+    const type = this.type();
+    return type !== null && itemHasAnimal(type);
+  });
+  protected readonly hasHerd = computed(() => {
+    const type = this.type();
+    return type !== null && itemHasHerd(type);
+  });
+  readonly herd = linkedSignal<boolean>(() => this.event()?.herd ?? false);
+  readonly sex = linkedSignal<Sex | null>(() => this.event()?.sex ?? null);
+  /** The raw value of the herd size input; empty when not counted */
+  readonly herdSize = linkedSignal<string>(() => this.event()?.herdSize?.toString() ?? '');
+  /** Herd details only apply to a sighting marked as a herd */
+  protected readonly isHerd = computed(() => this.hasHerd() && this.herd());
+  protected readonly herdSizeInvalid = computed(() => {
+    const value = this.herdSize().trim();
+    return this.isHerd() && value !== '' && !(Number.isInteger(Number(value)) && Number(value) >= MIN_HERD_SIZE);
+  });
+  /** Mixed sex is only offered for a herd */
+  protected readonly sexOptions = computed(() => (this.isHerd() ? SEXES : SEXES.filter((sex) => sex !== 'mixed')));
   readonly note = linkedSignal<string>(() => this.event()?.note ?? '');
   /** Where a new event starts instead of the user's current location */
   readonly initialLocation = input<GeoPoint | null>(null);
@@ -70,7 +95,12 @@ export class AddItem implements OnInit {
 
   protected readonly canSubmit = computed(
     () =>
-      !!this.type() && fromDateTimeLocal(this.occurredAt()) !== null && !this.isFuture() && !this.saving() && !this.photoBusy(),
+      !!this.type() &&
+      fromDateTimeLocal(this.occurredAt()) !== null &&
+      !this.isFuture() &&
+      !this.herdSizeInvalid() &&
+      !this.saving() &&
+      !this.photoBusy(),
   );
 
   /** Emits the stored event once it has been persisted */
@@ -154,15 +184,29 @@ export class AddItem implements OnInit {
     this.animal.set(value as Animal);
   }
 
+  protected selectSex(value: string): void {
+    this.sex.set(value ? (value as Sex) : null);
+  }
+
   protected submit(event: SubmitEvent): void {
     event.preventDefault();
     const type = this.type();
     const occurredAt = fromDateTimeLocal(this.occurredAt());
-    if (!type || !occurredAt || this.isFuture() || this.saving()) {
+    if (!type || !occurredAt || this.isFuture() || this.herdSizeInvalid() || this.saving()) {
       return;
     }
 
-    const fields = { type, animal: this.animal(), location: this.location(), note: this.note().trim(), occurredAt };
+    // Hidden fields filled in before switching to a type without them are dropped
+    const fields = {
+      type,
+      animal: this.hasAnimal() ? this.animal() : null,
+      herd: this.isHerd(),
+      herdSize: this.isHerd() && this.herdSize().trim() ? Number(this.herdSize()) : null,
+      sex: this.hasAnimal() && (this.isHerd() || this.sex() !== 'mixed') ? this.sex() : null,
+      location: this.location(),
+      note: this.note().trim(),
+      occurredAt,
+    };
     const photo = this.photo();
     if (!this.photoChanged()) {
       this.save(fields, this.event()?.photoId);

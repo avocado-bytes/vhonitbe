@@ -69,7 +69,13 @@
     "REMOVE_PHOTO": "Odebrat fotografii",
     "PHOTO_PROCESSING": "Zpracovávám fotografii…",
     "PHOTO_FAILED": "Fotografii se nepodařilo zpracovat nebo uložit. Zkuste to prosím znovu.",
-    "PHOTO_PREVIEW": "Fotografie události"
+    "PHOTO_PREVIEW": "Fotografie události",
+    "SEX": "Pohlaví",
+    "SEX_UNKNOWN": "Neurčeno",
+    "HERD": "Stádo (více kusů pohromadě)",
+    "HERD_SIZE": "Počet kusů",
+    "HERD_SIZE_PLACEHOLDER": "Nespočítáno",
+    "HERD_SIZE_INVALID": "Zadejte celé číslo, alespoň {{min}}."
   },
   "ITEMS": {
     "spotting": "Pozorování",
@@ -130,6 +136,11 @@
     "raccoon-dog": "Psík mývalovitý",
     "muskrat": "Ondatra pižmová"
   },
+  "SEXES": {
+    "male": "Samec",
+    "female": "Samice",
+    "mixed": "Smíšené"
+  },
   "OVERVIEW": {
     "TITLE": "Události",
     "LOADING": "Načítám události…",
@@ -157,7 +168,9 @@
     "SHOW_PHOTO": "Zobrazit fotografii",
     "PHOTO_CLOSE": "Zavřít",
     "SHARE": "Sdílet událost",
-    "ACTIONS": "Akce události"
+    "ACTIONS": "Akce události",
+    "HERD": "Stádo",
+    "HERD_OF": "Stádo ({{count}} ks)"
   },
   "LOCATION_PICKER": {
     "MAP": "Mapa pro výběr polohy",

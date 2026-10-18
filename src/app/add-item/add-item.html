@@ -9,105 +9,158 @@
     </select>
   </div>
 
-  <div class="mb-3">
-    <label for="add-item-animal" class="form-label fw-semibold">{{ 'ADD_ITEM.ANIMAL' | translate }}</label>
-    <select id="add-item-animal" class="form-select" #animalSelect (change)="selectAnimal(animalSelect.value)">
-      <option value="" disabled [selected]="animal() === null">{{ 'ADD_ITEM.ANIMAL_PLACEHOLDER' | translate }}</option>
-      @for (group of animalGroups | keyvalue: keepOrder; track group.key) {
-        <optgroup [label]="'ANIMAL_GROUPS.' + group.key | translate">
-          @for (option of group.value; track option) {
-            <option [value]="option" [selected]="animal() === option">{{ 'ANIMALS.' + option | translate }}</option>
+  <!-- The other fields depend on the type, so they appear once it is chosen -->
+  @if (type()) {
+    @if (hasAnimal()) {
+      <div class="mb-3">
+        <label for="add-item-animal" class="form-label fw-semibold">{{ 'ADD_ITEM.ANIMAL' | translate }}</label>
+        <select id="add-item-animal" class="form-select" #animalSelect (change)="selectAnimal(animalSelect.value)">
+          <option value="" disabled [selected]="animal() === null">{{ 'ADD_ITEM.ANIMAL_PLACEHOLDER' | translate }}</option>
+          @for (group of animalGroups | keyvalue: keepOrder; track group.key) {
+            <optgroup [label]="'ANIMAL_GROUPS.' + group.key | translate">
+              @for (option of group.value; track option) {
+                <option [value]="option" [selected]="animal() === option">{{ 'ANIMALS.' + option | translate }}</option>
+              }
+            </optgroup>
           }
-        </optgroup>
+        </select>
+      </div>
+
+      @if (hasHerd()) {
+        <div class="form-check mb-3">
+          <input
+            id="add-item-herd"
+            class="form-check-input"
+            type="checkbox"
+            #herdCheckbox
+            [checked]="herd()"
+            (change)="herd.set(herdCheckbox.checked)"
+          />
+          <label class="form-check-label" for="add-item-herd">{{ 'ADD_ITEM.HERD' | translate }}</label>
+        </div>
       }
-    </select>
-  </div>
 
-  <div>
-    <label for="add-item-occurred-at" class="form-label fw-semibold">{{ 'ADD_ITEM.OCCURRED_AT' | translate }}</label>
-    <input
-      id="add-item-occurred-at"
-      type="datetime-local"
-      class="form-control"
-      required
-      aria-describedby="add-item-occurred-at-error"
-      #occurredAtInput
-      [max]="maxOccurredAt"
-      [value]="occurredAt()"
-      [class.is-invalid]="isFuture()"
-      [attr.aria-invalid]="isFuture()"
-      (input)="occurredAt.set(occurredAtInput.value)"
-    />
-    <div id="add-item-occurred-at-error" class="invalid-feedback">{{ 'ADD_ITEM.FUTURE_DATE' | translate }}</div>
-  </div>
+      @if (isHerd()) {
+        <div class="mb-3">
+          <label for="add-item-herd-size" class="form-label fw-semibold">{{ 'ADD_ITEM.HERD_SIZE' | translate }}</label>
+          <input
+            id="add-item-herd-size"
+            type="number"
+            class="form-control"
+            inputmode="numeric"
+            step="1"
+            aria-describedby="add-item-herd-size-error"
+            #herdSizeInput
+            [min]="minHerdSize"
+            [placeholder]="'ADD_ITEM.HERD_SIZE_PLACEHOLDER' | translate"
+            [value]="herdSize()"
+            [class.is-invalid]="herdSizeInvalid()"
+            [attr.aria-invalid]="herdSizeInvalid()"
+            (input)="herdSize.set(herdSizeInput.value)"
+          />
+          <div id="add-item-herd-size-error" class="invalid-feedback">
+            {{ 'ADD_ITEM.HERD_SIZE_INVALID' | translate: { min: minHerdSize } }}
+          </div>
+        </div>
+      }
 
-  <div class="mt-3" role="group" aria-labelledby="add-item-location-label">
-    <div id="add-item-location-label" class="form-label fw-semibold">{{ 'ADD_ITEM.LOCATION' | translate }}</div>
-    @if (location(); as current) {
-      <app-location-picker [location]="current" (locationChange)="location.set($event)" />
-    } @else if (event()) {
-      <p class="form-text mb-0">{{ 'ADD_ITEM.NO_LOCATION' | translate }}</p>
-    } @else if (locationStatus() === 'error') {
-      <p class="form-text mb-0">{{ 'ADD_ITEM.LOCATION_UNAVAILABLE' | translate }}</p>
-    } @else {
-      <p class="form-text mb-0" role="status">{{ 'MAP.LOCATING' | translate }}</p>
+      <div class="mb-3">
+        <label for="add-item-sex" class="form-label fw-semibold">{{ 'ADD_ITEM.SEX' | translate }}</label>
+        <select id="add-item-sex" class="form-select" #sexSelect (change)="selectSex(sexSelect.value)">
+          <option value="" [selected]="sex() === null">{{ 'ADD_ITEM.SEX_UNKNOWN' | translate }}</option>
+          @for (option of sexOptions(); track option) {
+            <option [value]="option" [selected]="sex() === option">{{ 'SEXES.' + option | translate }}</option>
+          }
+        </select>
+      </div>
     }
-  </div>
 
-  <div class="mt-3">
-    <label for="add-item-note" class="form-label fw-semibold">{{ 'ADD_ITEM.NOTE' | translate }}</label>
-    <textarea
-      id="add-item-note"
-      class="form-control"
-      rows="3"
-      #noteInput
-      [value]="note()"
-      (input)="note.set(noteInput.value)"
-    ></textarea>
-  </div>
-
-  <div class="mt-3" role="group" aria-labelledby="add-item-photo-label">
-    <div id="add-item-photo-label" class="form-label fw-semibold">{{ 'ADD_ITEM.PHOTO' | translate }}</div>
-    @if (photoUrl(); as url) {
-      <img class="photo-preview d-block rounded border mb-2" [src]="url" [alt]="'ADD_ITEM.PHOTO_PREVIEW' | translate" />
-    }
-    <div class="d-flex flex-wrap align-items-center gap-2">
-      <!-- The rear camera opens on phones; elsewhere a file can be chosen -->
+    <div>
+      <label for="add-item-occurred-at" class="form-label fw-semibold">{{ 'ADD_ITEM.OCCURRED_AT' | translate }}</label>
       <input
-        id="add-item-photo"
-        class="visually-hidden"
-        type="file"
-        accept="image/*"
-        capture="environment"
-        #photoInput
-        [disabled]="photoBusy()"
-        (change)="selectPhoto(photoInput)"
+        id="add-item-occurred-at"
+        type="datetime-local"
+        class="form-control"
+        required
+        aria-describedby="add-item-occurred-at-error"
+        #occurredAtInput
+        [max]="maxOccurredAt"
+        [value]="occurredAt()"
+        [class.is-invalid]="isFuture()"
+        [attr.aria-invalid]="isFuture()"
+        (input)="occurredAt.set(occurredAtInput.value)"
       />
-      <label for="add-item-photo" class="btn btn-outline-primary btn-sm mb-0" [class.disabled]="photoBusy()">
-        {{ (photo() ? 'ADD_ITEM.REPLACE_PHOTO' : 'ADD_ITEM.TAKE_PHOTO') | translate }}
-      </label>
-      @if (photo()) {
-        <button type="button" class="btn btn-outline-danger btn-sm" [disabled]="photoBusy()" (click)="removePhoto()">
-          {{ 'ADD_ITEM.REMOVE_PHOTO' | translate }}
-        </button>
-      }
-      @if (photoBusy()) {
-        <span class="small text-body-secondary d-inline-flex align-items-center gap-2" role="status">
-          <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
-          {{ 'ADD_ITEM.PHOTO_PROCESSING' | translate }}
-        </span>
+      <div id="add-item-occurred-at-error" class="invalid-feedback">{{ 'ADD_ITEM.FUTURE_DATE' | translate }}</div>
+    </div>
+
+    <div class="mt-3" role="group" aria-labelledby="add-item-location-label">
+      <div id="add-item-location-label" class="form-label fw-semibold">{{ 'ADD_ITEM.LOCATION' | translate }}</div>
+      @if (location(); as current) {
+        <app-location-picker [location]="current" (locationChange)="location.set($event)" />
+      } @else if (event()) {
+        <p class="form-text mb-0">{{ 'ADD_ITEM.NO_LOCATION' | translate }}</p>
+      } @else if (locationStatus() === 'error') {
+        <p class="form-text mb-0">{{ 'ADD_ITEM.LOCATION_UNAVAILABLE' | translate }}</p>
+      } @else {
+        <p class="form-text mb-0" role="status">{{ 'MAP.LOCATING' | translate }}</p>
       }
     </div>
-    @if (photoError()) {
-      <p class="small text-danger mt-1 mb-0" role="alert">{{ 'ADD_ITEM.PHOTO_FAILED' | translate }}</p>
+
+    <div class="mt-3">
+      <label for="add-item-note" class="form-label fw-semibold">{{ 'ADD_ITEM.NOTE' | translate }}</label>
+      <textarea
+        id="add-item-note"
+        class="form-control"
+        rows="3"
+        #noteInput
+        [value]="note()"
+        (input)="note.set(noteInput.value)"
+      ></textarea>
+    </div>
+
+    <div class="mt-3" role="group" aria-labelledby="add-item-photo-label">
+      <div id="add-item-photo-label" class="form-label fw-semibold">{{ 'ADD_ITEM.PHOTO' | translate }}</div>
+      @if (photoUrl(); as url) {
+        <img class="photo-preview d-block rounded border mb-2" [src]="url" [alt]="'ADD_ITEM.PHOTO_PREVIEW' | translate" />
+      }
+      <div class="d-flex flex-wrap align-items-center gap-2">
+        <!-- The rear camera opens on phones; elsewhere a file can be chosen -->
+        <input
+          id="add-item-photo"
+          class="visually-hidden"
+          type="file"
+          accept="image/*"
+          capture="environment"
+          #photoInput
+          [disabled]="photoBusy()"
+          (change)="selectPhoto(photoInput)"
+        />
+        <label for="add-item-photo" class="btn btn-outline-primary btn-sm mb-0" [class.disabled]="photoBusy()">
+          {{ (photo() ? 'ADD_ITEM.REPLACE_PHOTO' : 'ADD_ITEM.TAKE_PHOTO') | translate }}
+        </label>
+        @if (photo()) {
+          <button type="button" class="btn btn-outline-danger btn-sm" [disabled]="photoBusy()" (click)="removePhoto()">
+            {{ 'ADD_ITEM.REMOVE_PHOTO' | translate }}
+          </button>
+        }
+        @if (photoBusy()) {
+          <span class="small text-body-secondary d-inline-flex align-items-center gap-2" role="status">
+            <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+            {{ 'ADD_ITEM.PHOTO_PROCESSING' | translate }}
+          </span>
+        }
+      </div>
+      @if (photoError()) {
+        <p class="small text-danger mt-1 mb-0" role="alert">{{ 'ADD_ITEM.PHOTO_FAILED' | translate }}</p>
+      }
+    </div>
+
+    @if (error()) {
+      <p class="text-danger small mt-3 mb-0" role="alert">{{ 'ADD_ITEM.SAVE_FAILED' | translate }}</p>
     }
-  </div>
 
-  @if (error()) {
-    <p class="text-danger small mt-3 mb-0" role="alert">{{ 'ADD_ITEM.SAVE_FAILED' | translate }}</p>
+    <div class="d-flex justify-content-end mt-4">
+      <button type="submit" class="btn btn-primary" [disabled]="!canSubmit()">{{ 'ADD_ITEM.SUBMIT' | translate }}</button>
+    </div>
   }
-
-  <div class="d-flex justify-content-end mt-4">
-    <button type="submit" class="btn btn-primary" [disabled]="!canSubmit()">{{ 'ADD_ITEM.SUBMIT' | translate }}</button>
-  </div>
 </form>

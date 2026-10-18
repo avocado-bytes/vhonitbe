@@ -62,7 +62,10 @@ describe('Overview', () => {
         DELETE: 'Delete event',
         DELETE_CONFIRM: 'Delete this event?',
         DELETE_FAILED: 'Delete failed',
+        HERD: 'Herd',
+        HERD_OF: 'Herd of {{count}}',
       },
+      SEXES: { male: 'Male', female: 'Female', mixed: 'Mixed' },
       ITEMS: { spotting: 'Sighting', harvest: 'Harvest' },
       ANIMALS: { 'roe-deer': 'Roe deer' },
     });
@@ -105,6 +108,24 @@ describe('Overview', () => {
       new Intl.DateTimeFormat('en', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date('2026-10-01T06:30:00.000Z')),
     );
     expect(items[1].textContent).not.toContain('Roe deer');
+  });
+
+  it('should show the animal, sex and herd of an event on one line', async () => {
+    await setState({
+      events: [
+        event('a', { sex: 'mixed', herd: true, herdSize: 7 }),
+        event('b', { sex: 'female' }),
+        event('c', { herd: true, herdSize: null }),
+        event('d', { animal: null }),
+      ],
+      total: 4,
+    });
+
+    const details = Array.from(element().querySelectorAll('.event')).map((item) => {
+      const line = item.querySelector('.event-details');
+      return line ? Array.from(line.querySelectorAll('span')).map((part) => part.textContent?.trim()) : null;
+    });
+    expect(details).toEqual([['Roe deer', 'Mixed', 'Herd of 7'], ['Roe deer', 'Female'], ['Roe deer', 'Herd'], null]);
   });
 
   it('should hide the pagination when everything fits on one page', async () => {

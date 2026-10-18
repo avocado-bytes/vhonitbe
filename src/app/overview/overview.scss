@@ -74,6 +74,11 @@
   z-index: 1000;
 }
 
+// Animal, sex and herd on one line, separated by dots
+.event-details > span + span::before {
+  content: ' · ';
+}
+
 .item-action-danger:hover:not(:disabled) {
   color: var(--bs-danger);
   background-color: rgba(var(--bs-danger-rgb), 0.1);

@@ -69,7 +69,13 @@
     "REMOVE_PHOTO": "Remove photo",
     "PHOTO_PROCESSING": "Processing photo…",
     "PHOTO_FAILED": "The photo could not be processed or saved. Please try again.",
-    "PHOTO_PREVIEW": "Photo of the event"
+    "PHOTO_PREVIEW": "Photo of the event",
+    "SEX": "Sex",
+    "SEX_UNKNOWN": "Not specified",
+    "HERD": "Herd (several animals together)",
+    "HERD_SIZE": "Number of animals",
+    "HERD_SIZE_PLACEHOLDER": "Not counted",
+    "HERD_SIZE_INVALID": "Enter a whole number of at least {{min}}."
   },
   "ITEMS": {
     "spotting": "Sighting",
@@ -130,6 +136,11 @@
     "raccoon-dog": "Raccoon dog",
     "muskrat": "Muskrat"
   },
+  "SEXES": {
+    "male": "Male",
+    "female": "Female",
+    "mixed": "Mixed"
+  },
   "OVERVIEW": {
     "TITLE": "Events",
     "LOADING": "Loading events…",
@@ -157,7 +168,9 @@
     "SHOW_PHOTO": "Show photo",
     "PHOTO_CLOSE": "Close",
     "SHARE": "Share event",
-    "ACTIONS": "Event actions"
+    "ACTIONS": "Event actions",
+    "HERD": "Herd",
+    "HERD_OF": "Herd of {{count}}"
   },
   "LOCATION_PICKER": {
     "MAP": "Map for choosing the location",

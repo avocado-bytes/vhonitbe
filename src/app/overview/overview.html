@@ -335,8 +335,18 @@
                     }
                   </div>
                 </div>
-                @if (event.animal) {
-                  <div>{{ 'ANIMALS.' + event.animal | translate }}</div>
+                @if (event.animal || event.sex || event.herd) {
+                  <div class="event-details">
+                    @if (event.animal) {
+                      <span>{{ 'ANIMALS.' + event.animal | translate }}</span>
+                    }
+                    @if (event.sex) {
+                      <span>{{ 'SEXES.' + event.sex | translate }}</span>
+                    }
+                    @if (event.herd) {
+                      <span>{{ (event.herdSize ? 'OVERVIEW.HERD_OF' : 'OVERVIEW.HERD') | translate: { count: event.herdSize } }}</span>
+                    }
+                  </div>
                 }
                 @if (event.location) {
                   <div class="small text-body-secondary">
