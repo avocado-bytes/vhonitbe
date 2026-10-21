@@ -89,7 +89,8 @@
     "AMMUNITION": "Ammunition",
     "NOT_GIVEN": "Not given",
     "AS_RECORDED": "{{label}} (as recorded)",
-    "WEAPON_HINT": "Save your firearms and ammunition on the \"Firearms and ammunition\" page to choose them here."
+    "WEAPON_HINT": "Save your firearms and ammunition on the \"Firearms and ammunition\" page to choose them here.",
+    "RETURN_TO_POSITION": "Back to my position"
   },
   "ITEMS": {
     "spotting": "Sighting",
@@ -332,7 +333,7 @@
       "STEPS": [
         "Allow access to your location when asked. The app needs it for sunrise and sunset, the weather, the map and to place new records where you stand.",
         "Your records and photos are stored only on this phone. Nothing is sent anywhere unless you share it yourself.",
-        "Open the menu with the ☰ button in the top left corner to switch between the overview, the map, feeding and this guide."
+        "Open the menu with the ☰ button in the top left corner to switch between the overview, the map, feeding, firearms and ammunition, and this guide."
       ]
     },
     "overview": {
@@ -353,8 +354,9 @@
         "Choose what happened: a sighting, tracks, a harvest, game damage and so on.",
         "For events about game, choose the animal and, if you know it, its sex. A sighting can be marked as a herd, with the number of animals.",
         "When you harvest hoofed game, enter the number of its tag.",
+        "For a harvest, choose the firearm and ammunition you used from those saved on the Firearms and ammunition page. Their details are copied into the harvest as they are now, so changing the firearm later does not alter it.",
         "The date and time are set to now; change them when you record the event later.",
-        "The location starts where you stand. If the event happened elsewhere, move the small map until the crosshair is on the right spot.",
+        "The location starts where you stand. If the event happened elsewhere, move the small map until the crosshair is on the right spot. Back to my position puts it back where you are.",
         "Add a note and a photo: take a new one with the camera or choose one from the gallery.",
         "Tap Save."
       ]
@@ -402,6 +404,17 @@
         "Places can be shown on a map, shared, edited and deleted just like events."
       ]
     },
+    "firearms": {
+      "TITLE": "Firearms and ammunition",
+      "TEXT": "Keep your firearms and ammunition here, so you can pick them when recording a harvest.",
+      "STEPS": [
+        "Tap the + button and choose whether you are adding a firearm or ammunition.",
+        "A firearm has a name and a caliber – pick a common cartridge or type in any other. You can add the barrel length in mm or inches, the thread pitch, a sight with its make and model, and whether it is suppressed.",
+        "Ammunition has a caliber, factory or handload, bullet weight, muzzle velocity, bullet type and G1 ballistic coefficient. Factory ammunition can have its make and product name.",
+        "For a handload you can also record the primer, the powder and its charge, the brass, how many times the brass has been fired and the overall cartridge length.",
+        "Edit or delete a firearm or ammunition with the ⋮ button next to it. Harvests keep the firearm and ammunition as they were recorded."
+      ]
+    },
     "settings": {
       "TITLE": "Settings",
       "TEXT": "The gear button in the top right corner opens the settings.",
@@ -413,14 +426,16 @@
     },
     "SHOTS": {
       "overview": "The overview with today’s conditions and your events",
-      "add-event": "Recording a sighting",
+      "add-event": "Recording a harvest with the firearm and ammunition used",
       "event-actions": "The actions of an event",
       "map": "The map with its options and the wind cone",
       "map-menu": "Press and hold on the map to add an event",
       "feeding": "The feeding season, the replenishment interval and the map of feeding places",
       "feeding-list": "A feeding place that needs replenishing, with its actions",
       "navigation": "Red dots tell you that a feeding place needs attention",
-      "settings": "The settings"
+      "settings": "The settings",
+      "firearms": "Your firearms and ammunition",
+      "add-ammunition": "Adding a handload"
     }
   },
   "FIREARMS": {

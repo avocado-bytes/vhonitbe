@@ -52,4 +52,12 @@ describe('LocationPicker', () => {
     expect(input('location-picker-latitude').value).toBe('49.123457');
     expect(input('location-picker-longitude').value).toBe('13.987654');
   });
+
+  it('should move the map to a location set from outside', async () => {
+    fixture.componentInstance.location.set({ latitude: 49.2, longitude: 13.6 });
+    await fixture.whenStable();
+
+    expect(map().getCenter()).toEqual(expect.objectContaining({ lat: 49.2, lng: 13.6 }));
+    expect(input('location-picker-latitude').value).toBe('49.200000');
+  });
 });

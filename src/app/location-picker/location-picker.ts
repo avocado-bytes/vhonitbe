@@ -1,4 +1,4 @@
-import { afterNextRender, Component, DestroyRef, ElementRef, inject, model, viewChild } from '@angular/core';
+import { afterNextRender, Component, DestroyRef, effect, ElementRef, inject, model, viewChild } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
 import type * as Leaflet from 'leaflet';
@@ -16,7 +16,8 @@ async function loadLeaflet(): Promise<typeof Leaflet> {
 }
 
 /**
- * A small map with a crosshair in its center; panning the map moves the location.
+ * A small map with a crosshair in its center; panning the map moves the location, and a location set
+ * from outside, e.g. back to the user's position, moves the map.
  * Leaflet is loaded on demand, so it stays out of the initial bundle.
  */
 @Component({
@@ -57,6 +58,19 @@ export class LocationPicker {
       if (typeof ResizeObserver !== 'undefined') {
         resizeObserver = new ResizeObserver(() => map.invalidateSize());
         resizeObserver.observe(this.container().nativeElement);
+      }
+    });
+
+    // Follows a location set from outside; one set by panning is already the map's center
+    effect(() => {
+      const { latitude, longitude } = this.location();
+      const map = this.map;
+      if (!map) {
+        return;
+      }
+      const center = map.getCenter();
+      if (Math.abs(center.lat - latitude) > 1 / PRECISION || Math.abs(center.lng - longitude) > 1 / PRECISION) {
+        map.setView([latitude, longitude], map.getZoom(), { animate: false });
       }
     });
 

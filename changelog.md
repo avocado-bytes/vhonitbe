@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.52.0
+
+- The user guide has its phone screenshots, in Czech and in English: the overview, recording a harvest with its firearm and ammunition, the actions of an event, the map with its options and its press-and-hold menu, the feeding page and a feeding place due for replenishing, the side navigation with its red dots, the firearms and ammunition, adding a handload, and the settings. They show sample records in the Brdy area.
+
+## 0.51.1
+
+- A "User guide" / "Návod" page in the side navigation, with a book icon. It explains the app in sections, with a table of contents: getting started, the overview, recording an event, working with events, the map, feeding, replenishing feeding places, firearms and ammunition, and the settings. The texts are in English and Czech, and each section can show phone screenshots in the selected language, loaded only when scrolled to; the screenshots themselves follow in a later version.
+- The section on recording an event covers choosing the firearm and ammunition of a harvest, which are copied into it as they are, and the "Back to my position" button of the location map.
+- The new "Firearms and ammunition" section covers adding firearms and ammunition with the add button, the details of a handload, and editing and deleting them.
+
+## 0.51.0
+
+- When a new event's location is moved away from the device's position on the small map, a "Back to my position" / "Zpět na moji polohu" button appears below it and moves the location back to where the device is now. It is also offered for an event added at a point on the map, but not when editing an event, which keeps its recorded location.
+- The small location map follows a location set from outside, not only one set by moving it.
+
 ## 0.50.1
 
 - The two numbers of a firearm's thread pitch are separated by a colon instead of a slash, in the form and in the list, e.g. "thread pitch 1:10" / "stoupání závitu 1:10".

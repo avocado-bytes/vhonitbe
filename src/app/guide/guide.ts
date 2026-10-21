@@ -19,6 +19,7 @@ export const GUIDE_SECTIONS: readonly GuideSection[] = [
   { id: 'map', screenshots: ['map', 'map-menu'] },
   { id: 'feeding', screenshots: ['feeding'] },
   { id: 'replenishing', screenshots: ['feeding-list', 'navigation'] },
+  { id: 'firearms', screenshots: ['firearms', 'add-ammunition'] },
   { id: 'settings', screenshots: ['settings'] },
 ];
 

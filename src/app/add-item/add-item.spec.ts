@@ -109,6 +109,7 @@ describe('AddItem', () => {
         NO_LOCATION: 'No location recorded',
         LOCATION_UNAVAILABLE: 'Location unavailable',
         NOT_GIVEN: 'Not given',
+        RETURN_TO_POSITION: 'Back to my position',
         AS_RECORDED: '{{label}} (as recorded)',
       },
       MAP: { LOCATING: 'Finding your location…' },
@@ -822,6 +823,70 @@ describe('AddItem', () => {
 
         expect((dispatch.mock.calls[0][0] as ReturnType<typeof EventsActions.updateEvent>).event.firearm).toEqual(firearmCopy);
       });
+    });
+  });
+
+  describe('returning to the user\'s position', () => {
+    const here = { latitude: 49.0, longitude: 13.5, accuracy: 5 };
+    const returnButton = () =>
+      Array.from(element().querySelectorAll('button')).find((button) => button.textContent?.includes('Back to my position'));
+
+    beforeEach(async () => {
+      await choose(typeSelect(), 'spotting');
+      await setState({ location: { status: 'located', position: here } });
+    });
+
+    it('should not be offered while a new event is at the user\'s position', () => {
+      expect(component.location()).toEqual({ latitude: 49.0, longitude: 13.5 });
+      expect(returnButton()).toBeUndefined();
+    });
+
+    it('should be offered once the location was moved, and move it back to the user\'s position', async () => {
+      component.location.set({ latitude: 49.01, longitude: 13.52 });
+      await fixture.whenStable();
+
+      returnButton()!.click();
+      await fixture.whenStable();
+
+      expect(component.location()).toEqual({ latitude: 49.0, longitude: 13.5 });
+      expect(returnButton()).toBeUndefined();
+    });
+
+    it('should return to where the device is now, after it has moved', async () => {
+      component.location.set({ latitude: 49.01, longitude: 13.52 });
+      await setState({ location: { status: 'located', position: { latitude: 49.002, longitude: 13.503, accuracy: 5 } } });
+
+      returnButton()!.click();
+
+      expect(component.location()).toEqual({ latitude: 49.002, longitude: 13.503 });
+    });
+
+    it('should be offered for an event added at a point on the map', async () => {
+      fixture = TestBed.createComponent(AddItem);
+      component = fixture.componentInstance;
+      fixture.componentRef.setInput('initialLocation', { latitude: 49.05, longitude: 13.6 });
+      await fixture.whenStable();
+      await choose(typeSelect(), 'spotting');
+
+      expect(returnButton()).toBeDefined();
+    });
+
+    it('should not be offered when editing an event, which keeps its recorded location', async () => {
+      fixture = TestBed.createComponent(AddItem);
+      component = fixture.componentInstance;
+      fixture.componentRef.setInput('event', {
+        id: 'e1',
+        type: 'spotting',
+        animal: null,
+        location: { latitude: 49.05, longitude: 13.6 },
+        note: '',
+        occurredAt: '2026-10-01T06:30:00.000Z',
+        createdAt: '2026-10-01T06:31:00.000Z',
+        updatedAt: '2026-10-01T06:31:00.000Z',
+      } satisfies HuntingEvent);
+      await fixture.whenStable();
+
+      expect(returnButton()).toBeUndefined();
     });
   });
 });

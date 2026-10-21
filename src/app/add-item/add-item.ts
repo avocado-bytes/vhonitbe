@@ -27,6 +27,9 @@ import { selectPosition, selectStatus } from '../state/location/location.reducer
 /** A herd has at least two animals */
 const MIN_HERD_SIZE = 2;
 
+/** The location picker rounds to about 10 cm, so a location this close is the user's position */
+const POSITION_TOLERANCE = 1e-6;
+
 /** The dropdown value of the firearm or ammunition copied into an edited event, as opposed to the id of a saved one */
 const RECORDED = 'recorded';
 
@@ -104,6 +107,18 @@ export class AddItem implements OnInit {
 
   /** Where the event happened; moved with the location picker */
   readonly location = linkedSignal<GeoPoint | null>(() => this.event()?.location ?? this.initialLocation() ?? null);
+  /** A new event placed away from the user's position can be moved back to it */
+  protected readonly canReturnToPosition = computed(() => {
+    const position = this.position();
+    const location = this.location();
+    if (this.event() || !position || !location) {
+      return false;
+    }
+    return (
+      Math.abs(position.latitude - location.latitude) > POSITION_TOLERANCE ||
+      Math.abs(position.longitude - location.longitude) > POSITION_TOLERANCE
+    );
+  });
   /** Local "YYYY-MM-DDTHH:mm" value of the date input; now for a new event */
   readonly occurredAt = linkedSignal<string>(() => {
     const event = this.event();
@@ -190,6 +205,14 @@ export class AddItem implements OnInit {
           this.photo.set(photo);
         }
       });
+    }
+  }
+
+  /** Moves the location back to where the user's device is now */
+  protected returnToPosition(): void {
+    const position = this.position();
+    if (position) {
+      this.location.set({ latitude: position.latitude, longitude: position.longitude });
     }
   }
 

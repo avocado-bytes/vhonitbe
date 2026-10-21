@@ -89,7 +89,8 @@
     "AMMUNITION": "Střelivo",
     "NOT_GIVEN": "Neuvedeno",
     "AS_RECORDED": "{{label}} (jak bylo zaznamenáno)",
-    "WEAPON_HINT": "Své zbraně a střelivo uložte na stránce „Zbraně a střelivo“, abyste je zde mohli vybrat."
+    "WEAPON_HINT": "Své zbraně a střelivo uložte na stránce „Zbraně a střelivo“, abyste je zde mohli vybrat.",
+    "RETURN_TO_POSITION": "Zpět na moji polohu"
   },
   "ITEMS": {
     "spotting": "Pozorování",
@@ -332,7 +333,7 @@
       "STEPS": [
         "Když se aplikace zeptá, povolte přístup k poloze. Potřebuje ji pro východ a západ slunce, počasí, mapu a k zaznamenání nových záznamů tam, kde stojíte.",
         "Vaše záznamy a fotografie jsou uložené jen v tomto telefonu. Nikam se neposílají, dokud je sami nesdílíte.",
-        "Tlačítkem ☰ vlevo nahoře otevřete nabídku a přepínáte mezi přehledem, mapou, přikrmováním a tímto návodem."
+        "Tlačítkem ☰ vlevo nahoře otevřete nabídku a přepínáte mezi přehledem, mapou, přikrmováním, zbraněmi a střelivem a tímto návodem."
       ]
     },
     "overview": {
@@ -353,8 +354,9 @@
         "Vyberte, co se stalo: pozorování, stopy, úlovek, škody zvěří a další.",
         "U událostí se zvěří vyberte zvíře a případně jeho pohlaví. Pozorování můžete označit jako stádo a zadat počet kusů.",
         "Při ulovení spárkaté zvěře zadejte číslo plomby.",
+        "U úlovku vyberte zbraň a střelivo, které jste použili, z uložených na stránce Zbraně a střelivo. Jejich údaje se do úlovku zkopírují tak, jak jsou teď, takže pozdější změna zbraně úlovek nezmění.",
         "Datum a čas jsou nastavené na teď; změňte je, když událost zapisujete později.",
-        "Poloha začíná tam, kde stojíte. Pokud se událost stala jinde, posuňte malou mapu tak, aby byl zaměřovač na správném místě.",
+        "Poloha začíná tam, kde stojíte. Pokud se událost stala jinde, posuňte malou mapu tak, aby byl zaměřovač na správném místě. Tlačítko Zpět na moji polohu ho vrátí tam, kde jste.",
         "Přidejte poznámku a fotografii: vyfoťte novou nebo vyberte z galerie.",
         "Klepněte na Uložit."
       ]
@@ -402,6 +404,17 @@
         "Místa můžete stejně jako události zobrazit na mapě, sdílet, upravit a smazat."
       ]
     },
+    "firearms": {
+      "TITLE": "Zbraně a střelivo",
+      "TEXT": "Zde si veďte své zbraně a střelivo, abyste je mohli vybrat při zaznamenání úlovku.",
+      "STEPS": [
+        "Klepněte na tlačítko + a vyberte, zda přidáváte zbraň, nebo střelivo.",
+        "Zbraň má název a ráži – vyberte běžný náboj, nebo napište jakýkoli jiný. Můžete doplnit délku hlavně v mm nebo palcích, stoupání závitu, optiku se značkou a modelem a zda má tlumič.",
+        "Střelivo má ráži, údaj, zda je tovární, nebo přebíjené, hmotnost střely, úsťovou rychlost, typ střely a balistický koeficient G1. U továrního střeliva můžete uvést výrobce a název.",
+        "U přebíjeného střeliva můžete zaznamenat také zápalku, prach a jeho navážku, nábojnici, kolikrát už byla vystřelena, a celkovou délku náboje.",
+        "Zbraň nebo střelivo upravíte či smažete tlačítkem ⋮ vedle nich. Úlovky si zbraň a střelivo ponechají tak, jak byly zaznamenány."
+      ]
+    },
     "settings": {
       "TITLE": "Nastavení",
       "TEXT": "Tlačítko s ozubeným kolem vpravo nahoře otevře nastavení.",
@@ -413,14 +426,16 @@
     },
     "SHOTS": {
       "overview": "Přehled s dnešními podmínkami a vašimi událostmi",
-      "add-event": "Zaznamenání pozorování",
+      "add-event": "Zaznamenání úlovku s použitou zbraní a střelivem",
       "event-actions": "Akce události",
       "map": "Mapa s možnostmi a kuželem větru",
       "map-menu": "Podržením prstu na mapě přidáte událost",
       "feeding": "Doba přikrmování, interval doplňování a mapa míst přikrmování",
       "feeding-list": "Místo přikrmování, které potřebuje doplnit, s jeho akcemi",
       "navigation": "Červené tečky upozorňují, že místo přikrmování potřebuje pozornost",
-      "settings": "Nastavení"
+      "settings": "Nastavení",
+      "firearms": "Vaše zbraně a střelivo",
+      "add-ammunition": "Přidání přebíjeného střeliva"
     }
   },
   "FIREARMS": {
