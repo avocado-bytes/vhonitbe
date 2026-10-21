@@ -1,0 +1,48 @@
+<article class="container py-3 guide">
+  <h1 class="h4 mb-2">{{ 'GUIDE.TITLE' | translate }}</h1>
+  <p class="text-body-secondary">{{ 'GUIDE.INTRO' | translate }}</p>
+
+  <nav class="card mb-4" aria-labelledby="guide-contents">
+    <div class="card-body">
+      <h2 id="guide-contents" class="h6 card-title text-body-secondary">{{ 'GUIDE.CONTENTS' | translate }}</h2>
+      <ol class="mb-0 ps-3">
+        @for (section of sections; track section.id) {
+          <li>
+            <a class="link-primary" [href]="'#guide-' + section.id" (click)="$event.preventDefault(); scrollTo(section.id)">
+              {{ 'GUIDE.' + section.id + '.TITLE' | translate }}
+            </a>
+          </li>
+        }
+      </ol>
+    </div>
+  </nav>
+
+  @for (section of sections; track section.id; let index = $index) {
+    <section class="guide-section mb-4" [id]="'guide-' + section.id" [attr.aria-labelledby]="'guide-' + section.id + '-title'">
+      <h2 class="h5" [id]="'guide-' + section.id + '-title'">{{ index + 1 }}. {{ 'GUIDE.' + section.id + '.TITLE' | translate }}</h2>
+      <p>{{ 'GUIDE.' + section.id + '.TEXT' | translate }}</p>
+      <ul class="mb-3">
+        @for (step of 'GUIDE.' + section.id + '.STEPS' | translate; track $index) {
+          <li>{{ step }}</li>
+        }
+      </ul>
+      @if (section.screenshots.length) {
+        <div class="d-flex flex-wrap justify-content-center gap-3">
+          @for (shot of section.screenshots; track shot) {
+            <figure class="guide-shot mb-0">
+              <img
+                class="d-block w-100 h-auto rounded-3 border shadow-sm"
+                [src]="'guide/' + language() + '/' + shot + '.jpg'"
+                [alt]="'GUIDE.SHOTS.' + shot | translate"
+                width="390"
+                height="844"
+                loading="lazy"
+              />
+              <figcaption class="small text-body-secondary text-center mt-2">{{ 'GUIDE.SHOTS.' + shot | translate }}</figcaption>
+            </figure>
+          }
+        </div>
+      }
+    </section>
+  }
+</article>

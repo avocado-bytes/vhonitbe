@@ -61,6 +61,20 @@ export class App {
     fragment: 'ignored',
     matrixParams: 'ignored',
   });
+  /** The firearms page has its own add button */
+  protected readonly isFirearmsActive = isActive('/firearms', this.router, {
+    paths: 'exact',
+    queryParams: 'ignored',
+    fragment: 'ignored',
+    matrixParams: 'ignored',
+  });
+  /** The guide has nothing to add */
+  protected readonly isGuideActive = isActive('/guide', this.router, {
+    paths: 'exact',
+    queryParams: 'ignored',
+    fragment: 'ignored',
+    matrixParams: 'ignored',
+  });
   /** The map adds items from its context menu instead of the fab button */
   protected readonly isMapActive = isActive('/map', this.router, {
     paths: 'exact',

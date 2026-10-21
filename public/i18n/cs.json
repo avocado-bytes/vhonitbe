@@ -27,7 +27,9 @@
     "MAP": "Mapa",
     "CLOSE": "Zavřít navigaci",
     "FEEDING": "Přikrmování",
-    "FEEDING_ATTENTION": "Místa přikrmování potřebují doplnit"
+    "FEEDING_ATTENTION": "Místa přikrmování potřebují doplnit",
+    "GUIDE": "Návod",
+    "FIREARMS": "Zbraně a střelivo"
   },
   "MAP": {
     "LOCATING": "Zjišťuji vaši polohu…",
@@ -312,5 +314,219 @@
     "NEVER_REPLENISHED": "Zatím nedoplněno",
     "NEEDS_REPLENISHING": "Potřebuje doplnit",
     "REPLENISH_FAILED": "Doplnění se nepodařilo uložit. Zkuste to prosím znovu."
+  },
+  "GUIDE": {
+    "TITLE": "Návod",
+    "INTRO": "vHonitbě je váš myslivecký deník do terénu. Zaznamená, co jste v honitbě viděli a udělali, ukáže podmínky pro dnešní lov a pomůže vám starat se o krmelce a slaniska.",
+    "CONTENTS": "Obsah",
+    "start": {
+      "TITLE": "Začínáme",
+      "TEXT": "vHonitbě běží ve webovém prohlížeči telefonu. Pro rychlý přístup si ji přidejte na plochu: otevřete nabídku prohlížeče a zvolte „Přidat na plochu“ nebo „Nainstalovat aplikaci“. Pak se otevírá jako každá jiná aplikace.",
+      "STEPS": [
+        "Když se aplikace zeptá, povolte přístup k poloze. Potřebuje ji pro východ a západ slunce, počasí, mapu a k zaznamenání nových záznamů tam, kde stojíte.",
+        "Vaše záznamy a fotografie jsou uložené jen v tomto telefonu. Nikam se neposílají, dokud je sami nesdílíte.",
+        "Tlačítkem ☰ vlevo nahoře otevřete nabídku a přepínáte mezi přehledem, mapou, přikrmováním a tímto návodem."
+      ]
+    },
+    "overview": {
+      "TITLE": "Přehled",
+      "TEXT": "Úvodní stránka ukazuje podmínky pro dnešní lov a seznam vašich záznamů.",
+      "STEPS": [
+        "Dnes: východ a západ slunce ve vašem místě.",
+        "Měsíc: aktuální fáze a kolik procent měsíce je osvětleno.",
+        "Počasí a Vítr: teplota a počasí právě teď, rychlost větru a odkud fouká; šipka ukazuje, kam vítr vane.",
+        "V noci se objeví žluté upozornění: od jedné hodiny po západu do jedné hodiny před východem slunce se některá zvěř nesmí lovit.",
+        "Pod tím jsou vaše události, nejnovější nahoře. Filtry nad seznamem změníte pořadí nebo zobrazíte jen jeden druh události či jedno zvíře."
+      ]
+    },
+    "add-event": {
+      "TITLE": "Zaznamenání události",
+      "TEXT": "Klepněte na kulaté tlačítko + vpravo dole na přehledu a vyplňte formulář.",
+      "STEPS": [
+        "Vyberte, co se stalo: pozorování, stopy, úlovek, škody zvěří a další.",
+        "U událostí se zvěří vyberte zvíře a případně jeho pohlaví. Pozorování můžete označit jako stádo a zadat počet kusů.",
+        "Při ulovení spárkaté zvěře zadejte číslo plomby.",
+        "Datum a čas jsou nastavené na teď; změňte je, když událost zapisujete později.",
+        "Poloha začíná tam, kde stojíte. Pokud se událost stala jinde, posuňte malou mapu tak, aby byl zaměřovač na správném místě.",
+        "Přidejte poznámku a fotografii: vyfoťte novou nebo vyberte z galerie.",
+        "Klepněte na Uložit."
+      ]
+    },
+    "event-actions": {
+      "TITLE": "Práce s událostmi",
+      "TEXT": "Každá událost v seznamu má své akce pod tlačítkem ⋮ vpravo.",
+      "STEPS": [
+        "Zobrazit fotografii a Zobrazit na mapě otevřou fotografii nebo mapu místa.",
+        "Sdílet událost pošle krátkou zprávu, například přes WhatsApp, s událostí, místem s odkazem na Mapy.cz a fotografií. Vaše poznámka se nikdy nesdílí.",
+        "Upravit událost otevře formulář pro změny.",
+        "Smazat událost ji po potvrzení odstraní i s fotografií."
+      ]
+    },
+    "map": {
+      "TITLE": "Mapa",
+      "TEXT": "Mapa ukazuje, kde jste, a vašich deset posledních událostí.",
+      "STEPS": [
+        "Tlačítkem vpravo nahoře zobrazíte možnosti mapy a legendu.",
+        "Sledovat moji polohu průběžně aktualizuje vaši polohu; Mapa mě následuje navíc drží mapu vystředěnou na vás.",
+        "Vzdálenostní kruhy ukazují 100, 150 a 200 m kolem vás.",
+        "Kužel větru ukazuje, kam vítr nese váš pach; se silnějším větrem se prodlužuje.",
+        "Bezpečnost střelby obarví terén kolem vás: zeleně tam, kde terén kulku zastaví, oranžově tam, kde ji zastaví až dál, červeně tam, kde žádný záchyt není nebo je blízko budova. Je to jen odhad – záchyt si vždy ověřte sami.",
+        "Klepnutím na špendlík události zjistíte, o co jde. Podržením prstu na špendlíku událost sdílíte, upravíte nebo smažete.",
+        "Podržením prstu kdekoli na mapě přidáte událost přímo tam, nebo nastavíte svou polohu ručně, když ji telefon nemůže najít."
+      ]
+    },
+    "feeding": {
+      "TITLE": "Přikrmování",
+      "TEXT": "Stránka Přikrmování vám pomůže starat se o místa, kde zvěř přikrmujete: krmelce, hromady, zásypy a slaniska.",
+      "STEPS": [
+        "Doba přikrmování: vyberte první a poslední měsíc; výchozí je říjen až březen. Štítek ukazuje, zda doba přikrmování právě probíhá.",
+        "Doplňování: kolik dní smí uplynout mezi doplněními místa; výchozí je 5 dní.",
+        "Mapa ukazuje všechna vaše místa přikrmování, každý druh vlastní barvou.",
+        "Místo přidáte tlačítkem + na této stránce: vyberte jeho druh, zkontrolujte polohu a přidejte poznámku nebo fotografii."
+      ]
+    },
+    "replenishing": {
+      "TITLE": "Doplňování míst přikrmování",
+      "TEXT": "U každého místa v seznamu je vidět, kdy bylo naposledy doplněno.",
+      "STEPS": [
+        "Po doplnění místa otevřete jeho akce tlačítkem ⋮ a klepněte na zelené Doplněno. Uloží se aktuální datum a čas.",
+        "V době přikrmování dostane místo, které ještě nebylo doplněno nebo nebylo doplněno v nastaveném intervalu, červený pruh a poznámku Potřebuje doplnit.",
+        "Ať jste v aplikaci kdekoli, červená tečka na tlačítku nabídky a u položky Přikrmování vám dá vědět, že některé místo potřebuje pozornost.",
+        "Místa můžete stejně jako události zobrazit na mapě, sdílet, upravit a smazat."
+      ]
+    },
+    "settings": {
+      "TITLE": "Nastavení",
+      "TEXT": "Tlačítko s ozubeným kolem vpravo nahoře otevře nastavení.",
+      "STEPS": [
+        "Vzhled: světlý, nebo tmavý pro šero a noc.",
+        "Jazyk: čeština nebo angličtina.",
+        "Dole je uvedená verze aplikace."
+      ]
+    },
+    "SHOTS": {
+      "overview": "Přehled s dnešními podmínkami a vašimi událostmi",
+      "add-event": "Zaznamenání pozorování",
+      "event-actions": "Akce události",
+      "map": "Mapa s možnostmi a kuželem větru",
+      "map-menu": "Podržením prstu na mapě přidáte událost",
+      "feeding": "Doba přikrmování, interval doplňování a mapa míst přikrmování",
+      "feeding-list": "Místo přikrmování, které potřebuje doplnit, s jeho akcemi",
+      "navigation": "Červené tečky upozorňují, že místo přikrmování potřebuje pozornost",
+      "settings": "Nastavení"
+    }
+  },
+  "FIREARMS": {
+    "TITLE": "Zbraně",
+    "ADD": "Přidat zbraň",
+    "LOADING": "Načítání zbraní…",
+    "EMPTY": "Zatím žádné zbraně. Přidejte první tlačítkem +.",
+    "LOAD_FAILED": "Zbraně se nepodařilo načíst.",
+    "OPTICS": {
+      "none": "Bez optiky",
+      "riflescope": "Puškohled",
+      "red-dot": "Kolimátor",
+      "thermal": "Termovize",
+      "night-vision": "Noční vidění"
+    },
+    "FORM": {
+      "ADD_TITLE": "Přidat zbraň",
+      "CLOSE": "Zavřít",
+      "NAME": "Název",
+      "NAME_PLACEHOLDER": "např. Blaser R8",
+      "CALIBER": "Ráže",
+      "CALIBER_PLACEHOLDER": "např. .308 Win",
+      "OPTICS": "Optika",
+      "SAVE_FAILED": "Zbraň se nepodařilo uložit. Zkuste to prosím znovu.",
+      "CALIBER_HINT": "Vyberte běžný náboj, nebo napište jakýkoli jiný.",
+      "OPTICS_MODEL": "Značka a model",
+      "OPTICS_MODEL_PLACEHOLDER": "např. Zeiss Victory V8 2,8-20×56",
+      "EDIT_TITLE": "Upravit zbraň",
+      "SUPPRESSED": "S tlumičem hluku výstřelu",
+      "ADD_ANY_TITLE": "Přidat",
+      "KIND": "Co přidáváte?",
+      "KIND_PLACEHOLDER": "Vyberte zbraň nebo střelivo",
+      "KINDS": {
+        "firearm": "Zbraň",
+        "ammunition": "Střelivo"
+      },
+      "BARREL_LENGTH": "Délka hlavně",
+      "LENGTH_UNIT": "Jednotka délky hlavně",
+      "BARREL_LENGTH_PLACEHOLDER": {
+        "mm": "např. 560",
+        "in": "např. 22"
+      },
+      "BARREL_LENGTH_INVALID": "Zadejte délku od {{min}} do {{max}} {{unit}}."
+    },
+    "EDIT": "Upravit zbraň",
+    "ACTIONS": "Akce zbraně",
+    "SUPPRESSED": "S tlumičem",
+    "DELETE": "Smazat zbraň",
+    "DELETE_CONFIRM": "Smazat tuto zbraň? Tuto akci nelze vrátit.",
+    "DELETE_FAILED": "Zbraň se nepodařilo smazat. Zkuste to prosím znovu.",
+    "PAGE_TITLE": "Zbraně a střelivo",
+    "ADD_ANY": "Přidat zbraň nebo střelivo",
+    "BARREL_LENGTH": "hlaveň {{value}} mm"
+  },
+  "AMMUNITION": {
+    "TITLE": "Střelivo",
+    "LOADING": "Načítání střeliva…",
+    "EMPTY": "Zatím žádné střelivo. Přidejte ho tlačítkem +.",
+    "LOAD_FAILED": "Střelivo se nepodařilo načíst.",
+    "SOURCES": {
+      "factory": "Tovární",
+      "handload": "Přebíjené"
+    },
+    "BC": "BC G1 {{value}}",
+    "BULLET_TYPES": [
+      "Poloplášťová (SP)",
+      "S plastovou špičkou",
+      "Bonded",
+      "Partition",
+      "Bezolovnatá (monolitická)",
+      "S dutinkou (HP)",
+      "Celoplášťová (FMJ)",
+      "S dutinkou a zúženou patkou (BTHP)"
+    ],
+    "FORM": {
+      "ADD_TITLE": "Přidat střelivo",
+      "SOURCE": "Střelivo",
+      "BULLET_WEIGHT": "Hmotnost střely",
+      "BULLET_WEIGHT_PLACEHOLDER": "např. 165",
+      "MUZZLE_VELOCITY": "Úsťová rychlost",
+      "MUZZLE_VELOCITY_PLACEHOLDER": "např. 820",
+      "BULLET_TYPE": "Typ střely",
+      "BULLET_TYPE_PLACEHOLDER": "např. Poloplášťová (SP)",
+      "BALLISTIC_COEFFICIENT": "Balistický koeficient G1",
+      "BALLISTIC_COEFFICIENT_PLACEHOLDER": "např. 0,447",
+      "RANGE_INVALID": "Zadejte číslo od {{min}} do {{max}}.",
+      "SAVE_FAILED": "Střelivo se nepodařilo uložit. Zkuste to prosím znovu.",
+      "PRIMER": "Zápalka",
+      "PRIMER_PLACEHOLDER": "např. CCI 200",
+      "POWDER": "Prach",
+      "POWDER_PLACEHOLDER": "např. Vihtavuori N140",
+      "BRASS": "Nábojnice",
+      "BRASS_PLACEHOLDER": "např. Lapua",
+      "BRASS_FIRINGS": "Počet výstřelů",
+      "WHOLE_NUMBER_INVALID": "Zadejte celé číslo od {{min}} do {{max}}.",
+      "EDIT_TITLE": "Upravit střelivo",
+      "PRODUCT": "Výrobce a název",
+      "PRODUCT_PLACEHOLDER": "např. RWS EVO",
+      "POWDER_CHARGE": "Navážka",
+      "POWDER_CHARGE_PLACEHOLDER": "např. 41,5",
+      "OVERALL_LENGTH": "Celková délka náboje",
+      "OVERALL_LENGTH_PLACEHOLDER": "např. 71,1"
+    },
+    "PRIMER": "Zápalka {{value}}",
+    "POWDER": "Prach {{value}}",
+    "BRASS": "Nábojnice {{value}}",
+    "BRASS_FIRINGS": "nábojnice vystřelena {{count}}×",
+    "EDIT": "Upravit střelivo",
+    "DELETE": "Smazat střelivo",
+    "ACTIONS": "Akce střeliva",
+    "DELETE_CONFIRM": "Smazat toto střelivo? Tuto akci nelze vrátit.",
+    "DELETE_FAILED": "Střelivo se nepodařilo smazat. Zkuste to prosím znovu.",
+    "POWDER_CHARGE": "navážka {{value}} gr",
+    "OVERALL_LENGTH": "délka náboje {{value}} mm"
   }
 }

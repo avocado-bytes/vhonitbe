@@ -1,5 +1,55 @@
 # Changelog
 
+## 0.48.1
+
+- The side navigation item for firearms is now "Zbraně a střelivo" / "Firearms and ammunition", matching its page.
+
+## 0.48.0
+
+- Firearms have an optional barrel length, entered in mm or inches with a unit selector next to the field. It is always stored in mm (inches are converted at 25.4 mm, rounded to 0.1 mm) and shown in the list as e.g. "barrel 560 mm" / "hlaveň 560 mm".
+
+## 0.47.0
+
+- Factory ammunition has an optional make and product name, e.g. "RWS EVO", shown in the list after the caliber.
+- Handloads have an optional powder charge in grains and overall cartridge length in mm, shown with the other components. Both accept a decimal comma.
+
+## 0.46.0
+
+- Ammunition can be edited and deleted like firearms: edit and delete buttons on wider screens, and on phones an action menu behind the ⋮ button. Editing opens the dialog filled in with the ammunition, titled "Edit ammunition" / "Upravit střelivo"; deleting asks for confirmation first.
+
+## 0.45.0
+
+- For handloaded ammunition the form also asks for the primer, powder and brass, and how many times the brass has been fired (a whole number from 0 to 99). The fields appear only for a handload and are all optional; the list shows the ones given below the ammunition.
+
+## 0.44.0
+
+- Firearms can be deleted: a delete button on wider screens and "Delete firearm" / "Smazat zbraň" in the phone action menu, after confirming.
+- The firearms page is now "Firearms and ammunition" / "Zbraně a střelivo", with a section for each.
+- The add button asks first whether a firearm or ammunition is being added, then shows the form for it.
+- Ammunition is added with its caliber (the same choice of common cartridges as for firearms, or any other typed in), factory or handload, bullet weight in grains, muzzle velocity in m/s, bullet type (with common types offered) and G1 ballistic coefficient. Caliber, weight and velocity are required; decimals can be typed with a comma or a point. It is kept in a new store of the app's database and listed by caliber and weight.
+
+## 0.43.0
+
+- The firearm form has a "Suppressed" / "S tlumičem hluku výstřelu" checkbox, unchecked by default. Suppressed firearms show "Suppressed" / "S tlumičem" in the list.
+
+## 0.42.1
+
+- The firearms item in the side navigation has a new icon: an upright cartridge with its bullet, instead of a rifle.
+
+## 0.42.0
+
+- Firearms can be edited in the same way as events: an edit button on wider screens, and on phones an action menu behind the ⋮ button. It opens the form filled in with the firearm, titled "Edit firearm" / "Upravit zbraň".
+
+## 0.41.1
+
+- The caliber of a firearm is a combo box: it offers the cartridges common in Czech hunting, from .22 LR to 20/76, and any other can still be typed in.
+- Once a sight is chosen for a firearm, a "Make and model" / "Značka a model" field appears for it, e.g. "Zeiss Victory V8 2.8-20×56". It is optional, shown in the list after the kind of sight, and dropped when no optic sight is chosen.
+
+## 0.41.0
+
+- New "Firearms" / "Zbraně" section in the side navigation, with a rifle icon. Its own add button opens a form for a firearm's name, caliber and optics; the optics are chosen from no optic sight (the default), riflescope, red dot sight, thermal sight and night vision sight.
+- The firearms are listed by name with their caliber and optics, and are kept in a new store of the app's database.
+
 ## 0.40.1
 
 - The feeding place form can take a photo from the gallery as well, with the same "Choose from gallery" / "Vybrat z galerie" button as the event form.

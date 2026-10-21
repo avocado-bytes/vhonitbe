@@ -20,6 +20,10 @@ import * as weatherEffects from './state/weather/weather.effects';
 import { weatherFeature } from './state/weather/weather.reducer';
 import * as feedingEffects from './state/feeding/feeding.effects';
 import { feedingFeature } from './state/feeding/feeding.reducer';
+import * as ammunitionEffects from './state/ammunition/ammunition.effects';
+import { ammunitionFeature } from './state/ammunition/ammunition.reducer';
+import * as firearmsEffects from './state/firearms/firearms.effects';
+import { firearmsFeature } from './state/firearms/firearms.reducer';
 import { provideServiceWorker } from '@angular/service-worker';
 
 export const appConfig: ApplicationConfig = {
@@ -35,7 +39,18 @@ export const appConfig: ApplicationConfig = {
     provideState(mapOptionsFeature),
     provideState(weatherFeature),
     provideState(feedingFeature),
-    provideEffects(settingsEffects, locationEffects, eventsEffects, shootingSafetyEffects, weatherEffects, feedingEffects),
+    provideState(firearmsFeature),
+    provideState(ammunitionFeature),
+    provideEffects(
+      settingsEffects,
+      locationEffects,
+      eventsEffects,
+      shootingSafetyEffects,
+      weatherEffects,
+      feedingEffects,
+      firearmsEffects,
+      ammunitionEffects,
+    ),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
     provideTranslateService({
       loader: provideTranslateHttpLoader({ prefix: '/i18n/', suffix: '.json' }),

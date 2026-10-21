@@ -1,0 +1,15 @@
+@use '../shared/item-list';
+
+:host {
+  display: block;
+}
+
+// Keep the last firearm clear of the floating add button
+.firearms {
+  padding-bottom: 6rem !important;
+}
+
+// The components of a handload on one line, separated by dots
+.ammunition-components > span + span::before {
+  content: ' · ';
+}

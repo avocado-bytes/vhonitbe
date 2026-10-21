@@ -1,0 +1,321 @@
+<section class="container py-3 firearms">
+  <h1 class="h4 mb-3">{{ 'FIREARMS.PAGE_TITLE' | translate }}</h1>
+
+  @if (actionsFor()) {
+    <!-- Closes the phone action menu on a tap outside of it, for firearms and ammunition alike -->
+    <div class="event-actions-backdrop" (click)="closeActions()"></div>
+  }
+
+  <section class="card mb-3" aria-labelledby="firearms-list">
+    <div class="card-body">
+      <h2 id="firearms-list" class="h5 card-title mb-3">{{ 'FIREARMS.TITLE' | translate }}</h2>
+      @if (loadError()) {
+        <p class="text-danger" role="alert">{{ 'FIREARMS.LOAD_FAILED' | translate }}</p>
+      } @else if (firearms().length === 0) {
+        @if (loading()) {
+          <p class="text-body-secondary" role="status">{{ 'FIREARMS.LOADING' | translate }}</p>
+        } @else {
+          <p class="text-body-secondary">{{ 'FIREARMS.EMPTY' | translate }}</p>
+        }
+      } @else {
+        @if (deleteError()) {
+          <p class="text-danger" role="alert">{{ 'FIREARMS.DELETE_FAILED' | translate }}</p>
+        }
+        <ul class="list-unstyled mb-0" [attr.aria-busy]="loading()">
+          @for (firearm of firearms(); track firearm.id) {
+            <li class="firearm p-3 mb-2 border rounded bg-body-tertiary">
+              <div class="d-flex align-items-center gap-2">
+                <div class="me-auto">
+                  <div class="fw-semibold">{{ firearm.name }}</div>
+                  <div class="small text-body-secondary">
+                    {{ firearm.caliber }} · {{ 'FIREARMS.OPTICS.' + firearm.optics | translate }}
+                    @if (firearm.opticsModel) {
+                      {{ firearm.opticsModel }}
+                    }
+                    @if (firearm.suppressed) {
+                      · {{ 'FIREARMS.SUPPRESSED' | translate }}
+                    }
+                    @if (firearm.barrelLength !== null && firearm.barrelLength !== undefined) {
+                      · {{ 'FIREARMS.BARREL_LENGTH' | translate: { value: formatNumber(firearm.barrelLength) } }}
+                    }
+                  </div>
+                </div>
+                <!-- Wider screens show every action as an icon button -->
+                <div class="d-none d-md-flex align-items-center gap-2">
+                  <button
+                    type="button"
+                    class="item-action"
+                    [attr.aria-label]="'FIREARMS.EDIT' | translate"
+                    [disabled]="isDeleting(firearm.id)"
+                    (click)="edit(firearm)"
+                  >
+                    <ng-container [ngTemplateOutlet]="editIcon" />
+                  </button>
+                  <button
+                    type="button"
+                    class="item-action item-action-danger"
+                    [attr.aria-label]="'FIREARMS.DELETE' | translate"
+                    [disabled]="isDeleting(firearm.id)"
+                    (click)="delete(firearm.id)"
+                  >
+                    <ng-container [ngTemplateOutlet]="deleteIcon" />
+                  </button>
+                </div>
+
+                <!-- Phones collect the actions in a menu behind a single button -->
+                <div class="d-md-none position-relative">
+                  <button
+                    type="button"
+                    class="item-action"
+                    aria-haspopup="menu"
+                    [attr.aria-controls]="'firearm-actions-' + firearm.id"
+                    [attr.aria-expanded]="actionsFor() === firearm.id"
+                    [attr.aria-label]="'FIREARMS.ACTIONS' | translate"
+                    (click)="toggleActions(firearm.id)"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+                      <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0" />
+                    </svg>
+                  </button>
+                  @if (actionsFor() === firearm.id) {
+                    <ul
+                      [id]="'firearm-actions-' + firearm.id"
+                      class="dropdown-menu dropdown-menu-end show shadow event-actions"
+                      role="menu"
+                      [attr.aria-label]="'FIREARMS.ACTIONS' | translate"
+                      appFocusTrap
+                    >
+                      <li role="none">
+                        <button
+                          type="button"
+                          class="dropdown-item d-flex align-items-center gap-2"
+                          role="menuitem"
+                          [disabled]="isDeleting(firearm.id)"
+                          (click)="closeActions(); edit(firearm)"
+                        >
+                          <ng-container [ngTemplateOutlet]="editIcon" />{{ 'FIREARMS.EDIT' | translate }}
+                        </button>
+                      </li>
+                      <li role="none">
+                        <button
+                          type="button"
+                          class="dropdown-item d-flex align-items-center gap-2 text-danger"
+                          role="menuitem"
+                          [disabled]="isDeleting(firearm.id)"
+                          (click)="closeActions(); delete(firearm.id)"
+                        >
+                          <ng-container [ngTemplateOutlet]="deleteIcon" />{{ 'FIREARMS.DELETE' | translate }}
+                        </button>
+                      </li>
+                    </ul>
+                  }
+                </div>
+              </div>
+            </li>
+          }
+        </ul>
+      }
+    </div>
+  </section>
+
+  <section class="card" aria-labelledby="ammunition-list">
+    <div class="card-body">
+      <h2 id="ammunition-list" class="h5 card-title mb-3">{{ 'AMMUNITION.TITLE' | translate }}</h2>
+      @if (ammunitionLoadError()) {
+        <p class="text-danger" role="alert">{{ 'AMMUNITION.LOAD_FAILED' | translate }}</p>
+      } @else if (ammunition().length === 0) {
+        @if (ammunitionLoading()) {
+          <p class="text-body-secondary mb-0" role="status">{{ 'AMMUNITION.LOADING' | translate }}</p>
+        } @else {
+          <p class="text-body-secondary mb-0">{{ 'AMMUNITION.EMPTY' | translate }}</p>
+        }
+      } @else {
+        @if (ammunitionDeleteError()) {
+          <p class="text-danger" role="alert">{{ 'AMMUNITION.DELETE_FAILED' | translate }}</p>
+        }
+        <ul class="list-unstyled mb-0" [attr.aria-busy]="ammunitionLoading()">
+          @for (cartridge of ammunition(); track cartridge.id) {
+            <li class="ammunition p-3 mb-2 border rounded bg-body-tertiary">
+              <div class="d-flex align-items-center gap-2">
+                <div class="me-auto fw-semibold">
+                  {{ cartridge.caliber }}
+                  @if (cartridge.product) {
+                    · {{ cartridge.product }}
+                  }
+                  @if (cartridge.bulletType) {
+                    · {{ cartridge.bulletType }}
+                  }
+                </div>
+                <!-- Wider screens show every action as an icon button -->
+                <div class="d-none d-md-flex align-items-center gap-2">
+                  <button
+                    type="button"
+                    class="item-action"
+                    [attr.aria-label]="'AMMUNITION.EDIT' | translate"
+                    [disabled]="isDeletingAmmunition(cartridge.id)"
+                    (click)="editAmmunition(cartridge)"
+                  >
+                    <ng-container [ngTemplateOutlet]="editIcon" />
+                  </button>
+                  <button
+                    type="button"
+                    class="item-action item-action-danger"
+                    [attr.aria-label]="'AMMUNITION.DELETE' | translate"
+                    [disabled]="isDeletingAmmunition(cartridge.id)"
+                    (click)="deleteAmmunition(cartridge.id)"
+                  >
+                    <ng-container [ngTemplateOutlet]="deleteIcon" />
+                  </button>
+                </div>
+
+                <!-- Phones collect the actions in a menu behind a single button -->
+                <div class="d-md-none position-relative">
+                  <button
+                    type="button"
+                    class="item-action"
+                    aria-haspopup="menu"
+                    [attr.aria-controls]="'ammunition-actions-' + cartridge.id"
+                    [attr.aria-expanded]="actionsFor() === cartridge.id"
+                    [attr.aria-label]="'AMMUNITION.ACTIONS' | translate"
+                    (click)="toggleActions(cartridge.id)"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+                      <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0" />
+                    </svg>
+                  </button>
+                  @if (actionsFor() === cartridge.id) {
+                    <ul
+                      [id]="'ammunition-actions-' + cartridge.id"
+                      class="dropdown-menu dropdown-menu-end show shadow event-actions"
+                      role="menu"
+                      [attr.aria-label]="'AMMUNITION.ACTIONS' | translate"
+                      appFocusTrap
+                    >
+                      <li role="none">
+                        <button
+                          type="button"
+                          class="dropdown-item d-flex align-items-center gap-2"
+                          role="menuitem"
+                          [disabled]="isDeletingAmmunition(cartridge.id)"
+                          (click)="closeActions(); editAmmunition(cartridge)"
+                        >
+                          <ng-container [ngTemplateOutlet]="editIcon" />{{ 'AMMUNITION.EDIT' | translate }}
+                        </button>
+                      </li>
+                      <li role="none">
+                        <button
+                          type="button"
+                          class="dropdown-item d-flex align-items-center gap-2 text-danger"
+                          role="menuitem"
+                          [disabled]="isDeletingAmmunition(cartridge.id)"
+                          (click)="closeActions(); deleteAmmunition(cartridge.id)"
+                        >
+                          <ng-container [ngTemplateOutlet]="deleteIcon" />{{ 'AMMUNITION.DELETE' | translate }}
+                        </button>
+                      </li>
+                    </ul>
+                  }
+                </div>
+              </div>
+              <div class="small text-body-secondary">
+                {{ 'AMMUNITION.SOURCES.' + cartridge.source | translate }} · {{ formatNumber(cartridge.bulletWeight) }} gr ·
+                {{ formatNumber(cartridge.muzzleVelocity) }} m/s
+                @if (cartridge.ballisticCoefficient !== null) {
+                  · {{ 'AMMUNITION.BC' | translate: { value: formatNumber(cartridge.ballisticCoefficient) } }}
+                }
+              </div>
+              @if (cartridge.source === 'handload') {
+                <!-- The components of a handload, each only when given -->
+                <div class="ammunition-components small text-body-secondary">
+                  @if (cartridge.primer) {
+                    <span>{{ 'AMMUNITION.PRIMER' | translate: { value: cartridge.primer } }}</span>
+                  }
+                  @if (cartridge.powder) {
+                    <span>{{ 'AMMUNITION.POWDER' | translate: { value: cartridge.powder } }}</span>
+                  }
+                  @if (cartridge.powderCharge !== null && cartridge.powderCharge !== undefined) {
+                    <span>{{ 'AMMUNITION.POWDER_CHARGE' | translate: { value: formatNumber(cartridge.powderCharge) } }}</span>
+                  }
+                  @if (cartridge.brass) {
+                    <span>{{ 'AMMUNITION.BRASS' | translate: { value: cartridge.brass } }}</span>
+                  }
+                  @if (cartridge.brassFirings !== null && cartridge.brassFirings !== undefined) {
+                    <span>{{ 'AMMUNITION.BRASS_FIRINGS' | translate: { count: cartridge.brassFirings } }}</span>
+                  }
+                  @if (cartridge.overallLength !== null && cartridge.overallLength !== undefined) {
+                    <span>{{ 'AMMUNITION.OVERALL_LENGTH' | translate: { value: formatNumber(cartridge.overallLength) } }}</span>
+                  }
+                </div>
+              }
+            </li>
+          }
+        </ul>
+      }
+    </div>
+  </section>
+</section>
+
+<button
+  type="button"
+  class="fab rounded-circle bg-primary text-white shadow"
+  aria-haspopup="dialog"
+  [attr.aria-label]="'FIREARMS.ADD_ANY' | translate"
+  (click)="add()"
+>
+  <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+    <path d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2" />
+  </svg>
+</button>
+
+<dialog #formDialog class="form-dialog" aria-labelledby="firearm-form-title" (close)="onFormClosed()">
+  @if (formOpen()) {
+    <div class="d-flex align-items-center justify-content-between p-3 border-bottom">
+      <h2 id="firearm-form-title" class="h5 mb-0">{{ dialogTitle() | translate }}</h2>
+      <button type="button" class="btn-close" [attr.aria-label]="'FIREARMS.FORM.CLOSE' | translate" (click)="closeForm()"></button>
+    </div>
+    <div class="p-3">
+      @if (editing(); as firearm) {
+        <app-firearm-form [firearm]="firearm" />
+      } @else if (editingAmmunition(); as cartridge) {
+        <app-ammunition-form [ammunition]="cartridge" />
+      } @else {
+        <!-- The dialog adds either kind; its form appears once the kind is chosen -->
+        <div class="mb-3">
+          <label for="add-kind" class="form-label fw-semibold">{{ 'FIREARMS.FORM.KIND' | translate }}</label>
+          <select id="add-kind" class="form-select" #kindSelect (change)="selectKind(kindSelect.value)">
+            <option value="" disabled [selected]="addKind() === null">{{ 'FIREARMS.FORM.KIND_PLACEHOLDER' | translate }}</option>
+            @for (kind of kinds; track kind) {
+              <option [value]="kind" [selected]="addKind() === kind">{{ 'FIREARMS.FORM.KINDS.' + kind | translate }}</option>
+            }
+          </select>
+        </div>
+        @switch (addKind()) {
+          @case ('firearm') {
+            <app-firearm-form />
+          }
+          @case ('ammunition') {
+            <app-ammunition-form />
+          }
+        }
+      }
+    </div>
+  }
+</dialog>
+
+<ng-template #editIcon>
+  <svg class="flex-shrink-0" xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+    <path
+      d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"
+    />
+  </svg>
+</ng-template>
+<ng-template #deleteIcon>
+  <svg class="flex-shrink-0" xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+    <path
+      d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"
+    />
+    <path
+      d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"
+    />
+  </svg>
+</ng-template>

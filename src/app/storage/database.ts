@@ -1,11 +1,13 @@
 import { DestroyRef, inject, Service } from '@angular/core';
 import { DBSchema, IDBPDatabase, IDBPTransaction, openDB, StoreNames } from 'idb';
+import { Ammunition } from '../model/ammunition';
 import { HuntingEvent } from '../model/event';
 import { FEEDING_PLACE_TYPES, FeedingPlace, FeedingPlaceType } from '../model/feeding-place';
+import { Firearm } from '../model/firearm';
 import { Animal, Item } from '../model/item';
 
 const DB_NAME = 'vhonitbe';
-const DB_VERSION = 3;
+const DB_VERSION = 5;
 
 export interface VhonitbeDB extends DBSchema {
   events: {
@@ -22,6 +24,14 @@ export interface VhonitbeDB extends DBSchema {
     key: string;
     value: FeedingPlace;
   };
+  firearms: {
+    key: string;
+    value: Firearm;
+  };
+  ammunition: {
+    key: string;
+    value: Ammunition;
+  };
   /** Compressed photos of events and feeding places, kept apart so listing them doesn't load the photos */
   photos: {
     key: string;
@@ -29,7 +39,7 @@ export interface VhonitbeDB extends DBSchema {
   };
 }
 
-/** Opens the IndexedDB database shared by the stores of events, feeding places and photos */
+/** Opens the IndexedDB database shared by the stores of events, feeding places, firearms, ammunition and photos */
 @Service()
 export class Database {
   private db?: Promise<IDBPDatabase<VhonitbeDB>>;
@@ -54,6 +64,12 @@ export class Database {
         if (oldVersion < 3) {
           db.createObjectStore('feeding-places', { keyPath: 'id' });
           await moveFeedingPlaces(transaction);
+        }
+        if (oldVersion < 4) {
+          db.createObjectStore('firearms', { keyPath: 'id' });
+        }
+        if (oldVersion < 5) {
+          db.createObjectStore('ammunition', { keyPath: 'id' });
         }
       },
       // Let a newer version of the app (e.g. in another tab) upgrade the database

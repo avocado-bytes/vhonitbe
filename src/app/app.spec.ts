@@ -19,6 +19,8 @@ describe('App', () => {
         provideRouter([
           { path: 'map', children: [] },
           { path: 'feeding', children: [] },
+          { path: 'firearms', children: [] },
+          { path: 'guide', children: [] },
         ]),
         provideTranslateService({ lang: 'en' }),
         provideMockStore({
@@ -36,7 +38,7 @@ describe('App', () => {
     TestBed.inject(TranslateService).setTranslation('en', {
       APP: { TITLE: 'vHonitbě', ADD: 'Add' },
       HEADER: { MENU: 'Open menu', MENU_ATTENTION: 'Open menu, {{count}} feeding places need replenishing', SETTINGS: 'Settings' },
-      NAV: { HOME: 'Home', MAP: 'Map', FEEDING: 'Feeding', CLOSE: 'Close navigation' },
+      NAV: { HOME: 'Home', MAP: 'Map', FEEDING: 'Feeding', GUIDE: 'User guide', FIREARMS: 'Firearms', CLOSE: 'Close navigation' },
       ADD_ITEM: { TITLE: 'Add item', EDIT_TITLE: 'Edit event', CLOSE: 'Close' },
     });
   });
@@ -155,12 +157,12 @@ describe('App', () => {
       fixture.nativeElement.remove();
     });
 
-    it('should link to the home, map and feeding routes', async () => {
+    it('should link to the home, map, feeding, firearms and guide routes', async () => {
       const { sideNav } = await createAppWithSideNav();
       const links = Array.from(sideNav.querySelectorAll('a.nav-link'));
 
-      expect(links.map((link) => link.textContent?.trim())).toEqual(['Home', 'Map', 'Feeding']);
-      expect(links.map((link) => link.getAttribute('href'))).toEqual(['/', '/map', '/feeding']);
+      expect(links.map((link) => link.textContent?.trim())).toEqual(['Home', 'Map', 'Feeding', 'Firearms', 'User guide']);
+      expect(links.map((link) => link.getAttribute('href'))).toEqual(['/', '/map', '/feeding', '/firearms', '/guide']);
     });
 
     it('should close when a link is clicked', async () => {
@@ -229,6 +231,27 @@ describe('App', () => {
       expect(dialog.open).toBe(true);
       expect(dialog.querySelector('app-add-item')).not.toBeNull();
       expect(dialog.querySelector('#add-item-title')?.textContent).toContain('Add item');
+    });
+
+    it('should link to the user guide in the side navigation and hide the add button there', async () => {
+      const { fixture, element } = await createAppWithDialog();
+      const link = element.querySelector('a[routerLink="/guide"]') as HTMLAnchorElement;
+      expect(link.textContent).toContain('User guide');
+
+      await TestBed.inject(Router).navigateByUrl('/guide');
+      await fixture.whenStable();
+
+      expect(element.querySelector('button.fab')).toBeNull();
+    });
+
+    it('should link to the firearms and leave adding them to their own add button', async () => {
+      const { fixture, element } = await createAppWithDialog();
+      expect(element.querySelector('a[routerLink="/firearms"]')?.textContent).toContain('Firearms');
+
+      await TestBed.inject(Router).navigateByUrl('/firearms');
+      await fixture.whenStable();
+
+      expect(element.querySelector('button.fab')).toBeNull();
     });
 
     it('should hide the add button on the feeding page, which has its own', async () => {

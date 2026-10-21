@@ -1,0 +1,116 @@
+<form (submit)="submit($event)">
+  <div class="mb-3">
+    <label for="firearm-name" class="form-label fw-semibold">{{ 'FIREARMS.FORM.NAME' | translate }}</label>
+    <input
+      id="firearm-name"
+      class="form-control"
+      required
+      autocomplete="off"
+      #nameInput
+      [placeholder]="'FIREARMS.FORM.NAME_PLACEHOLDER' | translate"
+      [value]="name()"
+      (input)="name.set(nameInput.value)"
+    />
+  </div>
+
+  <div class="mb-3">
+    <label for="firearm-caliber" class="form-label fw-semibold">{{ 'FIREARMS.FORM.CALIBER' | translate }}</label>
+    <!-- A combo box: the common cartridges are offered, any other can be typed in -->
+    <input
+      id="firearm-caliber"
+      class="form-control"
+      required
+      autocomplete="off"
+      list="firearm-calibers"
+      aria-describedby="firearm-caliber-hint"
+      #caliberInput
+      [placeholder]="'FIREARMS.FORM.CALIBER_PLACEHOLDER' | translate"
+      [value]="caliber()"
+      (input)="caliber.set(caliberInput.value)"
+    />
+    <datalist id="firearm-calibers">
+      @for (option of calibers; track option) {
+        <option [value]="option"></option>
+      }
+    </datalist>
+    <div id="firearm-caliber-hint" class="form-text">{{ 'FIREARMS.FORM.CALIBER_HINT' | translate }}</div>
+  </div>
+
+  <div class="mb-3">
+    <label for="firearm-barrel-length" class="form-label fw-semibold">{{ 'FIREARMS.FORM.BARREL_LENGTH' | translate }}</label>
+    <!-- Typed in either unit; it is stored in mm -->
+    <div class="input-group has-validation">
+      <input
+        id="firearm-barrel-length"
+        class="form-control"
+        inputmode="decimal"
+        autocomplete="off"
+        aria-describedby="firearm-barrel-length-error"
+        #barrelLengthInput
+        [placeholder]="'FIREARMS.FORM.BARREL_LENGTH_PLACEHOLDER.' + lengthUnit() | translate"
+        [value]="barrelLength()"
+        [class.is-invalid]="barrelLengthInvalid()"
+        [attr.aria-invalid]="barrelLengthInvalid()"
+        (input)="barrelLength.set(barrelLengthInput.value)"
+      />
+      <select
+        id="firearm-barrel-length-unit"
+        class="form-select flex-grow-0 w-auto"
+        [attr.aria-label]="'FIREARMS.FORM.LENGTH_UNIT' | translate"
+        #unitSelect
+        (change)="selectLengthUnit(unitSelect.value)"
+      >
+        @for (unit of lengthUnits; track unit) {
+          <option [value]="unit" [selected]="lengthUnit() === unit">{{ unit }}</option>
+        }
+      </select>
+      <div id="firearm-barrel-length-error" class="invalid-feedback">
+        {{ 'FIREARMS.FORM.BARREL_LENGTH_INVALID' | translate: { min: lengthRange().min, max: lengthRange().max, unit: lengthUnit() } }}
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <label for="firearm-optics" class="form-label fw-semibold">{{ 'FIREARMS.FORM.OPTICS' | translate }}</label>
+    <select id="firearm-optics" class="form-select" #opticsSelect (change)="selectOptics(opticsSelect.value)">
+      @for (option of opticsOptions; track option) {
+        <option [value]="option" [selected]="optics() === option">{{ 'FIREARMS.OPTICS.' + option | translate }}</option>
+      }
+    </select>
+  </div>
+
+  @if (hasOptics()) {
+    <div class="mt-3">
+      <label for="firearm-optics-model" class="form-label fw-semibold">{{ 'FIREARMS.FORM.OPTICS_MODEL' | translate }}</label>
+      <input
+        id="firearm-optics-model"
+        class="form-control"
+        autocomplete="off"
+        #opticsModelInput
+        [placeholder]="'FIREARMS.FORM.OPTICS_MODEL_PLACEHOLDER' | translate"
+        [value]="opticsModel()"
+        (input)="opticsModel.set(opticsModelInput.value)"
+      />
+    </div>
+  }
+
+  <div class="form-check mt-3">
+    <input
+      id="firearm-suppressed"
+      class="form-check-input"
+      type="checkbox"
+      #suppressedCheckbox
+      [checked]="suppressed()"
+      (change)="suppressed.set(suppressedCheckbox.checked)"
+    />
+    <label class="form-check-label" for="firearm-suppressed">{{ 'FIREARMS.FORM.SUPPRESSED' | translate }}</label>
+  </div>
+
+  @if (error()) {
+    <p class="text-danger small mt-3 mb-0" role="alert">{{ 'FIREARMS.FORM.SAVE_FAILED' | translate }}</p>
+  }
+
+  <div class="d-flex justify-content-end mt-4">
+    <button type="submit" class="btn btn-primary" [disabled]="!canSubmit()">{{ 'ADD_ITEM.SUBMIT' | translate }}</button>
+  </div>
+</form>

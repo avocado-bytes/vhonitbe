@@ -1,0 +1,19 @@
+:host {
+  display: block;
+}
+
+// Keeps the last section clear of the bottom of the screen
+.guide {
+  max-width: 48rem;
+  padding-bottom: 4rem !important;
+}
+
+// Lands a section below the top of the page when jumping to it from the contents
+.guide-section {
+  scroll-margin-top: 1rem;
+}
+
+// Phone screenshots at about the size of a phone screen, side by side where there is room
+.guide-shot {
+  width: min(17rem, 100%);
+}

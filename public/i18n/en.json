@@ -27,7 +27,9 @@
     "MAP": "Map",
     "CLOSE": "Close navigation",
     "FEEDING": "Feeding",
-    "FEEDING_ATTENTION": "Feeding places need replenishing"
+    "FEEDING_ATTENTION": "Feeding places need replenishing",
+    "GUIDE": "User guide",
+    "FIREARMS": "Firearms and ammunition"
   },
   "MAP": {
     "LOCATING": "Finding your location…",
@@ -312,5 +314,219 @@
     "NEVER_REPLENISHED": "Not replenished yet",
     "NEEDS_REPLENISHING": "Needs replenishing",
     "REPLENISH_FAILED": "The replenishment could not be saved. Please try again."
+  },
+  "GUIDE": {
+    "TITLE": "User guide",
+    "INTRO": "vHonitbě is your hunting diary for the field. It records what you see and do in your hunting ground, shows the conditions for today’s hunt and helps you look after feeders and salt licks.",
+    "CONTENTS": "Contents",
+    "start": {
+      "TITLE": "Getting started",
+      "TEXT": "vHonitbě runs in your phone’s web browser. For quick access, add it to your home screen: open the browser menu and choose “Add to Home screen” or “Install app”. It then opens like any other app.",
+      "STEPS": [
+        "Allow access to your location when asked. The app needs it for sunrise and sunset, the weather, the map and to place new records where you stand.",
+        "Your records and photos are stored only on this phone. Nothing is sent anywhere unless you share it yourself.",
+        "Open the menu with the ☰ button in the top left corner to switch between the overview, the map, feeding and this guide."
+      ]
+    },
+    "overview": {
+      "TITLE": "Overview",
+      "TEXT": "The home page shows the conditions for today’s hunt and the list of your records.",
+      "STEPS": [
+        "Today: sunrise and sunset at your location.",
+        "Moon: the current phase and how much of the moon is lit.",
+        "Weather and Wind: the temperature and conditions now, the wind speed and where the wind comes from; the arrow points where it blows.",
+        "At night a yellow notice appears: from one hour after sunset until one hour before sunrise some game may not be hunted.",
+        "Below are your events, newest first. Use the filters above the list to change the order or to show only one kind of event or one animal."
+      ]
+    },
+    "add-event": {
+      "TITLE": "Recording an event",
+      "TEXT": "Tap the round + button in the bottom right corner of the overview and fill in the form.",
+      "STEPS": [
+        "Choose what happened: a sighting, tracks, a harvest, game damage and so on.",
+        "For events about game, choose the animal and, if you know it, its sex. A sighting can be marked as a herd, with the number of animals.",
+        "When you harvest hoofed game, enter the number of its tag.",
+        "The date and time are set to now; change them when you record the event later.",
+        "The location starts where you stand. If the event happened elsewhere, move the small map until the crosshair is on the right spot.",
+        "Add a note and a photo: take a new one with the camera or choose one from the gallery.",
+        "Tap Save."
+      ]
+    },
+    "event-actions": {
+      "TITLE": "Working with events",
+      "TEXT": "Each event in the list has its actions behind the ⋮ button on the right.",
+      "STEPS": [
+        "Show photo and Show on map open the photo or a map of the place.",
+        "Share event sends a short message, for example in WhatsApp, with the event, its place with a link to Mapy.cz and its photo. Your note is never shared.",
+        "Edit event opens the form to make changes.",
+        "Delete event removes the event together with its photo once you confirm it."
+      ]
+    },
+    "map": {
+      "TITLE": "Map",
+      "TEXT": "The map shows where you are and your ten latest events.",
+      "STEPS": [
+        "Tap the button in the top right corner to show the map options and the legend.",
+        "Track my location keeps your position up to date; Follow me also keeps the map centred on you.",
+        "Distance circles show 100, 150 and 200 m around you.",
+        "Wind cone shows where the wind carries your scent; it gets longer as the wind gets stronger.",
+        "Shooting safety colours the terrain around you: green where the ground stops a bullet, orange where it stops it only further away, red where there is no backstop or a building is close. It is only an estimate – always check the backstop yourself.",
+        "Tap an event pin to see what it is. Press and hold a pin to share, edit or delete the event.",
+        "Press and hold anywhere on the map to add an event right there, or to set your position by hand when your phone cannot find it."
+      ]
+    },
+    "feeding": {
+      "TITLE": "Feeding",
+      "TEXT": "The Feeding page helps you look after the places where you feed game: feeders, feed piles, baiting spots and salt licks.",
+      "STEPS": [
+        "Feeding season: choose the first and the last month; October to March by default. The badge tells whether the season is in progress.",
+        "Replenishment: how many days may pass between topping up a place; 5 days by default.",
+        "The map shows all your feeding places, each kind in its own colour.",
+        "To add a place, tap the + button on this page, choose its kind, check its location and add a note or a photo."
+      ]
+    },
+    "replenishing": {
+      "TITLE": "Replenishing feeding places",
+      "TEXT": "Each place in the list shows when it was last replenished.",
+      "STEPS": [
+        "After topping up a place, open its actions with ⋮ and tap the green Replenished. The current date and time are recorded.",
+        "During the feeding season, a place that was never replenished, or not within the replenishment interval, gets a red band and the note Needs replenishing.",
+        "Wherever you are in the app, a red dot on the menu button and on the Feeding item tells you that a place needs attention.",
+        "Places can be shown on a map, shared, edited and deleted just like events."
+      ]
+    },
+    "settings": {
+      "TITLE": "Settings",
+      "TEXT": "The gear button in the top right corner opens the settings.",
+      "STEPS": [
+        "Appearance: light, or dark for dusk and night.",
+        "Language: Czech or English.",
+        "The version of the app is shown at the bottom."
+      ]
+    },
+    "SHOTS": {
+      "overview": "The overview with today’s conditions and your events",
+      "add-event": "Recording a sighting",
+      "event-actions": "The actions of an event",
+      "map": "The map with its options and the wind cone",
+      "map-menu": "Press and hold on the map to add an event",
+      "feeding": "The feeding season, the replenishment interval and the map of feeding places",
+      "feeding-list": "A feeding place that needs replenishing, with its actions",
+      "navigation": "Red dots tell you that a feeding place needs attention",
+      "settings": "The settings"
+    }
+  },
+  "FIREARMS": {
+    "TITLE": "Firearms",
+    "ADD": "Add firearm",
+    "LOADING": "Loading firearms…",
+    "EMPTY": "No firearms yet. Use the + button to add one.",
+    "LOAD_FAILED": "The firearms could not be loaded.",
+    "OPTICS": {
+      "none": "No optic sight",
+      "riflescope": "Riflescope",
+      "red-dot": "Red dot sight",
+      "thermal": "Thermal sight",
+      "night-vision": "Night vision sight"
+    },
+    "FORM": {
+      "ADD_TITLE": "Add firearm",
+      "CLOSE": "Close",
+      "NAME": "Name",
+      "NAME_PLACEHOLDER": "e.g. Blaser R8",
+      "CALIBER": "Caliber",
+      "CALIBER_PLACEHOLDER": "e.g. .308 Win",
+      "OPTICS": "Optics",
+      "SAVE_FAILED": "The firearm could not be saved. Please try again.",
+      "CALIBER_HINT": "Choose a common cartridge or type in any other.",
+      "OPTICS_MODEL": "Make and model",
+      "OPTICS_MODEL_PLACEHOLDER": "e.g. Zeiss Victory V8 2.8-20×56",
+      "EDIT_TITLE": "Edit firearm",
+      "SUPPRESSED": "Suppressed (fitted with a suppressor)",
+      "ADD_ANY_TITLE": "Add",
+      "KIND": "What are you adding?",
+      "KIND_PLACEHOLDER": "Select firearm or ammunition",
+      "KINDS": {
+        "firearm": "Firearm",
+        "ammunition": "Ammunition"
+      },
+      "BARREL_LENGTH": "Barrel length",
+      "LENGTH_UNIT": "Unit of the barrel length",
+      "BARREL_LENGTH_PLACEHOLDER": {
+        "mm": "e.g. 560",
+        "in": "e.g. 22"
+      },
+      "BARREL_LENGTH_INVALID": "Enter a length from {{min}} to {{max}} {{unit}}."
+    },
+    "EDIT": "Edit firearm",
+    "ACTIONS": "Firearm actions",
+    "SUPPRESSED": "Suppressed",
+    "DELETE": "Delete firearm",
+    "DELETE_CONFIRM": "Delete this firearm? This cannot be undone.",
+    "DELETE_FAILED": "The firearm could not be deleted. Please try again.",
+    "PAGE_TITLE": "Firearms and ammunition",
+    "ADD_ANY": "Add firearm or ammunition",
+    "BARREL_LENGTH": "barrel {{value}} mm"
+  },
+  "AMMUNITION": {
+    "TITLE": "Ammunition",
+    "LOADING": "Loading ammunition…",
+    "EMPTY": "No ammunition yet. Use the + button to add some.",
+    "LOAD_FAILED": "The ammunition could not be loaded.",
+    "SOURCES": {
+      "factory": "Factory",
+      "handload": "Handload"
+    },
+    "BC": "BC G1 {{value}}",
+    "BULLET_TYPES": [
+      "Soft point (SP)",
+      "Polymer tip",
+      "Bonded",
+      "Partition",
+      "Lead-free (monolithic)",
+      "Hollow point (HP)",
+      "Full metal jacket (FMJ)",
+      "Boat tail hollow point (BTHP)"
+    ],
+    "FORM": {
+      "ADD_TITLE": "Add ammunition",
+      "SOURCE": "Ammunition",
+      "BULLET_WEIGHT": "Bullet weight",
+      "BULLET_WEIGHT_PLACEHOLDER": "e.g. 165",
+      "MUZZLE_VELOCITY": "Muzzle velocity",
+      "MUZZLE_VELOCITY_PLACEHOLDER": "e.g. 820",
+      "BULLET_TYPE": "Bullet type",
+      "BULLET_TYPE_PLACEHOLDER": "e.g. Soft point (SP)",
+      "BALLISTIC_COEFFICIENT": "Ballistic coefficient G1",
+      "BALLISTIC_COEFFICIENT_PLACEHOLDER": "e.g. 0.447",
+      "RANGE_INVALID": "Enter a number from {{min}} to {{max}}.",
+      "SAVE_FAILED": "The ammunition could not be saved. Please try again.",
+      "PRIMER": "Primer",
+      "PRIMER_PLACEHOLDER": "e.g. CCI 200",
+      "POWDER": "Powder",
+      "POWDER_PLACEHOLDER": "e.g. Vihtavuori N140",
+      "BRASS": "Brass",
+      "BRASS_PLACEHOLDER": "e.g. Lapua",
+      "BRASS_FIRINGS": "Times fired",
+      "WHOLE_NUMBER_INVALID": "Enter a whole number from {{min}} to {{max}}.",
+      "EDIT_TITLE": "Edit ammunition",
+      "PRODUCT": "Make and product",
+      "PRODUCT_PLACEHOLDER": "e.g. RWS EVO",
+      "POWDER_CHARGE": "Charge",
+      "POWDER_CHARGE_PLACEHOLDER": "e.g. 41.5",
+      "OVERALL_LENGTH": "Overall length (OAL)",
+      "OVERALL_LENGTH_PLACEHOLDER": "e.g. 71.1"
+    },
+    "PRIMER": "Primer {{value}}",
+    "POWDER": "Powder {{value}}",
+    "BRASS": "Brass {{value}}",
+    "BRASS_FIRINGS": "brass fired {{count}}×",
+    "EDIT": "Edit ammunition",
+    "DELETE": "Delete ammunition",
+    "ACTIONS": "Ammunition actions",
+    "DELETE_CONFIRM": "Delete this ammunition? This cannot be undone.",
+    "DELETE_FAILED": "The ammunition could not be deleted. Please try again.",
+    "POWDER_CHARGE": "charge {{value}} gr",
+    "OVERALL_LENGTH": "OAL {{value}} mm"
   }
 }

@@ -1,0 +1,255 @@
+<form (submit)="submit($event)">
+  <div class="mb-3">
+    <label for="ammunition-caliber" class="form-label fw-semibold">{{ 'FIREARMS.FORM.CALIBER' | translate }}</label>
+    <!-- A combo box: the common cartridges are offered, any other can be typed in -->
+    <input
+      id="ammunition-caliber"
+      class="form-control"
+      required
+      autocomplete="off"
+      list="ammunition-calibers"
+      aria-describedby="ammunition-caliber-hint"
+      #caliberInput
+      [placeholder]="'FIREARMS.FORM.CALIBER_PLACEHOLDER' | translate"
+      [value]="caliber()"
+      (input)="caliber.set(caliberInput.value)"
+    />
+    <datalist id="ammunition-calibers">
+      @for (option of calibers; track option) {
+        <option [value]="option"></option>
+      }
+    </datalist>
+    <div id="ammunition-caliber-hint" class="form-text">{{ 'FIREARMS.FORM.CALIBER_HINT' | translate }}</div>
+  </div>
+
+  <fieldset class="mb-3">
+    <legend class="form-label fs-6 fw-semibold">{{ 'AMMUNITION.FORM.SOURCE' | translate }}</legend>
+    @for (option of sources; track option) {
+      <div class="form-check form-check-inline">
+        <input
+          class="form-check-input"
+          type="radio"
+          name="ammunition-source"
+          [id]="'ammunition-source-' + option"
+          [value]="option"
+          [checked]="source() === option"
+          (change)="source.set(option)"
+        />
+        <label class="form-check-label" [for]="'ammunition-source-' + option">{{ 'AMMUNITION.SOURCES.' + option | translate }}</label>
+      </div>
+    }
+  </fieldset>
+
+  @if (isFactory()) {
+    <div class="mb-3">
+      <label for="ammunition-product" class="form-label fw-semibold">{{ 'AMMUNITION.FORM.PRODUCT' | translate }}</label>
+      <input
+        id="ammunition-product"
+        class="form-control"
+        autocomplete="off"
+        #productInput
+        [placeholder]="'AMMUNITION.FORM.PRODUCT_PLACEHOLDER' | translate"
+        [value]="product()"
+        (input)="product.set(productInput.value)"
+      />
+    </div>
+  }
+
+  @if (isHandload()) {
+    <div class="row g-3 mb-3">
+      <div class="col-12">
+        <label for="ammunition-primer" class="form-label fw-semibold">{{ 'AMMUNITION.FORM.PRIMER' | translate }}</label>
+        <input
+          id="ammunition-primer"
+          class="form-control"
+          autocomplete="off"
+          #primerInput
+          [placeholder]="'AMMUNITION.FORM.PRIMER_PLACEHOLDER' | translate"
+          [value]="primer()"
+          (input)="primer.set(primerInput.value)"
+        />
+      </div>
+      <div class="col-7">
+        <label for="ammunition-powder" class="form-label fw-semibold">{{ 'AMMUNITION.FORM.POWDER' | translate }}</label>
+        <input
+          id="ammunition-powder"
+          class="form-control"
+          autocomplete="off"
+          #powderInput
+          [placeholder]="'AMMUNITION.FORM.POWDER_PLACEHOLDER' | translate"
+          [value]="powder()"
+          (input)="powder.set(powderInput.value)"
+        />
+      </div>
+      <div class="col-5">
+        <label for="ammunition-charge" class="form-label fw-semibold">{{ 'AMMUNITION.FORM.POWDER_CHARGE' | translate }}</label>
+        <div class="input-group has-validation">
+          <input
+            id="ammunition-charge"
+            class="form-control"
+            inputmode="decimal"
+            autocomplete="off"
+            aria-describedby="ammunition-charge-error"
+            #chargeInput
+            [placeholder]="'AMMUNITION.FORM.POWDER_CHARGE_PLACEHOLDER' | translate"
+            [value]="powderCharge()"
+            [class.is-invalid]="chargeInvalid()"
+            [attr.aria-invalid]="chargeInvalid()"
+            (input)="powderCharge.set(chargeInput.value)"
+          />
+          <span class="input-group-text">gr</span>
+          <div id="ammunition-charge-error" class="invalid-feedback">{{ 'AMMUNITION.FORM.RANGE_INVALID' | translate: chargeRange }}</div>
+        </div>
+      </div>
+      <div class="col-7">
+        <label for="ammunition-brass" class="form-label fw-semibold">{{ 'AMMUNITION.FORM.BRASS' | translate }}</label>
+        <input
+          id="ammunition-brass"
+          class="form-control"
+          autocomplete="off"
+          #brassInput
+          [placeholder]="'AMMUNITION.FORM.BRASS_PLACEHOLDER' | translate"
+          [value]="brass()"
+          (input)="brass.set(brassInput.value)"
+        />
+      </div>
+      <div class="col-5">
+        <label for="ammunition-brass-firings" class="form-label fw-semibold">{{ 'AMMUNITION.FORM.BRASS_FIRINGS' | translate }}</label>
+        <input
+          id="ammunition-brass-firings"
+          type="number"
+          class="form-control"
+          inputmode="numeric"
+          step="1"
+          autocomplete="off"
+          aria-describedby="ammunition-brass-firings-error"
+          #firingsInput
+          [min]="firingsRange.min"
+          [max]="firingsRange.max"
+          [value]="brassFirings()"
+          [class.is-invalid]="firingsInvalid()"
+          [attr.aria-invalid]="firingsInvalid()"
+          (input)="brassFirings.set(firingsInput.value)"
+        />
+        <div id="ammunition-brass-firings-error" class="invalid-feedback">
+          {{ 'AMMUNITION.FORM.WHOLE_NUMBER_INVALID' | translate: firingsRange }}
+        </div>
+      </div>
+      <div class="col-7">
+        <label for="ammunition-length" class="form-label fw-semibold">{{ 'AMMUNITION.FORM.OVERALL_LENGTH' | translate }}</label>
+        <div class="input-group has-validation">
+          <input
+            id="ammunition-length"
+            class="form-control"
+            inputmode="decimal"
+            autocomplete="off"
+            aria-describedby="ammunition-length-error"
+            #lengthInput
+            [placeholder]="'AMMUNITION.FORM.OVERALL_LENGTH_PLACEHOLDER' | translate"
+            [value]="overallLength()"
+            [class.is-invalid]="lengthInvalid()"
+            [attr.aria-invalid]="lengthInvalid()"
+            (input)="overallLength.set(lengthInput.value)"
+          />
+          <span class="input-group-text">mm</span>
+          <div id="ammunition-length-error" class="invalid-feedback">{{ 'AMMUNITION.FORM.RANGE_INVALID' | translate: lengthRange }}</div>
+        </div>
+      </div>
+    </div>
+  }
+
+  <div class="row g-3 mb-3">
+    <div class="col-6">
+      <label for="ammunition-weight" class="form-label fw-semibold">{{ 'AMMUNITION.FORM.BULLET_WEIGHT' | translate }}</label>
+      <div class="input-group has-validation">
+        <input
+          id="ammunition-weight"
+          class="form-control"
+          inputmode="decimal"
+          required
+          autocomplete="off"
+          aria-describedby="ammunition-weight-error"
+          #weightInput
+          [placeholder]="'AMMUNITION.FORM.BULLET_WEIGHT_PLACEHOLDER' | translate"
+          [value]="bulletWeight()"
+          [class.is-invalid]="weightInvalid()"
+          [attr.aria-invalid]="weightInvalid()"
+          (input)="bulletWeight.set(weightInput.value)"
+        />
+        <span class="input-group-text">gr</span>
+        <div id="ammunition-weight-error" class="invalid-feedback">
+          {{ 'AMMUNITION.FORM.RANGE_INVALID' | translate: weightRange }}
+        </div>
+      </div>
+    </div>
+    <div class="col-6">
+      <label for="ammunition-velocity" class="form-label fw-semibold">{{ 'AMMUNITION.FORM.MUZZLE_VELOCITY' | translate }}</label>
+      <div class="input-group has-validation">
+        <input
+          id="ammunition-velocity"
+          class="form-control"
+          inputmode="decimal"
+          required
+          autocomplete="off"
+          aria-describedby="ammunition-velocity-error"
+          #velocityInput
+          [placeholder]="'AMMUNITION.FORM.MUZZLE_VELOCITY_PLACEHOLDER' | translate"
+          [value]="muzzleVelocity()"
+          [class.is-invalid]="velocityInvalid()"
+          [attr.aria-invalid]="velocityInvalid()"
+          (input)="muzzleVelocity.set(velocityInput.value)"
+        />
+        <span class="input-group-text">m/s</span>
+        <div id="ammunition-velocity-error" class="invalid-feedback">
+          {{ 'AMMUNITION.FORM.RANGE_INVALID' | translate: velocityRange }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <label for="ammunition-bullet-type" class="form-label fw-semibold">{{ 'AMMUNITION.FORM.BULLET_TYPE' | translate }}</label>
+    <!-- A combo box: the common kinds of bullets are offered, any other, such as a product name, can be typed in -->
+    <input
+      id="ammunition-bullet-type"
+      class="form-control"
+      autocomplete="off"
+      list="ammunition-bullet-types"
+      #bulletTypeInput
+      [placeholder]="'AMMUNITION.FORM.BULLET_TYPE_PLACEHOLDER' | translate"
+      [value]="bulletType()"
+      (input)="bulletType.set(bulletTypeInput.value)"
+    />
+    <datalist id="ammunition-bullet-types">
+      @for (option of 'AMMUNITION.BULLET_TYPES' | translate; track $index) {
+        <option [value]="option"></option>
+      }
+    </datalist>
+  </div>
+
+  <div>
+    <label for="ammunition-bc" class="form-label fw-semibold">{{ 'AMMUNITION.FORM.BALLISTIC_COEFFICIENT' | translate }}</label>
+    <input
+      id="ammunition-bc"
+      class="form-control"
+      inputmode="decimal"
+      autocomplete="off"
+      aria-describedby="ammunition-bc-error"
+      #coefficientInput
+      [placeholder]="'AMMUNITION.FORM.BALLISTIC_COEFFICIENT_PLACEHOLDER' | translate"
+      [value]="ballisticCoefficient()"
+      [class.is-invalid]="coefficientInvalid()"
+      [attr.aria-invalid]="coefficientInvalid()"
+      (input)="ballisticCoefficient.set(coefficientInput.value)"
+    />
+    <div id="ammunition-bc-error" class="invalid-feedback">{{ 'AMMUNITION.FORM.RANGE_INVALID' | translate: coefficientRange }}</div>
+  </div>
+
+  @if (error()) {
+    <p class="text-danger small mt-3 mb-0" role="alert">{{ 'AMMUNITION.FORM.SAVE_FAILED' | translate }}</p>
+  }
+
+  <div class="d-flex justify-content-end mt-4">
+    <button type="submit" class="btn btn-primary" [disabled]="!canSubmit()">{{ 'ADD_ITEM.SUBMIT' | translate }}</button>
+  </div>
+</form>
