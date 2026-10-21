@@ -1,0 +1,115 @@
+{
+  "TITLE": "User guide",
+  "INTRO": "vHonitbě is your hunting diary for the field. It records what you see and do in your hunting ground, shows the conditions for today’s hunt and helps you look after feeders and salt licks.",
+  "CONTENTS": "Contents",
+  "start": {
+    "TITLE": "Getting started",
+    "TEXT": "vHonitbě runs in your phone’s web browser. For quick access, add it to your home screen: open the browser menu and choose “Add to Home screen” or “Install app”. It then opens like any other app.",
+    "STEPS": [
+      "Allow access to your location when asked. The app needs it for sunrise and sunset, the weather, the map and to place new records where you stand.",
+      "Your records and photos are stored only on this phone. Nothing is sent anywhere unless you share it yourself.",
+      "Open the menu with the ☰ button in the top left corner to switch between the overview, the map, feeding, firearms and ammunition, and this guide."
+    ]
+  },
+  "overview": {
+    "TITLE": "Overview",
+    "TEXT": "The home page shows the conditions for today’s hunt and the list of your records.",
+    "STEPS": [
+      "Today: sunrise and sunset at your location.",
+      "Moon: the current phase and how much of the moon is lit.",
+      "Weather and Wind: the temperature and conditions now, the wind speed and where the wind comes from; the arrow points where it blows.",
+      "At night a yellow notice appears: from one hour after sunset until one hour before sunrise some game may not be hunted.",
+      "Below are your events, newest first. Use the filters above the list to change the order or to show only one kind of event or one animal."
+    ]
+  },
+  "add-event": {
+    "TITLE": "Recording an event",
+    "TEXT": "Tap the round + button in the bottom right corner of the overview and fill in the form.",
+    "STEPS": [
+      "Choose what happened: a sighting, tracks, a harvest, game damage and so on.",
+      "For events about game, choose the animal and, if you know it, its sex. A sighting can be marked as a herd, with the number of animals.",
+      "When you harvest hoofed game, enter the number of its tag.",
+      "For a harvest, choose the firearm and ammunition you used from those saved on the Firearms and ammunition page. Their details are copied into the harvest as they are now, so changing the firearm later does not alter it.",
+      "The date and time are set to now; change them when you record the event later.",
+      "The location starts where you stand. If the event happened elsewhere, move the small map until the crosshair is on the right spot. Back to my position puts it back where you are.",
+      "Add a note and a photo: take a new one with the camera or choose one from the gallery.",
+      "Tap Save."
+    ]
+  },
+  "event-actions": {
+    "TITLE": "Working with events",
+    "TEXT": "Each event in the list has its actions behind the ⋮ button on the right.",
+    "STEPS": [
+      "Show photo and Show on map open the photo or a map of the place.",
+      "Share event sends a short message, for example in WhatsApp, with the event, its place with a link to Mapy.cz and its photo. Your note is never shared.",
+      "Edit event opens the form to make changes.",
+      "Delete event removes the event together with its photo once you confirm it."
+    ]
+  },
+  "map": {
+    "TITLE": "Map",
+    "TEXT": "The map shows where you are and your ten latest events.",
+    "STEPS": [
+      "Tap the button in the top right corner to show the map options and the legend.",
+      "Track my location keeps your position up to date; Follow me also keeps the map centred on you.",
+      "Distance circles show 100, 150 and 200 m around you.",
+      "Wind cone shows where the wind carries your scent; it gets longer as the wind gets stronger.",
+      "Shooting safety colours the terrain around you: green where the ground stops a bullet, orange where it stops it only further away, red where there is no backstop or a building is close. It is only an estimate – always check the backstop yourself.",
+      "Tap an event pin to see what it is. Press and hold a pin to share, edit or delete the event.",
+      "Press and hold anywhere on the map to add an event right there, or to set your position by hand when your phone cannot find it."
+    ]
+  },
+  "feeding": {
+    "TITLE": "Feeding",
+    "TEXT": "The Feeding page helps you look after the places where you feed game: feeders, feed piles, baiting spots and salt licks.",
+    "STEPS": [
+      "Feeding season: choose the first and the last month; October to March by default. The badge tells whether the season is in progress.",
+      "Replenishment: how many days may pass between topping up a place; 5 days by default.",
+      "The map shows all your feeding places, each kind in its own colour.",
+      "To add a place, tap the + button on this page, choose its kind, check its location and add a note or a photo."
+    ]
+  },
+  "replenishing": {
+    "TITLE": "Replenishing feeding places",
+    "TEXT": "Each place in the list shows when it was last replenished.",
+    "STEPS": [
+      "After topping up a place, open its actions with ⋮ and tap the green Replenished. The current date and time are recorded.",
+      "During the feeding season, a place that was never replenished, or not within the replenishment interval, gets a red band and the note Needs replenishing.",
+      "Wherever you are in the app, a red dot on the menu button and on the Feeding item tells you that a place needs attention.",
+      "Places can be shown on a map, shared, edited and deleted just like events."
+    ]
+  },
+  "firearms": {
+    "TITLE": "Firearms and ammunition",
+    "TEXT": "Keep your firearms and ammunition here, so you can pick them when recording a harvest.",
+    "STEPS": [
+      "Tap the + button and choose whether you are adding a firearm or ammunition.",
+      "A firearm has a name and a caliber – pick a common cartridge or type in any other. You can add the barrel length in mm or inches, the thread pitch, a sight with its make and model, and whether it is suppressed.",
+      "Ammunition has a caliber, factory or handload, bullet weight, muzzle velocity, bullet type and G1 ballistic coefficient. Factory ammunition can have its make and product name.",
+      "For a handload you can also record the primer, the powder and its charge, the brass, how many times the brass has been fired and the overall cartridge length.",
+      "Edit or delete a firearm or ammunition with the ⋮ button next to it. Harvests keep the firearm and ammunition as they were recorded."
+    ]
+  },
+  "settings": {
+    "TITLE": "Settings",
+    "TEXT": "The gear button in the top right corner opens the settings.",
+    "STEPS": [
+      "Appearance: light, or dark for dusk and night.",
+      "Language: Czech or English.",
+      "The version of the app is shown at the bottom."
+    ]
+  },
+  "SHOTS": {
+    "overview": "The overview with today’s conditions and your events",
+    "add-event": "Recording a harvest with the firearm and ammunition used",
+    "event-actions": "The actions of an event",
+    "map": "The map with its options and the wind cone",
+    "map-menu": "Press and hold on the map to add an event",
+    "feeding": "The feeding season, the replenishment interval and the map of feeding places",
+    "feeding-list": "A feeding place that needs replenishing, with its actions",
+    "navigation": "Red dots tell you that a feeding place needs attention",
+    "settings": "The settings",
+    "firearms": "Your firearms and ammunition",
+    "add-ammunition": "Adding a handload"
+  }
+}
