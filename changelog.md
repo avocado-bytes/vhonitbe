@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.50.1
+
+- The two numbers of a firearm's thread pitch are separated by a colon instead of a slash, in the form and in the list, e.g. "thread pitch 1:10" / "stoupání závitu 1:10".
+
+## 0.50.0
+
+- Firearms have an optional thread pitch, entered as a ratio in two number inputs separated by a slash, styled like the tag number of a harvest (monospace, larger, spaced). Both numbers are needed once either is given, each from 0.1 to 100, with a decimal comma or point. The list shows it as e.g. "thread pitch 5/8" / "stoupání závitu 5/8", and it is copied into new harvests with the rest of the firearm.
+
+## 0.49.0
+
+- A harvest records the firearm and ammunition used: two optional dropdowns in the event form offer only the firearms and ammunition saved on the "Firearms and ammunition" page.
+- The chosen firearm and ammunition are copied into the harvest with all their details, without any link back to them, so changing or deleting them later keeps the harvest as it was. Editing a harvest offers the recorded copy, marked "(as recorded)", next to the saved ones.
+- The event list shows the firearm and ammunition of a harvest, e.g. "Firearm: Blaser R8 (.308 Win)".
+
 ## 0.48.1
 
 - The side navigation item for firearms is now "Zbraně a střelivo" / "Firearms and ammunition", matching its page.

@@ -53,3 +53,12 @@ export function parseDecimal(value: string): number | null {
 export function inRange(value: number | null, { min, max }: { min: number; max: number }): value is number {
   return value !== null && value >= min && value <= max;
 }
+
+/** A short name for ammunition in a list or dropdown, e.g. ".308 Win · RWS EVO · 165 gr" */
+export function ammunitionLabel(
+  ammunition: Pick<Ammunition, 'caliber' | 'bulletWeight' | 'bulletType' | 'product'>,
+  numberFormat: Intl.NumberFormat,
+): string {
+  const name = ammunition.product || ammunition.bulletType;
+  return [ammunition.caliber, name, `${numberFormat.format(ammunition.bulletWeight)} gr`].filter(Boolean).join(' · ');
+}

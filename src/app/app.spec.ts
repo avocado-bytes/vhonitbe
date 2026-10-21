@@ -5,8 +5,10 @@ import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { EMPTY } from 'rxjs';
 import { HuntingEvent } from './model/event';
 import { EventsActions } from './state/events/events.actions';
+import { initialState as ammunitionInitialState } from './state/ammunition/ammunition.reducer';
 import { initialState as eventsInitialState } from './state/events/events.reducer';
 import { initialState as feedingInitialState } from './state/feeding/feeding.reducer';
+import { initialState as firearmsInitialState } from './state/firearms/firearms.reducer';
 import { initialState as locationInitialState } from './state/location/location.reducer';
 import { provideTranslateService, TranslateService } from '@ngx-translate/core';
 import { App } from './app';
@@ -28,6 +30,8 @@ describe('App', () => {
             settings: { theme: 'light', language: 'en' },
             events: eventsInitialState,
             feeding: feedingInitialState,
+            firearms: firearmsInitialState,
+            ammunition: ammunitionInitialState,
             location: locationInitialState,
           },
         }),
@@ -305,6 +309,8 @@ describe('App', () => {
         settings: { theme: 'light', language: 'en' },
         events: { ...eventsInitialState, editing: existing },
         feeding: feedingInitialState,
+        firearms: firearmsInitialState,
+        ammunition: ammunitionInitialState,
         location: locationInitialState,
       });
       await app.fixture.whenStable();

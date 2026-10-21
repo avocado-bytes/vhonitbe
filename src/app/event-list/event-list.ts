@@ -4,7 +4,9 @@ import { Store } from '@ngrx/store';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { EventMap } from '../event-map/event-map';
 import { EventPhoto } from '../event-photo/event-photo';
-import { HuntingEvent } from '../model/event';
+import { ammunitionLabel } from '../model/ammunition';
+import { AmmunitionSnapshot, FirearmSnapshot, HuntingEvent } from '../model/event';
+import { firearmLabel } from '../model/firearm';
 import { FocusTrap } from '../shared/focus-trap';
 import { formatTagNumber } from '../shared/tag-number';
 import { EventsActions } from '../state/events/events.actions';
@@ -40,6 +42,7 @@ export class EventList {
     () => new Intl.DateTimeFormat(this.language(), { dateStyle: 'medium', timeStyle: 'short' }),
   );
   protected readonly formatTagNumber = formatTagNumber;
+  private readonly numberFormat = computed(() => new Intl.NumberFormat(this.language(), { maximumFractionDigits: 3 }));
 
   /** Id of the event whose action menu is open on phones, if any */
   protected readonly actionsFor = signal<string | null>(null);
@@ -50,6 +53,14 @@ export class EventList {
   /** The event shown in the photo dialog, if any */
   protected readonly photoEvent = signal<HuntingEvent | null>(null);
   private readonly photoDialog = viewChild.required<ElementRef<HTMLDialogElement>>('photoDialog');
+
+  protected firearmLabel(firearm: FirearmSnapshot): string {
+    return firearmLabel(firearm);
+  }
+
+  protected ammunitionLabel(ammunition: AmmunitionSnapshot): string {
+    return ammunitionLabel(ammunition, this.numberFormat());
+  }
 
   protected formatDate(iso: string): string {
     return this.dateFormat().format(new Date(iso));

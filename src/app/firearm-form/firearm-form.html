@@ -70,6 +70,47 @@
     </div>
   </div>
 
+  <div class="mb-3" role="group" aria-labelledby="firearm-thread-pitch-label">
+    <div id="firearm-thread-pitch-label" class="form-label fw-semibold">{{ 'FIREARMS.FORM.THREAD_PITCH' | translate }}</div>
+    <!-- Two numbers of a ratio, separated by a colon, in the monospace style of the tag number -->
+    <div class="ratio-field">
+      <input
+        id="firearm-thread-numerator"
+        class="form-control ratio-input"
+        inputmode="decimal"
+        autocomplete="off"
+        spellcheck="false"
+        aria-describedby="firearm-thread-pitch-error"
+        #numeratorInput
+        [attr.aria-label]="'FIREARMS.FORM.THREAD_NUMERATOR' | translate"
+        [value]="threadNumerator()"
+        [class.is-invalid]="threadPitchInvalid()"
+        [attr.aria-invalid]="threadPitchInvalid()"
+        (input)="threadNumerator.set(numeratorInput.value)"
+      />
+      <span class="ratio-separator" aria-hidden="true">:</span>
+      <input
+        id="firearm-thread-denominator"
+        class="form-control ratio-input"
+        inputmode="decimal"
+        autocomplete="off"
+        spellcheck="false"
+        aria-describedby="firearm-thread-pitch-error"
+        #denominatorInput
+        [attr.aria-label]="'FIREARMS.FORM.THREAD_DENOMINATOR' | translate"
+        [value]="threadDenominator()"
+        [class.is-invalid]="threadPitchInvalid()"
+        [attr.aria-invalid]="threadPitchInvalid()"
+        (input)="threadDenominator.set(denominatorInput.value)"
+      />
+    </div>
+    @if (threadPitchInvalid()) {
+      <div id="firearm-thread-pitch-error" class="invalid-feedback d-block">
+        {{ 'FIREARMS.FORM.THREAD_PITCH_INVALID' | translate: threadPitchRange }}
+      </div>
+    }
+  </div>
+
   <div>
     <label for="firearm-optics" class="form-label fw-semibold">{{ 'FIREARMS.FORM.OPTICS' | translate }}</label>
     <select id="firearm-optics" class="form-select" #opticsSelect (change)="selectOptics(opticsSelect.value)">

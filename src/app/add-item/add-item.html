@@ -92,6 +92,41 @@
       }
     }
 
+    @if (hasWeapon()) {
+      <!-- Only saved firearms and ammunition are offered; the chosen ones are copied into the event as they are now -->
+      <div class="mb-3">
+        <label for="add-item-firearm" class="form-label fw-semibold">{{ 'ADD_ITEM.FIREARM' | translate }}</label>
+        <select id="add-item-firearm" class="form-select" #firearmSelect (change)="firearmChoice.set(firearmSelect.value)">
+          <option value="" [selected]="firearmChoice() === ''">{{ 'ADD_ITEM.NOT_GIVEN' | translate }}</option>
+          @if (event()?.firearm; as recordedFirearm) {
+            <option [value]="recorded" [selected]="firearmChoice() === recorded">
+              {{ 'ADD_ITEM.AS_RECORDED' | translate: { label: firearmLabel(recordedFirearm) } }}
+            </option>
+          }
+          @for (firearm of firearms(); track firearm.id) {
+            <option [value]="firearm.id" [selected]="firearmChoice() === firearm.id">{{ firearmLabel(firearm) }}</option>
+          }
+        </select>
+      </div>
+      <div class="mb-3">
+        <label for="add-item-ammunition" class="form-label fw-semibold">{{ 'ADD_ITEM.AMMUNITION' | translate }}</label>
+        <select id="add-item-ammunition" class="form-select" #ammunitionSelect (change)="ammunitionChoice.set(ammunitionSelect.value)">
+          <option value="" [selected]="ammunitionChoice() === ''">{{ 'ADD_ITEM.NOT_GIVEN' | translate }}</option>
+          @if (event()?.ammunition; as recordedAmmunition) {
+            <option [value]="recorded" [selected]="ammunitionChoice() === recorded">
+              {{ 'ADD_ITEM.AS_RECORDED' | translate: { label: ammunitionLabel(recordedAmmunition) } }}
+            </option>
+          }
+          @for (ammunition of ammunitionOptions(); track ammunition.id) {
+            <option [value]="ammunition.id" [selected]="ammunitionChoice() === ammunition.id">{{ ammunitionLabel(ammunition) }}</option>
+          }
+        </select>
+        @if (firearms().length === 0 && ammunitionOptions().length === 0) {
+          <div class="form-text">{{ 'ADD_ITEM.WEAPON_HINT' | translate }}</div>
+        }
+      </div>
+    }
+
     <div>
       <label for="add-item-occurred-at" class="form-label fw-semibold">{{ 'ADD_ITEM.OCCURRED_AT' | translate }}</label>
       <input

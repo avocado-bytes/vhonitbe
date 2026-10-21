@@ -65,6 +65,8 @@ describe('Overview', () => {
         HERD: 'Herd',
         HERD_OF: 'Herd of {{count}}',
         TAG_NUMBER: 'Tag number',
+        FIREARM: 'Firearm: {{value}}',
+        AMMUNITION: 'Ammunition: {{value}}',
       },
       SEXES: { male: 'Male', female: 'Female', mixed: 'Mixed' },
       ITEMS: { spotting: 'Sighting', harvest: 'Harvest' },
@@ -109,6 +111,36 @@ describe('Overview', () => {
       new Intl.DateTimeFormat('en', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date('2026-10-01T06:30:00.000Z')),
     );
     expect(items[1].textContent).not.toContain('Roe deer');
+  });
+
+  it('should show the firearm and ammunition copied into a harvest', async () => {
+    await setState({
+      events: [
+        event('a', {
+          type: 'harvest',
+          firearm: { name: 'Blaser R8', caliber: '.308 Win', optics: 'none' },
+          ammunition: {
+            caliber: '.308 Win',
+            source: 'factory',
+            bulletWeight: 165,
+            muzzleVelocity: 820,
+            bulletType: 'Soft point (SP)',
+            ballisticCoefficient: null,
+            primer: '',
+            powder: '',
+            brass: '',
+            brassFirings: null,
+          },
+        }),
+        event('b'),
+      ],
+      total: 2,
+    });
+
+    const items = Array.from(element().querySelectorAll('li.event'));
+    expect(items[0].textContent).toContain('Firearm: Blaser R8 (.308 Win)');
+    expect(items[0].textContent).toContain('Ammunition: .308 Win · Soft point (SP) · 165 gr');
+    expect(items[1].textContent).not.toContain('Firearm');
   });
 
   it('should show the animal, sex and herd of an event on one line', async () => {

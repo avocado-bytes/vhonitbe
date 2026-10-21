@@ -4,14 +4,21 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { TranslatePipe } from '@ngx-translate/core';
-import { GeoPoint, HuntingEvent, NewHuntingEvent, Sex, SEXES } from '../model/event';
-import { Animal, ANIMAL_GROUPS, hasTagNumber, Item, itemHasAnimal, itemHasHerd, ITEMS } from '../model/item';
+import { ammunitionLabel } from '../model/ammunition';
+import { AmmunitionSnapshot, FirearmSnapshot, GeoPoint, HuntingEvent, NewHuntingEvent, Sex, SEXES, snapshot } from '../model/event';
+import { firearmLabel } from '../model/firearm';
+import { Animal, ANIMAL_GROUPS, hasTagNumber, Item, itemHasAnimal, itemHasHerd, itemHasWeapon, ITEMS } from '../model/item';
 import { LocationPicker } from '../location-picker/location-picker';
 import { compressImage } from '../shared/compress-image';
 import { TAG_DIGITS } from '../shared/tag-number';
 import { TagNumberInput } from '../tag-number-input/tag-number-input';
 import { fromDateTimeLocal, toDateTimeLocal } from '../shared/datetime-local';
 import { EventStorage } from '../storage/event-storage';
+import { AmmunitionActions } from '../state/ammunition/ammunition.actions';
+import { selectSorted as selectSortedAmmunition } from '../state/ammunition/ammunition.reducer';
+import { FirearmsActions } from '../state/firearms/firearms.actions';
+import { selectSorted as selectSortedFirearms } from '../state/firearms/firearms.reducer';
+import { selectLanguage } from '../state/settings/settings.reducer';
 import { EventsActions } from '../state/events/events.actions';
 import { selectSaveError, selectSaving } from '../state/events/events.reducer';
 import { LocationActions } from '../state/location/location.actions';
@@ -19,6 +26,9 @@ import { selectPosition, selectStatus } from '../state/location/location.reducer
 
 /** A herd has at least two animals */
 const MIN_HERD_SIZE = 2;
+
+/** The dropdown value of the firearm or ammunition copied into an edited event, as opposed to the id of a saved one */
+const RECORDED = 'recorded';
 
 @Component({
   imports: [TranslatePipe, KeyValuePipe, LocationPicker, TagNumberInput],
@@ -75,6 +85,19 @@ export class AddItem implements OnInit {
   /** The user left the tag number field, so an incomplete number is pointed out */
   protected readonly tagNumberTouched = signal(false);
   protected readonly showTagNumberError = computed(() => this.tagNumberInvalid() && this.tagNumberTouched());
+  /** A harvest records the firearm and ammunition used, chosen from the saved ones */
+  protected readonly hasWeapon = computed(() => {
+    const type = this.type();
+    return type !== null && itemHasWeapon(type);
+  });
+  protected readonly firearms = this.store.selectSignal(selectSortedFirearms);
+  protected readonly ammunitionOptions = this.store.selectSignal(selectSortedAmmunition);
+  private readonly language = this.store.selectSignal(selectLanguage);
+  private readonly numberFormat = computed(() => new Intl.NumberFormat(this.language(), { maximumFractionDigits: 3 }));
+  protected readonly recorded = RECORDED;
+  /** The chosen firearm: empty for none, RECORDED for the copy in an edited event, or the id of a saved firearm */
+  readonly firearmChoice = linkedSignal<string>(() => (this.event()?.firearm ? RECORDED : ''));
+  readonly ammunitionChoice = linkedSignal<string>(() => (this.event()?.ammunition ? RECORDED : ''));
   readonly note = linkedSignal<string>(() => this.event()?.note ?? '');
   /** Where a new event starts instead of the user's current location */
   readonly initialLocation = input<GeoPoint | null>(null);
@@ -155,6 +178,9 @@ export class AddItem implements OnInit {
     if (!this.event()) {
       this.store.dispatch(LocationActions.locate());
     }
+    // The saved firearms and ammunition to choose from for a harvest
+    this.store.dispatch(FirearmsActions.load());
+    this.store.dispatch(AmmunitionActions.load());
 
     const photoId = this.event()?.photoId;
     if (photoId) {
@@ -196,6 +222,33 @@ export class AddItem implements OnInit {
     this.type.set(value as Item);
   }
 
+  protected firearmLabel(firearm: FirearmSnapshot): string {
+    return firearmLabel(firearm);
+  }
+
+  protected ammunitionLabel(ammunition: AmmunitionSnapshot): string {
+    return ammunitionLabel(ammunition, this.numberFormat());
+  }
+
+  /** A copy of the chosen firearm, so the event keeps it as it was even when the firearm is changed later */
+  private chosenFirearm(): FirearmSnapshot | null {
+    const choice = this.firearmChoice();
+    if (choice === RECORDED) {
+      return this.event()?.firearm ?? null;
+    }
+    const firearm = this.firearms().find(({ id }) => id === choice);
+    return firearm ? snapshot(firearm) : null;
+  }
+
+  private chosenAmmunition(): AmmunitionSnapshot | null {
+    const choice = this.ammunitionChoice();
+    if (choice === RECORDED) {
+      return this.event()?.ammunition ?? null;
+    }
+    const ammunition = this.ammunitionOptions().find(({ id }) => id === choice);
+    return ammunition ? snapshot(ammunition) : null;
+  }
+
   protected selectAnimal(value: string): void {
     this.animal.set(value as Animal);
   }
@@ -220,6 +273,8 @@ export class AddItem implements OnInit {
       herdSize: this.isHerd() && this.herdSize().trim() ? Number(this.herdSize()) : null,
       sex: this.hasAnimal() && (this.isHerd() || this.sex() !== 'mixed') ? this.sex() : null,
       tagNumber: this.hasTagNumber() && this.tagNumber() ? this.tagNumber() : null,
+      firearm: this.hasWeapon() ? this.chosenFirearm() : null,
+      ammunition: this.hasWeapon() ? this.chosenAmmunition() : null,
       location: this.location(),
       note: this.note().trim(),
       occurredAt,

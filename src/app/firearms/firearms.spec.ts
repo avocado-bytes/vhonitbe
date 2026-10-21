@@ -59,6 +59,7 @@ describe('Firearms', () => {
         ACTIONS: 'Firearm actions',
         SUPPRESSED: 'Suppressed',
         BARREL_LENGTH: 'barrel {{value}} mm',
+        THREAD_PITCH: 'thread pitch {{value}}',
         EMPTY: 'No firearms yet',
         OPTICS: { none: 'No optic sight', riflescope: 'Riflescope' },
         FORM: { ADD_TITLE: 'Add firearm', EDIT_TITLE: 'Edit firearm', ADD_ANY_TITLE: 'Add', KIND_PLACEHOLDER: 'Select' },
@@ -94,7 +95,7 @@ describe('Firearms', () => {
     await setState({
       firearms: [
         { id: 'a', name: 'Blaser R8', caliber: '.308 Win', optics: 'riflescope', opticsModel: 'Zeiss Victory V8' },
-        { id: 'b', name: 'CZ 527', caliber: '.222 Rem', optics: 'none', suppressed: true, barrelLength: 520.7 },
+        { id: 'b', name: 'CZ 527', caliber: '.222 Rem', optics: 'none', suppressed: true, barrelLength: 520.7, threadPitch: { numerator: 1, denominator: 2 } },
       ],
     });
 
@@ -102,7 +103,7 @@ describe('Firearms', () => {
     expect(items).toHaveLength(2);
     expect(items[0].textContent).toContain('Blaser R8');
     expect(items[0].textContent?.replace(/\s+/g, ' ')).toContain('.308 Win · Riflescope Zeiss Victory V8');
-    expect(items[1].textContent?.replace(/\s+/g, ' ')).toContain('.222 Rem · No optic sight · Suppressed · barrel 520.7 mm');
+    expect(items[1].textContent?.replace(/\s+/g, ' ')).toContain('.222 Rem · No optic sight · Suppressed · barrel 520.7 mm · thread pitch 1:2');
     expect(items[0].textContent).not.toContain('Suppressed');
   });
 

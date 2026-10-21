@@ -11,6 +11,8 @@ import {
   LengthUnit,
   Optics,
   OPTICS,
+  ThreadPitch,
+  THREAD_PITCH_RANGE,
   toMillimetres,
 } from '../model/firearm';
 import { FirearmsActions } from '../state/firearms/firearms.actions';
@@ -18,12 +20,13 @@ import { selectSaveError, selectSaving } from '../state/firearms/firearms.reduce
 
 /**
  * Adds or edits a firearm: its name, its caliber picked from the common ones or typed in,
- * its barrel length in mm or inches, its optics, which default to none, with their make and model,
+ * its barrel length in mm or inches, its thread pitch as a ratio, its optics, which default to none, with their make and model,
  * and whether it is suppressed
  */
 @Component({
   imports: [TranslatePipe],
   selector: 'app-firearm-form',
+  styleUrl: './firearm-form.scss',
   templateUrl: './firearm-form.html',
 })
 export class FirearmForm {
@@ -32,6 +35,7 @@ export class FirearmForm {
   protected readonly opticsOptions = OPTICS;
   protected readonly calibers = COMMON_CALIBERS;
   protected readonly lengthUnits = LENGTH_UNITS;
+  protected readonly threadPitchRange = THREAD_PITCH_RANGE;
 
   /** The firearm to edit; without it a new firearm is added */
   readonly firearm = input<Firearm | null>(null);
@@ -56,6 +60,18 @@ export class FirearmForm {
     const length = parseDecimal(this.barrelLength());
     return length === null ? null : toMillimetres(length, this.lengthUnit());
   });
+  /** The raw values of the two numbers of the thread pitch, which accept a decimal comma */
+  readonly threadNumerator = linkedSignal(() => this.numberText(this.firearm()?.threadPitch?.numerator));
+  readonly threadDenominator = linkedSignal(() => this.numberText(this.firearm()?.threadPitch?.denominator));
+  /** Both numbers are needed once either is given */
+  protected readonly threadPitchInvalid = computed(() => {
+    const numerator = this.threadNumerator().trim();
+    const denominator = this.threadDenominator().trim();
+    if (!numerator && !denominator) {
+      return false;
+    }
+    return !inRange(parseDecimal(numerator), THREAD_PITCH_RANGE) || !inRange(parseDecimal(denominator), THREAD_PITCH_RANGE);
+  });
   protected readonly barrelLengthInvalid = computed(
     () => this.barrelLength().trim() !== '' && !inRange(this.barrelLengthMm(), BARREL_LENGTH_RANGE_MM),
   );
@@ -65,8 +81,20 @@ export class FirearmForm {
   protected readonly saving = this.store.selectSignal(selectSaving);
   protected readonly error = this.store.selectSignal(selectSaveError);
   protected readonly canSubmit = computed(
-    () => !!this.name().trim() && !!this.caliber().trim() && !this.barrelLengthInvalid() && !this.saving(),
+    () =>
+      !!this.name().trim() && !!this.caliber().trim() && !this.barrelLengthInvalid() && !this.threadPitchInvalid() && !this.saving(),
   );
+
+  private numberText(value: number | null | undefined): string {
+    return value === null || value === undefined ? '' : String(value);
+  }
+
+  /** The thread pitch to store; null when not given */
+  private threadPitch(): ThreadPitch | null {
+    const numerator = parseDecimal(this.threadNumerator());
+    const denominator = parseDecimal(this.threadDenominator());
+    return numerator === null || denominator === null ? null : { numerator, denominator };
+  }
 
   protected selectLengthUnit(value: string): void {
     this.lengthUnit.set(value as LengthUnit);
@@ -90,6 +118,7 @@ export class FirearmForm {
       opticsModel,
       suppressed: this.suppressed(),
       barrelLength: this.barrelLengthMm(),
+      threadPitch: this.threadPitch(),
     };
     const editing = this.firearm();
     if (editing) {

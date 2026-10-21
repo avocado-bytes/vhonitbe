@@ -84,7 +84,12 @@
     "TAG_NUMBER": "Tag number",
     "TAG_NUMBER_HINT": "Optional. The 2 + 6 digits from the tag.",
     "TAG_NUMBER_INVALID": "Enter all 8 digits of the tag number.",
-    "CHOOSE_PHOTO": "Choose from gallery"
+    "CHOOSE_PHOTO": "Choose from gallery",
+    "FIREARM": "Firearm",
+    "AMMUNITION": "Ammunition",
+    "NOT_GIVEN": "Not given",
+    "AS_RECORDED": "{{label}} (as recorded)",
+    "WEAPON_HINT": "Save your firearms and ammunition on the \"Firearms and ammunition\" page to choose them here."
   },
   "ITEMS": {
     "spotting": "Sighting",
@@ -178,7 +183,9 @@
     "ACTIONS": "Event actions",
     "HERD": "Herd",
     "HERD_OF": "Herd of {{count}}",
-    "TAG_NUMBER": "Tag number"
+    "TAG_NUMBER": "Tag number",
+    "FIREARM": "Firearm: {{value}}",
+    "AMMUNITION": "Ammunition: {{value}}"
   },
   "LOCATION_PICKER": {
     "MAP": "Map for choosing the location",
@@ -456,7 +463,11 @@
         "mm": "e.g. 560",
         "in": "e.g. 22"
       },
-      "BARREL_LENGTH_INVALID": "Enter a length from {{min}} to {{max}} {{unit}}."
+      "BARREL_LENGTH_INVALID": "Enter a length from {{min}} to {{max}} {{unit}}.",
+      "THREAD_PITCH": "Thread pitch",
+      "THREAD_NUMERATOR": "Thread pitch, number before the colon",
+      "THREAD_DENOMINATOR": "Thread pitch, number after the colon",
+      "THREAD_PITCH_INVALID": "Enter both numbers, each from {{min}} to {{max}}."
     },
     "EDIT": "Edit firearm",
     "ACTIONS": "Firearm actions",
@@ -466,7 +477,8 @@
     "DELETE_FAILED": "The firearm could not be deleted. Please try again.",
     "PAGE_TITLE": "Firearms and ammunition",
     "ADD_ANY": "Add firearm or ammunition",
-    "BARREL_LENGTH": "barrel {{value}} mm"
+    "BARREL_LENGTH": "barrel {{value}} mm",
+    "THREAD_PITCH": "thread pitch {{value}}"
   },
   "AMMUNITION": {
     "TITLE": "Ammunition",

@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { AmmunitionForm } from '../ammunition-form/ammunition-form';
 import { FirearmForm } from '../firearm-form/firearm-form';
-import { Firearm } from '../model/firearm';
+import { Firearm, formatThreadPitch, ThreadPitch } from '../model/firearm';
 import { FocusTrap } from '../shared/focus-trap';
 import { Ammunition } from '../model/ammunition';
 import { AmmunitionActions } from '../state/ammunition/ammunition.actions';
@@ -138,6 +138,10 @@ export class Firearms {
     if (this.window?.confirm(this.translate.instant('AMMUNITION.DELETE_CONFIRM'))) {
       this.store.dispatch(AmmunitionActions.deleteAmmunition({ id }));
     }
+  }
+
+  protected formatThreadPitch(threadPitch: ThreadPitch): string {
+    return formatThreadPitch(threadPitch, this.numberFormat());
   }
 
   protected formatNumber(value: number): string {

@@ -94,7 +94,7 @@ describe('FirearmForm', () => {
 
     expect(dispatch).toHaveBeenCalledWith(
       FirearmsActions.addFirearm({
-        firearm: { name: 'Blaser R8', caliber: '.308 Win', optics: 'riflescope', opticsModel: 'Zeiss Victory V8', suppressed: false, barrelLength: null },
+        firearm: { name: 'Blaser R8', caliber: '.308 Win', optics: 'riflescope', opticsModel: 'Zeiss Victory V8', suppressed: false, barrelLength: null, threadPitch: null },
       }),
     );
   });
@@ -108,14 +108,14 @@ describe('FirearmForm', () => {
 
     submitButton().click();
     expect(dispatch).toHaveBeenLastCalledWith(
-      FirearmsActions.addFirearm({ firearm: { name: 'CZ 527', caliber: '.222 Rem', optics: 'none', opticsModel: null, suppressed: false, barrelLength: null } }),
+      FirearmsActions.addFirearm({ firearm: { name: 'CZ 527', caliber: '.222 Rem', optics: 'none', opticsModel: null, suppressed: false, barrelLength: null, threadPitch: null } }),
     );
 
     await chooseOptics('red-dot');
     await enter('firearm-optics-model', '   ');
     submitButton().click();
     expect(dispatch).toHaveBeenLastCalledWith(
-      FirearmsActions.addFirearm({ firearm: { name: 'CZ 527', caliber: '.222 Rem', optics: 'red-dot', opticsModel: null, suppressed: false, barrelLength: null } }),
+      FirearmsActions.addFirearm({ firearm: { name: 'CZ 527', caliber: '.222 Rem', optics: 'red-dot', opticsModel: null, suppressed: false, barrelLength: null, threadPitch: null } }),
     );
   });
 
@@ -140,7 +140,7 @@ describe('FirearmForm', () => {
 
     expect(dispatch).toHaveBeenCalledWith(
       FirearmsActions.addFirearm({
-        firearm: { name: 'Sauer 404', caliber: '.308 Win', optics: 'none', opticsModel: null, suppressed: true, barrelLength: null },
+        firearm: { name: 'Sauer 404', caliber: '.308 Win', optics: 'none', opticsModel: null, suppressed: true, barrelLength: null, threadPitch: null },
       }),
     );
   });
@@ -154,6 +154,7 @@ describe('FirearmForm', () => {
       opticsModel: 'Zeiss Victory V8',
       suppressed: true,
       barrelLength: null,
+      threadPitch: null,
     };
 
     beforeEach(async () => {
@@ -241,6 +242,73 @@ describe('FirearmForm', () => {
       await chooseUnit('in');
       expect(input('firearm-barrel-length').classList).not.toContain('is-invalid');
       expect(submitButton().disabled).toBe(false);
+    });
+  });
+
+  describe('thread pitch', () => {
+    const numerator = () => input('firearm-thread-numerator');
+    const denominator = () => input('firearm-thread-denominator');
+    const save = async () => {
+      await enter('firearm-name', 'Blaser R8');
+      await enter('firearm-caliber', '.308 Win');
+      submitButton().click();
+      return (dispatch.mock.calls.at(-1)![0] as ReturnType<typeof FirearmsActions.addFirearm>).firearm.threadPitch;
+    };
+
+    it('should show two inputs separated by a colon, in the style of the tag number', () => {
+      const field = element().querySelector('.ratio-field') as HTMLElement;
+
+      expect(Array.from(field.children).map((child) => child.textContent?.trim() || child.id)).toEqual([
+        'firearm-thread-numerator',
+        ':',
+        'firearm-thread-denominator',
+      ]);
+      expect(numerator().inputMode).toBe('decimal');
+    });
+
+    it('should be optional', async () => {
+      expect(await save()).toBeNull();
+    });
+
+    it('should store both numbers, reading a decimal comma', async () => {
+      await enter('firearm-thread-numerator', '5');
+      await enter('firearm-thread-denominator', '8');
+      expect(await save()).toEqual({ numerator: 5, denominator: 8 });
+
+      await enter('firearm-thread-numerator', '0,5');
+      await enter('firearm-thread-denominator', '28');
+      expect(await save()).toEqual({ numerator: 0.5, denominator: 28 });
+    });
+
+    it('should need both numbers once either is given, each in range', async () => {
+      await enter('firearm-name', 'Blaser R8');
+      await enter('firearm-caliber', '.308 Win');
+
+      await enter('firearm-thread-numerator', '5');
+      expect(denominator().classList).toContain('is-invalid');
+      expect(element().querySelector('#firearm-thread-pitch-error')).not.toBeNull();
+      expect(submitButton().disabled).toBe(true);
+
+      await enter('firearm-thread-denominator', '0');
+      expect(submitButton().disabled).toBe(true);
+
+      await enter('firearm-thread-denominator', '8');
+      expect(numerator().classList).not.toContain('is-invalid');
+      expect(submitButton().disabled).toBe(false);
+    });
+
+    it('should prefill and keep the thread pitch of an edited firearm', async () => {
+      const firearm = { id: 'a', name: 'Blaser R8', caliber: '.308 Win', optics: 'none' as const, threadPitch: { numerator: 5, denominator: 8 } };
+      fixture.componentRef.setInput('firearm', firearm);
+      await fixture.whenStable();
+
+      expect(numerator().value).toBe('5');
+      expect(denominator().value).toBe('8');
+      submitButton().click();
+      expect((dispatch.mock.calls.at(-1)![0] as ReturnType<typeof FirearmsActions.updateFirearm>).firearm.threadPitch).toEqual({
+        numerator: 5,
+        denominator: 8,
+      });
     });
   });
 });

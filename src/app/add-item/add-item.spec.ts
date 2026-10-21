@@ -4,10 +4,16 @@ import { Action } from '@ngrx/store';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { provideTranslateService, TranslateService } from '@ngx-translate/core';
 import { Subject } from 'rxjs';
+import { Ammunition } from '../model/ammunition';
 import { HuntingEvent } from '../model/event';
+import { Firearm } from '../model/firearm';
 import { ANIMAL_GROUPS, GAME_BIRDS, GAME_MAMMALS, ITEMS, REGULATED_SPECIES } from '../model/item';
+import { AmmunitionActions } from '../state/ammunition/ammunition.actions';
 import { EventsActions } from '../state/events/events.actions';
+import { FirearmsActions } from '../state/firearms/firearms.actions';
+import { AmmunitionState, initialState as ammunitionInitialState } from '../state/ammunition/ammunition.reducer';
 import { EventsState, initialState as eventsInitialState } from '../state/events/events.reducer';
+import { FirearmsState, initialState as firearmsInitialState } from '../state/firearms/firearms.reducer';
 import { LocationActions } from '../state/location/location.actions';
 import { LocationState } from '../state/location/location.model';
 import { initialState as locationInitialState } from '../state/location/location.reducer';
@@ -58,10 +64,18 @@ describe('AddItem', () => {
     select.dispatchEvent(new Event('change'));
     await fixture.whenStable();
   };
-  const setState = async (state: { events?: Partial<EventsState>; location?: Partial<LocationState> }) => {
+  const setState = async (state: {
+    events?: Partial<EventsState>;
+    location?: Partial<LocationState>;
+    firearms?: Partial<FirearmsState>;
+    ammunition?: Partial<AmmunitionState>;
+  }) => {
     store.setState({
       events: { ...eventsInitialState, ...state.events },
       location: { ...locationInitialState, ...state.location },
+      firearms: { ...firearmsInitialState, ...state.firearms },
+      ammunition: { ...ammunitionInitialState, ...state.ammunition },
+      settings: { theme: 'light', language: 'en' },
     });
     await fixture.whenStable();
   };
@@ -72,7 +86,15 @@ describe('AddItem', () => {
       imports: [AddItem],
       providers: [
         provideTranslateService({ lang: 'en' }),
-        provideMockStore({ initialState: { events: eventsInitialState, location: locationInitialState } }),
+        provideMockStore({
+          initialState: {
+            events: eventsInitialState,
+            location: locationInitialState,
+            firearms: firearmsInitialState,
+            ammunition: ammunitionInitialState,
+            settings: { theme: 'light', language: 'en' },
+          },
+        }),
         provideMockActions(() => actions$),
       ],
     }).compileComponents();
@@ -86,6 +108,8 @@ describe('AddItem', () => {
         FUTURE_DATE: 'No future dates',
         NO_LOCATION: 'No location recorded',
         LOCATION_UNAVAILABLE: 'Location unavailable',
+        NOT_GIVEN: 'Not given',
+        AS_RECORDED: '{{label}} (as recorded)',
       },
       MAP: { LOCATING: 'Finding your location…' },
       ITEMS: { spotting: 'Sighting', tracks: 'Tracks' },
@@ -538,6 +562,8 @@ describe('AddItem', () => {
         herdSize: null,
         sex: null,
         tagNumber: null,
+        firearm: null,
+        ammunition: null,
         location: { latitude: 49.0, longitude: 13.5 },
         note: 'Clean shot, 80 m',
         occurredAt: expect.any(String),
@@ -585,6 +611,8 @@ describe('AddItem', () => {
     herdSize: null,
     sex: 'male',
     tagNumber: '12345678',
+    firearm: null,
+    ammunition: null,
     location: { latitude: 49, longitude: 13.5 },
     note: 'Clean shot',
     occurredAt: '2026-10-01T06:30:00.000Z',
@@ -673,6 +701,127 @@ describe('AddItem', () => {
       actions$.next(EventsActions.updateEventSuccess({ event: updated }));
 
       expect(saved).toHaveBeenCalledWith(updated);
+    });
+  });
+
+  describe('firearm and ammunition', () => {
+    const firearm: Firearm = { id: 'g1', name: 'Blaser R8', caliber: '.308 Win', optics: 'riflescope', opticsModel: 'Zeiss V8', suppressed: true, barrelLength: 560 };
+    const cartridge: Ammunition = {
+      id: 'a1',
+      caliber: '.308 Win',
+      source: 'factory',
+      bulletWeight: 165,
+      muzzleVelocity: 820,
+      bulletType: 'Soft point (SP)',
+      ballisticCoefficient: 0.447,
+      primer: '',
+      powder: '',
+      brass: '',
+      brassFirings: null,
+      product: 'RWS EVO',
+    };
+    const { id: _firearmId, ...firearmCopy } = firearm;
+    const { id: _ammunitionId, ...ammunitionCopy } = cartridge;
+    const firearmSelect = () => element().querySelector('#add-item-firearm') as HTMLSelectElement;
+    const ammunitionSelect = () => element().querySelector('#add-item-ammunition') as HTMLSelectElement;
+    const options = (select: HTMLSelectElement) => Array.from(select.options).map((option) => option.textContent?.trim());
+    const submitted = () => {
+      dispatch.mockClear();
+      submitButton().click();
+      return (dispatch.mock.calls[0][0] as ReturnType<typeof EventsActions.addEvent>).event;
+    };
+
+    beforeEach(() => setState({ firearms: { firearms: [firearm] }, ammunition: { ammunition: [cartridge] } }));
+
+    it('should load the saved firearms and ammunition to choose from', () => {
+      expect(dispatch).toHaveBeenCalledWith(FirearmsActions.load());
+      expect(dispatch).toHaveBeenCalledWith(AmmunitionActions.load());
+    });
+
+    it('should offer only the saved firearms and ammunition, and only for a harvest', async () => {
+      await choose(typeSelect(), 'spotting');
+      expect(firearmSelect()).toBeNull();
+
+      await choose(typeSelect(), 'harvest');
+      expect(options(firearmSelect())).toEqual(['Not given', 'Blaser R8 (.308 Win)']);
+      expect(options(ammunitionSelect())).toEqual(['Not given', '.308 Win · RWS EVO · 165 gr']);
+      expect(firearmSelect().value).toBe('');
+    });
+
+    it('should copy the chosen firearm and ammunition into the harvest, without their ids', async () => {
+      await choose(typeSelect(), 'harvest');
+      await choose(firearmSelect(), 'g1');
+      await choose(ammunitionSelect(), 'a1');
+
+      const event = submitted();
+
+      expect(event.firearm).toEqual(firearmCopy);
+      expect(event.ammunition).toEqual(ammunitionCopy);
+      // A copy rather than the stored object, so it keeps its state when the firearm is changed later
+      expect(event.firearm).not.toBe(firearm);
+    });
+
+    it('should store none when not given, and drop a choice made before switching to another type', async () => {
+      await choose(typeSelect(), 'harvest');
+      expect(submitted().firearm).toBeNull();
+
+      await choose(firearmSelect(), 'g1');
+      await choose(typeSelect(), 'tracks');
+      const event = submitted();
+      expect(event.firearm).toBeNull();
+      expect(event.ammunition).toBeNull();
+    });
+
+    describe('editing a harvest', () => {
+      const recordedFirearm = { ...firearmCopy, opticsModel: 'Swarovski Z8i' };
+      const harvest: HuntingEvent = {
+        id: 'e1',
+        type: 'harvest',
+        animal: 'wild-boar',
+        location: null,
+        note: '',
+        firearm: recordedFirearm,
+        ammunition: null,
+        occurredAt: '2026-10-01T06:30:00.000Z',
+        createdAt: '2026-10-01T06:31:00.000Z',
+        updatedAt: '2026-10-01T06:31:00.000Z',
+      };
+
+      beforeEach(async () => {
+        fixture = TestBed.createComponent(AddItem);
+        component = fixture.componentInstance;
+        fixture.componentRef.setInput('event', harvest);
+        await fixture.whenStable();
+      });
+
+      it('should offer and keep the firearm as recorded, even though the saved one has changed since', () => {
+        expect(firearmSelect().value).toBe('recorded');
+        expect(options(firearmSelect())).toEqual(['Not given', 'Blaser R8 (.308 Win) (as recorded)', 'Blaser R8 (.308 Win)']);
+        expect(ammunitionSelect().value).toBe('');
+
+        dispatch.mockClear();
+        submitButton().click();
+
+        const { event } = dispatch.mock.calls[0][0] as ReturnType<typeof EventsActions.updateEvent>;
+        expect(event.firearm).toEqual(recordedFirearm);
+      });
+
+      it('should keep the recorded firearm when it is no longer saved', async () => {
+        await setState({ firearms: { firearms: [] } });
+
+        expect(firearmSelect().value).toBe('recorded');
+        dispatch.mockClear();
+        submitButton().click();
+        expect((dispatch.mock.calls[0][0] as ReturnType<typeof EventsActions.updateEvent>).event.firearm).toEqual(recordedFirearm);
+      });
+
+      it('should copy the saved firearm as it is now when chosen instead', async () => {
+        await choose(firearmSelect(), 'g1');
+        dispatch.mockClear();
+        submitButton().click();
+
+        expect((dispatch.mock.calls[0][0] as ReturnType<typeof EventsActions.updateEvent>).event.firearm).toEqual(firearmCopy);
+      });
     });
   });
 });

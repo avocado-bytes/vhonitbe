@@ -84,7 +84,12 @@
     "TAG_NUMBER": "Číslo plomby",
     "TAG_NUMBER_HINT": "Nepovinné. 2 + 6 číslic z plomby.",
     "TAG_NUMBER_INVALID": "Zadejte všech 8 číslic čísla plomby.",
-    "CHOOSE_PHOTO": "Vybrat z galerie"
+    "CHOOSE_PHOTO": "Vybrat z galerie",
+    "FIREARM": "Zbraň",
+    "AMMUNITION": "Střelivo",
+    "NOT_GIVEN": "Neuvedeno",
+    "AS_RECORDED": "{{label}} (jak bylo zaznamenáno)",
+    "WEAPON_HINT": "Své zbraně a střelivo uložte na stránce „Zbraně a střelivo“, abyste je zde mohli vybrat."
   },
   "ITEMS": {
     "spotting": "Pozorování",
@@ -178,7 +183,9 @@
     "ACTIONS": "Akce události",
     "HERD": "Stádo",
     "HERD_OF": "Stádo ({{count}} ks)",
-    "TAG_NUMBER": "Číslo plomby"
+    "TAG_NUMBER": "Číslo plomby",
+    "FIREARM": "Zbraň: {{value}}",
+    "AMMUNITION": "Střelivo: {{value}}"
   },
   "LOCATION_PICKER": {
     "MAP": "Mapa pro výběr polohy",
@@ -456,7 +463,11 @@
         "mm": "např. 560",
         "in": "např. 22"
       },
-      "BARREL_LENGTH_INVALID": "Zadejte délku od {{min}} do {{max}} {{unit}}."
+      "BARREL_LENGTH_INVALID": "Zadejte délku od {{min}} do {{max}} {{unit}}.",
+      "THREAD_PITCH": "Stoupání závitu",
+      "THREAD_NUMERATOR": "Stoupání závitu, číslo před dvojtečkou",
+      "THREAD_DENOMINATOR": "Stoupání závitu, číslo za dvojtečkou",
+      "THREAD_PITCH_INVALID": "Zadejte obě čísla, každé od {{min}} do {{max}}."
     },
     "EDIT": "Upravit zbraň",
     "ACTIONS": "Akce zbraně",
@@ -466,7 +477,8 @@
     "DELETE_FAILED": "Zbraň se nepodařilo smazat. Zkuste to prosím znovu.",
     "PAGE_TITLE": "Zbraně a střelivo",
     "ADD_ANY": "Přidat zbraň nebo střelivo",
-    "BARREL_LENGTH": "hlaveň {{value}} mm"
+    "BARREL_LENGTH": "hlaveň {{value}} mm",
+    "THREAD_PITCH": "stoupání závitu {{value}}"
   },
   "AMMUNITION": {
     "TITLE": "Střelivo",

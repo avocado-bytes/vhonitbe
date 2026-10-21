@@ -112,6 +112,11 @@ const HOOFED_GAME: readonly GameMammal[] = [
   'roe-deer',
 ];
 
+/** Only a harvest records the firearm and ammunition used */
+export function itemHasWeapon(item: Item): boolean {
+  return item === 'harvest';
+}
+
 /** A harvested animal of hoofed game is marked with a tag, whose number can be recorded */
 export function hasTagNumber(item: Item, animal: Animal | null): boolean {
   return item === 'harvest' && animal !== null && HOOFED_GAME.includes(animal as GameMammal);

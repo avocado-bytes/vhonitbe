@@ -1,3 +1,5 @@
+import { Ammunition } from './ammunition';
+import { Firearm } from './firearm';
 import { Animal, Item } from './item';
 
 /** 'mixed' only applies to a herd of both sexes */
@@ -7,6 +9,19 @@ export type Sex = (typeof SEXES)[number];
 export interface GeoPoint {
   latitude: number;
   longitude: number;
+}
+
+/**
+ * A copy of a firearm as it was when used, rather than a reference to it, so that changing or deleting
+ * the firearm later keeps the record as it was
+ */
+export type FirearmSnapshot = Omit<Firearm, 'id'>;
+/** A copy of ammunition as it was when used; see {@link FirearmSnapshot} */
+export type AmmunitionSnapshot = Omit<Ammunition, 'id'>;
+
+/** Copies a saved firearm or ammunition into a record, without its id so nothing links back to it */
+export function snapshot<T extends { id: string }>({ id: _id, ...fields }: T): Omit<T, 'id'> {
+  return structuredClone(fields);
 }
 
 /**
@@ -28,6 +43,9 @@ export interface HuntingEvent {
   sex?: Sex | null;
   /** The 8 digits of the tag of a harvested mammal, without the space; missing in older events */
   tagNumber?: string | null;
+  /** The firearm and ammunition used for a harvest, copied as they were; null when not given, missing in older events */
+  firearm?: FirearmSnapshot | null;
+  ammunition?: AmmunitionSnapshot | null;
   location: GeoPoint | null;
   note: string;
   /** Key of the event's photo in the photo store; missing or null without a photo */

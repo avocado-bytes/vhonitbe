@@ -38,6 +38,9 @@
                     @if (firearm.barrelLength !== null && firearm.barrelLength !== undefined) {
                       · {{ 'FIREARMS.BARREL_LENGTH' | translate: { value: formatNumber(firearm.barrelLength) } }}
                     }
+                    @if (firearm.threadPitch; as threadPitch) {
+                      · {{ 'FIREARMS.THREAD_PITCH' | translate: { value: formatThreadPitch(threadPitch) } }}
+                    }
                   </div>
                 </div>
                 <!-- Wider screens show every action as an icon button -->

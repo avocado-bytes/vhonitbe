@@ -52,6 +52,22 @@ export interface Firearm {
   suppressed?: boolean;
   /** Barrel length in mm, whatever unit it was entered in; null when not given, missing in older firearms */
   barrelLength?: number | null;
+  /** Thread pitch as a ratio, e.g. 1:10; null when not given, missing in older firearms */
+  threadPitch?: ThreadPitch | null;
+}
+
+/** The two numbers of a ratio written with a colon, e.g. 1:10 */
+export interface ThreadPitch {
+  numerator: number;
+  denominator: number;
+}
+
+/** Each number of the thread pitch */
+export const THREAD_PITCH_RANGE = { min: 0.1, max: 100 } as const;
+
+/** The thread pitch as written, e.g. "1:10" */
+export function formatThreadPitch({ numerator, denominator }: ThreadPitch, numberFormat: Intl.NumberFormat): string {
+  return `${numberFormat.format(numerator)}:${numberFormat.format(denominator)}`;
 }
 
 /** Barrel lengths can be entered in either unit, but are stored in mm */
@@ -80,3 +96,8 @@ export function barrelLengthRange(unit: LengthUnit): { min: number; max: number 
 
 /** The fields the user provides; `id` is set when stored */
 export type NewFirearm = Omit<Firearm, 'id'>;
+
+/** A short name for a firearm in a list or dropdown, e.g. "Blaser R8 (.308 Win)" */
+export function firearmLabel(firearm: Pick<Firearm, 'name' | 'caliber'>): string {
+  return `${firearm.name} (${firearm.caliber})`;
+}

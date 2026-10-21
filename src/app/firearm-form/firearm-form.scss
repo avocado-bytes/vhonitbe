@@ -1,0 +1,22 @@
+// The thread pitch: two numbers separated by a colon, in the monospace style of the harvest's tag number
+.ratio-field {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  max-width: 15rem;
+}
+
+.ratio-input,
+.ratio-separator {
+  font-family: var(--bs-font-monospace);
+  font-size: 1.25rem;
+  letter-spacing: 0.12em;
+}
+
+.ratio-input {
+  text-align: center;
+}
+
+.ratio-separator {
+  color: var(--bs-secondary-color);
+}
