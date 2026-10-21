@@ -23,6 +23,8 @@ import { feedingFeature } from './state/feeding/feeding.reducer';
 import * as ammunitionEffects from './state/ammunition/ammunition.effects';
 import { ammunitionFeature } from './state/ammunition/ammunition.reducer';
 import * as firearmsEffects from './state/firearms/firearms.effects';
+import * as handloadingEffects from './state/handloading/handloading.effects';
+import { handloadingFeature } from './state/handloading/handloading.reducer';
 import { firearmsFeature } from './state/firearms/firearms.reducer';
 import { provideServiceWorker } from '@angular/service-worker';
 
@@ -41,6 +43,7 @@ export const appConfig: ApplicationConfig = {
     provideState(feedingFeature),
     provideState(firearmsFeature),
     provideState(ammunitionFeature),
+    provideState(handloadingFeature),
     provideEffects(
       settingsEffects,
       locationEffects,
@@ -50,6 +53,7 @@ export const appConfig: ApplicationConfig = {
       feedingEffects,
       firearmsEffects,
       ammunitionEffects,
+      handloadingEffects,
     ),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
     provideTranslateService({

@@ -29,7 +29,8 @@
     "FEEDING": "Feeding",
     "FEEDING_ATTENTION": "Feeding places need replenishing",
     "GUIDE": "User guide",
-    "FIREARMS": "Firearms and ammunition"
+    "FIREARMS": "Firearms and ammunition",
+    "HANDLOADING": "Handloading"
   },
   "MAP": {
     "LOCATING": "Finding your location…",
@@ -444,5 +445,18 @@
   "GUIDE_PAGE": {
     "LOADING": "Loading the guide…",
     "LOAD_FAILED": "The guide could not be loaded. Connect to the internet and open it again."
+  },
+  "HANDLOADING": {
+    "TITLE": "Handloading",
+    "SERIES": "Load development",
+    "ADD": "Start load development",
+    "LOADING": "Loading load development…",
+    "EMPTY": "No load development yet. Use the + button to start a series.",
+    "LOAD_FAILED": "The load development could not be loaded.",
+    "FORM": {
+      "ADD_TITLE": "New load development",
+      "CLOSE": "Close",
+      "SAVE_FAILED": "The series could not be saved. Please try again."
+    }
   }
 }

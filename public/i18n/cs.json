@@ -29,7 +29,8 @@
     "FEEDING": "Přikrmování",
     "FEEDING_ATTENTION": "Místa přikrmování potřebují doplnit",
     "GUIDE": "Návod",
-    "FIREARMS": "Zbraně a střelivo"
+    "FIREARMS": "Zbraně a střelivo",
+    "HANDLOADING": "Přebíjení"
   },
   "MAP": {
     "LOCATING": "Zjišťuji vaši polohu…",
@@ -444,5 +445,18 @@
   "GUIDE_PAGE": {
     "LOADING": "Načítání návodu…",
     "LOAD_FAILED": "Návod se nepodařilo načíst. Připojte se k internetu a otevřete ho znovu."
+  },
+  "HANDLOADING": {
+    "TITLE": "Přebíjení",
+    "SERIES": "Vývoj náboje",
+    "ADD": "Začít vývoj náboje",
+    "LOADING": "Načítání vývoje náboje…",
+    "EMPTY": "Zatím žádný vývoj náboje. Sérii začnete tlačítkem +.",
+    "LOAD_FAILED": "Vývoj náboje se nepodařilo načíst.",
+    "FORM": {
+      "ADD_TITLE": "Nový vývoj náboje",
+      "CLOSE": "Zavřít",
+      "SAVE_FAILED": "Sérii se nepodařilo uložit. Zkuste to prosím znovu."
+    }
   }
 }

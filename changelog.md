@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.52.1
+
+- The user guide is loaded entirely on demand. Besides its code and its screenshots, its texts are now kept in their own files (`i18n/guide/<language>.json`) and downloaded only when the guide is opened, in the language in use, so the translations loaded at startup are about a third smaller. The service worker caches them only once opened, like the screenshots, so the guide still works offline after that. While the texts load, the guide shows its heading and a loading message, and an error if they cannot be loaded.
+
 ## 0.52.0
 
 - The user guide has its phone screenshots, in Czech and in English: the overview, recording a harvest with its firearm and ammunition, the actions of an event, the map with its options and its press-and-hold menu, the feeding page and a feeding place due for replenishing, the side navigation with its red dots, the firearms and ammunition, adding a handload, and the settings. They show sample records in the Brdy area.

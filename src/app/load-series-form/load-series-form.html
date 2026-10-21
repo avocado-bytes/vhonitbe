@@ -1,0 +1,32 @@
+<form (submit)="submit($event)">
+  <div>
+    <label for="load-series-caliber" class="form-label fw-semibold">{{ 'FIREARMS.FORM.CALIBER' | translate }}</label>
+    <!-- A combo box: the common cartridges are offered, any other can be typed in -->
+    <input
+      id="load-series-caliber"
+      class="form-control"
+      required
+      autocomplete="off"
+      list="load-series-calibers"
+      aria-describedby="load-series-caliber-hint"
+      #caliberInput
+      [placeholder]="'FIREARMS.FORM.CALIBER_PLACEHOLDER' | translate"
+      [value]="caliber()"
+      (input)="caliber.set(caliberInput.value)"
+    />
+    <datalist id="load-series-calibers">
+      @for (option of calibers; track option) {
+        <option [value]="option"></option>
+      }
+    </datalist>
+    <div id="load-series-caliber-hint" class="form-text">{{ 'FIREARMS.FORM.CALIBER_HINT' | translate }}</div>
+  </div>
+
+  @if (error()) {
+    <p class="text-danger small mt-3 mb-0" role="alert">{{ 'HANDLOADING.FORM.SAVE_FAILED' | translate }}</p>
+  }
+
+  <div class="d-flex justify-content-end mt-4">
+    <button type="submit" class="btn btn-primary" [disabled]="!canSubmit()">{{ 'ADD_ITEM.SUBMIT' | translate }}</button>
+  </div>
+</form>

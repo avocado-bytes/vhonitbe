@@ -5,6 +5,7 @@ export const routes: Routes = [
   { path: 'map', loadComponent: () => import('./map/map').then((m) => m.MapView) },
   { path: 'feeding', loadComponent: () => import('./feeding/feeding').then((m) => m.Feeding) },
   { path: 'firearms', loadComponent: () => import('./firearms/firearms').then((m) => m.Firearms) },
+  { path: 'handloading', loadComponent: () => import('./handloading/handloading').then((m) => m.Handloading) },
   { path: 'guide', loadComponent: () => import('./guide/guide').then((m) => m.Guide) },
   { path: '**', redirectTo: '' },
 ];

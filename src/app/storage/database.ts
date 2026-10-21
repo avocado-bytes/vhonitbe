@@ -5,9 +5,10 @@ import { HuntingEvent } from '../model/event';
 import { FEEDING_PLACE_TYPES, FeedingPlace, FeedingPlaceType } from '../model/feeding-place';
 import { Firearm } from '../model/firearm';
 import { Animal, Item } from '../model/item';
+import { LoadSeries } from '../model/load-series';
 
 const DB_NAME = 'vhonitbe';
-const DB_VERSION = 5;
+const DB_VERSION = 6;
 
 export interface VhonitbeDB extends DBSchema {
   events: {
@@ -32,6 +33,10 @@ export interface VhonitbeDB extends DBSchema {
     key: string;
     value: Ammunition;
   };
+  'load-series': {
+    key: string;
+    value: LoadSeries;
+  };
   /** Compressed photos of events and feeding places, kept apart so listing them doesn't load the photos */
   photos: {
     key: string;
@@ -39,7 +44,7 @@ export interface VhonitbeDB extends DBSchema {
   };
 }
 
-/** Opens the IndexedDB database shared by the stores of events, feeding places, firearms, ammunition and photos */
+/** Opens the IndexedDB database shared by the stores of events, feeding places, firearms, ammunition, load series and photos */
 @Service()
 export class Database {
   private db?: Promise<IDBPDatabase<VhonitbeDB>>;
@@ -70,6 +75,9 @@ export class Database {
         }
         if (oldVersion < 5) {
           db.createObjectStore('ammunition', { keyPath: 'id' });
+        }
+        if (oldVersion < 6) {
+          db.createObjectStore('load-series', { keyPath: 'id' });
         }
       },
       // Let a newer version of the app (e.g. in another tab) upgrade the database

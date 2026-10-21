@@ -1,0 +1,50 @@
+<section class="container py-3 handloading">
+  <h1 class="h4 mb-3">{{ 'HANDLOADING.TITLE' | translate }}</h1>
+
+  <section class="card" aria-labelledby="load-series-list">
+    <div class="card-body">
+      <h2 id="load-series-list" class="h5 card-title mb-3">{{ 'HANDLOADING.SERIES' | translate }}</h2>
+      @if (loadError()) {
+        <p class="text-danger" role="alert">{{ 'HANDLOADING.LOAD_FAILED' | translate }}</p>
+      } @else if (series().length === 0) {
+        @if (loading()) {
+          <p class="text-body-secondary mb-0" role="status">{{ 'HANDLOADING.LOADING' | translate }}</p>
+        } @else {
+          <p class="text-body-secondary mb-0">{{ 'HANDLOADING.EMPTY' | translate }}</p>
+        }
+      } @else {
+        <ul class="list-unstyled mb-0" [attr.aria-busy]="loading()">
+          @for (item of series(); track item.id) {
+            <li class="load-series p-3 mb-2 border rounded bg-body-tertiary">
+              <div class="fw-semibold">{{ item.caliber }}</div>
+            </li>
+          }
+        </ul>
+      }
+    </div>
+  </section>
+</section>
+
+<button
+  type="button"
+  class="fab rounded-circle bg-primary text-white shadow"
+  aria-haspopup="dialog"
+  [attr.aria-label]="'HANDLOADING.ADD' | translate"
+  (click)="add()"
+>
+  <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+    <path d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2" />
+  </svg>
+</button>
+
+<dialog #formDialog class="form-dialog" aria-labelledby="load-series-form-title" (close)="onFormClosed()">
+  @if (formOpen()) {
+    <div class="d-flex align-items-center justify-content-between p-3 border-bottom">
+      <h2 id="load-series-form-title" class="h5 mb-0">{{ 'HANDLOADING.FORM.ADD_TITLE' | translate }}</h2>
+      <button type="button" class="btn-close" [attr.aria-label]="'HANDLOADING.FORM.CLOSE' | translate" (click)="closeForm()"></button>
+    </div>
+    <div class="p-3">
+      <app-load-series-form />
+    </div>
+  }
+</dialog>
