@@ -22,6 +22,7 @@ describe('App', () => {
           { path: 'map', children: [] },
           { path: 'feeding', children: [] },
           { path: 'firearms', children: [] },
+          { path: 'handloading', children: [] },
           { path: 'guide', children: [] },
         ]),
         provideTranslateService({ lang: 'en' }),
@@ -42,7 +43,7 @@ describe('App', () => {
     TestBed.inject(TranslateService).setTranslation('en', {
       APP: { TITLE: 'vHonitbě', ADD: 'Add' },
       HEADER: { MENU: 'Open menu', MENU_ATTENTION: 'Open menu, {{count}} feeding places need replenishing', SETTINGS: 'Settings' },
-      NAV: { HOME: 'Home', MAP: 'Map', FEEDING: 'Feeding', GUIDE: 'User guide', FIREARMS: 'Firearms', CLOSE: 'Close navigation' },
+      NAV: { HOME: 'Home', MAP: 'Map', FEEDING: 'Feeding', GUIDE: 'User guide', FIREARMS: 'Firearms', HANDLOADING: 'Handloading', CLOSE: 'Close navigation' },
       ADD_ITEM: { TITLE: 'Add item', EDIT_TITLE: 'Edit event', CLOSE: 'Close' },
     });
   });
@@ -161,12 +162,12 @@ describe('App', () => {
       fixture.nativeElement.remove();
     });
 
-    it('should link to the home, map, feeding, firearms and guide routes', async () => {
+    it('should link to the home, map, feeding, firearms, handloading and guide routes', async () => {
       const { sideNav } = await createAppWithSideNav();
       const links = Array.from(sideNav.querySelectorAll('a.nav-link'));
 
-      expect(links.map((link) => link.textContent?.trim())).toEqual(['Home', 'Map', 'Feeding', 'Firearms', 'User guide']);
-      expect(links.map((link) => link.getAttribute('href'))).toEqual(['/', '/map', '/feeding', '/firearms', '/guide']);
+      expect(links.map((link) => link.textContent?.trim())).toEqual(['Home', 'Map', 'Feeding', 'Firearms', 'Handloading', 'User guide']);
+      expect(links.map((link) => link.getAttribute('href'))).toEqual(['/', '/map', '/feeding', '/firearms', '/handloading', '/guide']);
     });
 
     it('should close when a link is clicked', async () => {
@@ -253,6 +254,15 @@ describe('App', () => {
       expect(element.querySelector('a[routerLink="/firearms"]')?.textContent).toContain('Firearms');
 
       await TestBed.inject(Router).navigateByUrl('/firearms');
+      await fixture.whenStable();
+
+      expect(element.querySelector('button.fab')).toBeNull();
+    });
+
+    it('should leave adding to the handloading page\'s own add button', async () => {
+      const { fixture, element } = await createAppWithDialog();
+
+      await TestBed.inject(Router).navigateByUrl('/handloading');
       await fixture.whenStable();
 
       expect(element.querySelector('button.fab')).toBeNull();

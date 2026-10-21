@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.53.0
+
+- New "Handloading" / "Přebíjení" page in the side navigation, right below "Firearms and ammunition", with a powder funnel icon. It lists load development series ("Load development" / "Vývoj náboje") in the same style as the other lists, ordered by caliber.
+- Its own add button starts a new load development series, beginning with its caliber, chosen from the same common cartridges as for firearms or typed in. The series are kept in a new store of the app's database.
+
 ## 0.52.1
 
 - The user guide is loaded entirely on demand. Besides its code and its screenshots, its texts are now kept in their own files (`i18n/guide/<language>.json`) and downloaded only when the guide is opened, in the language in use, so the translations loaded at startup are about a third smaller. The service worker caches them only once opened, like the screenshots, so the guide still works offline after that. While the texts load, the guide shows its heading and a loading message, and an error if they cannot be loaded.
