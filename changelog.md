@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.54.2
+
+- The group size field of a test load is called "Velikost soustřelu" in Czech instead of "Velikost skupiny", also in the user guide and its screenshot of the form.
+
 ## 0.54.1
 
 - The user guide has a "Load development" / "Vývoj náboje" section: starting a series with its components, adding test loads with their velocities and statistics, adding the best one to the ammunition, and editing and deleting them. It has two new screenshots in each language, of a series with its test loads and of adding a test load; the screenshot of the side navigation is retaken with the new menu items.
