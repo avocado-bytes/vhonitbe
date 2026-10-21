@@ -81,7 +81,8 @@
     "HERD_SIZE_INVALID": "Enter a whole number of at least {{min}}.",
     "TAG_NUMBER": "Tag number",
     "TAG_NUMBER_HINT": "Optional. The 2 + 6 digits from the tag.",
-    "TAG_NUMBER_INVALID": "Enter all 8 digits of the tag number."
+    "TAG_NUMBER_INVALID": "Enter all 8 digits of the tag number.",
+    "CHOOSE_PHOTO": "Choose from gallery"
   },
   "ITEMS": {
     "spotting": "Sighting",

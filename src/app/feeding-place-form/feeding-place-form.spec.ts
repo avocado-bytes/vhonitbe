@@ -67,6 +67,18 @@ describe('FeedingPlaceForm', () => {
       expect(dispatch).toHaveBeenCalledWith(LocationActions.locate());
     });
 
+    it('should offer taking a photo with the camera and choosing one from the gallery', async () => {
+      await chooseType('feeding');
+      const camera = element().querySelector('#feeding-place-photo') as HTMLInputElement;
+      const gallery = element().querySelector('#feeding-place-gallery') as HTMLInputElement;
+
+      expect(camera.getAttribute('capture')).toBe('environment');
+      expect(gallery.accept).toBe('image/*');
+      // Without capture, phones offer their gallery instead of opening the camera
+      expect(gallery.hasAttribute('capture')).toBe(false);
+      expect(element().querySelector('label[for="feeding-place-gallery"]')).not.toBeNull();
+    });
+
     it('should ask for no date', async () => {
       await chooseType('feeding');
 

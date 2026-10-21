@@ -81,7 +81,8 @@
     "HERD_SIZE_INVALID": "Zadejte celé číslo, alespoň {{min}}.",
     "TAG_NUMBER": "Číslo plomby",
     "TAG_NUMBER_HINT": "Nepovinné. 2 + 6 číslic z plomby.",
-    "TAG_NUMBER_INVALID": "Zadejte všech 8 číslic čísla plomby."
+    "TAG_NUMBER_INVALID": "Zadejte všech 8 číslic čísla plomby.",
+    "CHOOSE_PHOTO": "Vybrat z galerie"
   },
   "ITEMS": {
     "spotting": "Pozorování",

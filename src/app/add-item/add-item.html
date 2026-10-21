@@ -155,6 +155,19 @@
         <label for="add-item-photo" class="btn btn-outline-primary btn-sm mb-0" [class.disabled]="photoBusy()">
           {{ (photo() ? 'ADD_ITEM.REPLACE_PHOTO' : 'ADD_ITEM.TAKE_PHOTO') | translate }}
         </label>
+        <!-- Without capture, phones offer the gallery instead of opening the camera -->
+        <input
+          id="add-item-gallery"
+          class="visually-hidden"
+          type="file"
+          accept="image/*"
+          #galleryInput
+          [disabled]="photoBusy()"
+          (change)="selectPhoto(galleryInput)"
+        />
+        <label for="add-item-gallery" class="btn btn-outline-primary btn-sm mb-0" [class.disabled]="photoBusy()">
+          {{ 'ADD_ITEM.CHOOSE_PHOTO' | translate }}
+        </label>
         @if (photo()) {
           <button type="button" class="btn btn-outline-danger btn-sm" [disabled]="photoBusy()" (click)="removePhoto()">
             {{ 'ADD_ITEM.REMOVE_PHOTO' | translate }}

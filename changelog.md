@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.40.1
+
+- The feeding place form can take a photo from the gallery as well, with the same "Choose from gallery" / "Vybrat z galerie" button as the event form.
+
+## 0.40.0
+
+- The event form can take a photo from the gallery as well: next to "Take photo", a "Choose from gallery" / "Vybrat z galerie" button opens the phone's gallery instead of the camera. The chosen photo is compressed and stored like a photo taken with the camera.
+
 ## 0.39.1
 
 - The feeding icon in the side navigation shows a plain red dot instead of a number while places need replenishing, so it stays round.

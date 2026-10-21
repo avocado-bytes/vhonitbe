@@ -107,6 +107,21 @@ describe('AddItem', () => {
     expect(dispatch).toHaveBeenCalledWith(LocationActions.locate());
   });
 
+  describe('photo', () => {
+    it('should offer taking a photo with the camera and choosing one from the gallery', async () => {
+      await choose(typeSelect(), 'spotting');
+      const camera = element().querySelector('#add-item-photo') as HTMLInputElement;
+      const gallery = element().querySelector('#add-item-gallery') as HTMLInputElement;
+
+      expect(camera.getAttribute('capture')).toBe('environment');
+      expect(gallery.type).toBe('file');
+      expect(gallery.accept).toBe('image/*');
+      // Without capture, phones offer their gallery instead of opening the camera
+      expect(gallery.hasAttribute('capture')).toBe(false);
+      expect(element().querySelector('label[for="add-item-gallery"]')).not.toBeNull();
+    });
+  });
+
   describe('event type', () => {
     it('should offer every item type with a placeholder selected by default', () => {
       const options = Array.from(typeSelect().options);

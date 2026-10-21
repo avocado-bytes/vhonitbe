@@ -4,8 +4,9 @@
   object-fit: contain;
 }
 
-// Shows keyboard focus of the hidden file input on its visible label
-#add-item-photo:focus-visible + label {
+// Shows keyboard focus of the hidden file inputs on their visible labels
+#add-item-photo:focus-visible + label,
+#add-item-gallery:focus-visible + label {
   outline: 2px solid var(--bs-focus-ring-color);
   outline-offset: 2px;
 }
