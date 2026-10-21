@@ -1,0 +1,136 @@
+<form (submit)="submit($event)">
+  <div class="row g-3 mb-3">
+    <div class="col-6">
+      <label for="test-load-charge" class="form-label fw-semibold">{{ 'AMMUNITION.FORM.POWDER_CHARGE' | translate }}</label>
+      <div class="input-group has-validation">
+        <input
+          id="test-load-charge"
+          class="form-control"
+          inputmode="decimal"
+          autocomplete="off"
+          aria-describedby="test-load-charge-error"
+          #chargeInput
+          [placeholder]="'AMMUNITION.FORM.POWDER_CHARGE_PLACEHOLDER' | translate"
+          [value]="powderCharge()"
+          [class.is-invalid]="chargeInvalid()"
+          [attr.aria-invalid]="chargeInvalid()"
+          (input)="powderCharge.set(chargeInput.value)"
+        />
+        <span class="input-group-text">gr</span>
+        <div id="test-load-charge-error" class="invalid-feedback">{{ 'AMMUNITION.FORM.RANGE_INVALID' | translate: chargeRange }}</div>
+      </div>
+    </div>
+    <div class="col-6">
+      <label for="test-load-length" class="form-label fw-semibold">{{ 'HANDLOADING.LOAD_FORM.OVERALL_LENGTH' | translate }}</label>
+      <div class="input-group has-validation">
+        <input
+          id="test-load-length"
+          class="form-control"
+          inputmode="decimal"
+          autocomplete="off"
+          aria-describedby="test-load-length-error"
+          #lengthInput
+          [placeholder]="'AMMUNITION.FORM.OVERALL_LENGTH_PLACEHOLDER' | translate"
+          [value]="overallLength()"
+          [class.is-invalid]="lengthInvalid()"
+          [attr.aria-invalid]="lengthInvalid()"
+          (input)="overallLength.set(lengthInput.value)"
+        />
+        <span class="input-group-text">mm</span>
+        <div id="test-load-length-error" class="invalid-feedback">{{ 'AMMUNITION.FORM.RANGE_INVALID' | translate: lengthRange }}</div>
+      </div>
+    </div>
+    <div class="col-6">
+      <label for="test-load-shots" class="form-label fw-semibold">{{ 'HANDLOADING.LOAD_FORM.SHOTS' | translate }}</label>
+      <input
+        id="test-load-shots"
+        type="number"
+        class="form-control"
+        inputmode="numeric"
+        step="1"
+        autocomplete="off"
+        aria-describedby="test-load-shots-error"
+        #shotsInput
+        [min]="shotsRange.min"
+        [max]="shotsRange.max"
+        [value]="shots()"
+        [class.is-invalid]="shotsInvalid()"
+        [attr.aria-invalid]="shotsInvalid()"
+        (input)="shots.set(shotsInput.value)"
+      />
+      <div id="test-load-shots-error" class="invalid-feedback">{{ 'AMMUNITION.FORM.WHOLE_NUMBER_INVALID' | translate: shotsRange }}</div>
+    </div>
+    <div class="col-6">
+      <label for="test-load-group" class="form-label fw-semibold">{{ 'HANDLOADING.LOAD_FORM.GROUP_SIZE' | translate }}</label>
+      <div class="input-group has-validation">
+        <input
+          id="test-load-group"
+          class="form-control"
+          inputmode="decimal"
+          autocomplete="off"
+          aria-describedby="test-load-group-error"
+          #groupInput
+          [placeholder]="'HANDLOADING.LOAD_FORM.GROUP_SIZE_PLACEHOLDER' | translate"
+          [value]="groupSize()"
+          [class.is-invalid]="groupInvalid()"
+          [attr.aria-invalid]="groupInvalid()"
+          (input)="groupSize.set(groupInput.value)"
+        />
+        <span class="input-group-text">mm</span>
+        <div id="test-load-group-error" class="invalid-feedback">{{ 'AMMUNITION.FORM.RANGE_INVALID' | translate: groupRange }}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <label for="test-load-velocities" class="form-label fw-semibold">{{ 'HANDLOADING.LOAD_FORM.VELOCITIES' | translate }}</label>
+    <textarea
+      id="test-load-velocities"
+      class="form-control"
+      rows="2"
+      inputmode="decimal"
+      aria-describedby="test-load-velocities-hint test-load-velocities-error test-load-velocities-stats"
+      #velocitiesInput
+      [placeholder]="'HANDLOADING.LOAD_FORM.VELOCITIES_PLACEHOLDER' | translate"
+      [value]="velocities()"
+      [class.is-invalid]="velocitiesInvalid()"
+      [attr.aria-invalid]="velocitiesInvalid()"
+      (input)="velocities.set(velocitiesInput.value)"
+    ></textarea>
+    <div id="test-load-velocities-error" class="invalid-feedback">
+      {{ 'HANDLOADING.LOAD_FORM.VELOCITIES_INVALID' | translate: velocityRange }}
+    </div>
+    <div id="test-load-velocities-hint" class="form-text">{{ 'HANDLOADING.LOAD_FORM.VELOCITIES_HINT' | translate }}</div>
+    <!-- Worked out as the velocities are typed -->
+    @if (stats(); as velocity) {
+      <div id="test-load-velocities-stats" class="small mt-1" aria-live="polite">
+        {{ 'HANDLOADING.AVERAGE' | translate: { value: format(velocity.average) } }} ·
+        {{ 'HANDLOADING.EXTREME_SPREAD' | translate: { value: format(velocity.extremeSpread) } }}
+        @if (velocity.standardDeviation !== null) {
+          · {{ 'HANDLOADING.STANDARD_DEVIATION' | translate: { value: format(velocity.standardDeviation) } }}
+        }
+      </div>
+    }
+  </div>
+
+  <div>
+    <label for="test-load-notes" class="form-label fw-semibold">{{ 'HANDLOADING.LOAD_FORM.NOTES' | translate }}</label>
+    <textarea
+      id="test-load-notes"
+      class="form-control"
+      rows="3"
+      #notesInput
+      [placeholder]="'HANDLOADING.LOAD_FORM.NOTES_PLACEHOLDER' | translate"
+      [value]="notes()"
+      (input)="notes.set(notesInput.value)"
+    ></textarea>
+  </div>
+
+  @if (error()) {
+    <p class="text-danger small mt-3 mb-0" role="alert">{{ 'HANDLOADING.FORM.SAVE_FAILED' | translate }}</p>
+  }
+
+  <div class="d-flex justify-content-end mt-4">
+    <button type="submit" class="btn btn-primary" [disabled]="!canSubmit()">{{ 'ADD_ITEM.SUBMIT' | translate }}</button>
+  </div>
+</form>

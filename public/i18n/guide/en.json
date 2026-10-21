@@ -8,7 +8,7 @@
     "STEPS": [
       "Allow access to your location when asked. The app needs it for sunrise and sunset, the weather, the map and to place new records where you stand.",
       "Your records and photos are stored only on this phone. Nothing is sent anywhere unless you share it yourself.",
-      "Open the menu with the ☰ button in the top left corner to switch between the overview, the map, feeding, firearms and ammunition, and this guide."
+      "Open the menu with the ☰ button in the top left corner to switch between the overview, the map, feeding, firearms and ammunition, handloading and this guide."
     ]
   },
   "overview": {
@@ -90,6 +90,17 @@
       "Edit or delete a firearm or ammunition with the ⋮ button next to it. Harvests keep the firearm and ammunition as they were recorded."
     ]
   },
+  "load-development": {
+    "TITLE": "Load development",
+    "TEXT": "On the Handloading page you note how a handload is worked up: a series of test loads with the same components, each with a different charge or seating depth.",
+    "STEPS": [
+      "Tap the + button to start a series. Choose the caliber, give the series a name and fill in the components kept the same throughout – the bullet, powder, primer, brass and case length – and the firearm you test the loads in.",
+      "Tap a series to open it. Add each test load with the + button: its powder charge and overall length, the shots fired, the group size and the velocity of each shot.",
+      "The average velocity, the extreme spread (ES) and the standard deviation (SD) are worked out as you type the velocities. Note pressure signs, such as flattened primers or a stiff bolt lift, in the notes.",
+      "When a test load proves itself, choose Add to ammunition in its actions. It is copied into your ammunition as a handload, with its average velocity as the muzzle velocity, and marked as added. It needs the bullet weight of the series and at least one velocity.",
+      "Edit or delete a series or a test load with the ⋮ button next to it. Ammunition added from a series stays when the series is deleted."
+    ]
+  },
   "settings": {
     "TITLE": "Settings",
     "TEXT": "The gear button in the top right corner opens the settings.",
@@ -110,6 +121,8 @@
     "navigation": "Red dots tell you that a feeding place needs attention",
     "settings": "The settings",
     "firearms": "Your firearms and ammunition",
-    "add-ammunition": "Adding a handload"
+    "add-ammunition": "Adding a handload",
+    "load-series": "A load development series with its test loads",
+    "test-load": "Adding a test load, with its velocity statistics"
   }
 }

@@ -18,4 +18,22 @@ export class LoadSeriesStorage {
     await (await this.database.open()).add('load-series', stored);
     return stored;
   }
+
+  /** Replaces an existing series, with its test loads */
+  async update(series: LoadSeries): Promise<LoadSeries> {
+    const tx = (await this.database.open()).transaction('load-series', 'readwrite');
+    if (!(await tx.store.get(series.id))) {
+      tx.abort();
+      // Aborting rejects `tx.done`; that rejection is expected here
+      await tx.done.catch(() => undefined);
+      throw new Error(`Load series ${series.id} does not exist`);
+    }
+    await Promise.all([tx.store.put(series), tx.done]);
+    return series;
+  }
+
+  /** Deletes a series with its test loads; ammunition promoted from it stays */
+  async delete(id: string): Promise<void> {
+    await (await this.database.open()).delete('load-series', id);
+  }
 }

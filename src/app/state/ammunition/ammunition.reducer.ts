@@ -1,6 +1,7 @@
 import { createFeature, createReducer, createSelector, on } from '@ngrx/store';
 import { Ammunition } from '../../model/ammunition';
 import { FirearmsActions } from '../firearms/firearms.actions';
+import { HandloadingActions } from '../handloading/handloading.actions';
 import { AmmunitionActions } from './ammunition.actions';
 
 export interface AmmunitionState {
@@ -46,6 +47,11 @@ export const ammunitionFeature = createFeature({
       AmmunitionActions.addAmmunition,
       AmmunitionActions.updateAmmunition,
       (state): AmmunitionState => ({ ...state, saving: true, saveError: null }),
+    ),
+    // A test load added to the list from its load development series
+    on(
+      HandloadingActions.promoteLoadSuccess,
+      (state, { ammunition }): AmmunitionState => ({ ...state, ammunition: [...state.ammunition, ammunition] }),
     ),
     on(
       AmmunitionActions.addAmmunitionSuccess,

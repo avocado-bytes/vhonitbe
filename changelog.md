@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.54.1
+
+- The user guide has a "Load development" / "Vývoj náboje" section: starting a series with its components, adding test loads with their velocities and statistics, adding the best one to the ammunition, and editing and deleting them. It has two new screenshots in each language, of a series with its test loads and of adding a test load; the screenshot of the side navigation is retaken with the new menu items.
+
+## 0.54.0
+
+- A load development series has its details: an optional name and start date (today by default), and the components kept the same throughout it – bullet type and weight, powder, primer, brass, case length in mm – and the firearm the loads are tested in, chosen from the saved firearms and copied into the series like the firearm of a harvest. The list of series shows them, with the number of test loads.
+- Each series opens on its own page, with its details and its test loads. The page's add button adds a test load: its powder charge, overall length, shots fired, group size, the velocity of each shot and notes such as pressure signs. The average velocity, extreme spread and standard deviation are worked out as the velocities are typed, and shown with each test load.
+- Series and test loads can be edited and deleted, with buttons on wider screens and an action menu on phones.
+- A test load that proves itself can be added to the ammunition list as a handload, after confirming: it takes the series' caliber, bullet, powder, primer and brass, and the load's charge and overall length, with its average velocity as the muzzle velocity. It is copied rather than linked, and the test load is marked "In ammunition since …". It needs the bullet weight of the series and at least one velocity; on phones the menu says which is missing.
+
 ## 0.53.0
 
 - New "Handloading" / "Přebíjení" page in the side navigation, right below "Firearms and ammunition", with a powder funnel icon. It lists load development series ("Load development" / "Vývoj náboje") in the same style as the other lists, ordered by caliber.

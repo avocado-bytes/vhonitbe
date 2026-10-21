@@ -8,7 +8,7 @@
     "STEPS": [
       "Když se aplikace zeptá, povolte přístup k poloze. Potřebuje ji pro východ a západ slunce, počasí, mapu a k zaznamenání nových záznamů tam, kde stojíte.",
       "Vaše záznamy a fotografie jsou uložené jen v tomto telefonu. Nikam se neposílají, dokud je sami nesdílíte.",
-      "Tlačítkem ☰ vlevo nahoře otevřete nabídku a přepínáte mezi přehledem, mapou, přikrmováním, zbraněmi a střelivem a tímto návodem."
+      "Tlačítkem ☰ vlevo nahoře otevřete nabídku a přepínáte mezi přehledem, mapou, přikrmováním, zbraněmi a střelivem, přebíjením a tímto návodem."
     ]
   },
   "overview": {
@@ -90,6 +90,17 @@
       "Zbraň nebo střelivo upravíte či smažete tlačítkem ⋮ vedle nich. Úlovky si zbraň a střelivo ponechají tak, jak byly zaznamenány."
     ]
   },
+  "load-development": {
+    "TITLE": "Vývoj náboje",
+    "TEXT": "Na stránce Přebíjení si zapisujete, jak vyvíjíte přebíjený náboj: sérii testovaných náplní se stejnými komponenty, kde se mění navážka prachu nebo hloubka usazení střely.",
+    "STEPS": [
+      "Sérii začnete tlačítkem +. Vyberte ráži, pojmenujte sérii a vyplňte komponenty, které zůstávají po celou sérii stejné – střelu, prach, zápalku, nábojnici a délku nábojnice – a zbraň, ve které náplně testujete.",
+      "Klepnutím sérii otevřete. Každou testovanou náplň přidáte tlačítkem +: navážku prachu a celkovou délku náboje, počet výstřelů, velikost soustřelu a rychlost každé rány.",
+      "Průměrná rychlost, rozptyl (ES) a směrodatná odchylka (SD) se spočítají už při psaní rychlostí. Známky tlaku, například zploštělé zápalky nebo těžké otevírání závěru, si zapište do poznámek.",
+      "Když se testovaná náplň osvědčí, vyberte v jejích akcích Přidat do střeliva. Zkopíruje se do vašeho střeliva jako přebíjené, s průměrnou rychlostí jako úsťovou rychlostí, a označí se jako přidaná. Potřebuje hmotnost střely v sérii a alespoň jednu rychlost.",
+      "Sérii nebo testovanou náplň upravíte či smažete tlačítkem ⋮ vedle ní. Střelivo přidané ze série zůstane, i když sérii smažete."
+    ]
+  },
   "settings": {
     "TITLE": "Nastavení",
     "TEXT": "Tlačítko s ozubeným kolem vpravo nahoře otevře nastavení.",
@@ -110,6 +121,8 @@
     "navigation": "Červené tečky upozorňují, že místo přikrmování potřebuje pozornost",
     "settings": "Nastavení",
     "firearms": "Vaše zbraně a střelivo",
-    "add-ammunition": "Přidání přebíjeného střeliva"
+    "add-ammunition": "Přidání přebíjeného střeliva",
+    "load-series": "Série vývoje náboje s testovanými náplněmi",
+    "test-load": "Přidání testované náplně se statistikou rychlostí"
   }
 }

@@ -68,9 +68,9 @@ export class App {
     fragment: 'ignored',
     matrixParams: 'ignored',
   });
-  /** The handloading page has its own add button */
+  /** The handloading pages, including those of the series, have their own add button */
   protected readonly isHandloadingActive = isActive('/handloading', this.router, {
-    paths: 'exact',
+    paths: 'subset',
     queryParams: 'ignored',
     fragment: 'ignored',
     matrixParams: 'ignored',

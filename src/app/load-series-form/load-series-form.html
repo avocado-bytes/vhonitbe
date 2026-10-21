@@ -1,5 +1,5 @@
 <form (submit)="submit($event)">
-  <div>
+  <div class="mb-3">
     <label for="load-series-caliber" class="form-label fw-semibold">{{ 'FIREARMS.FORM.CALIBER' | translate }}</label>
     <!-- A combo box: the common cartridges are offered, any other can be typed in -->
     <input
@@ -20,6 +20,154 @@
       }
     </datalist>
     <div id="load-series-caliber-hint" class="form-text">{{ 'FIREARMS.FORM.CALIBER_HINT' | translate }}</div>
+  </div>
+
+  <div class="row g-3 mb-3">
+    <div class="col-7">
+      <label for="load-series-name" class="form-label fw-semibold">{{ 'HANDLOADING.FORM.NAME' | translate }}</label>
+      <input
+        id="load-series-name"
+        class="form-control"
+        autocomplete="off"
+        #nameInput
+        [placeholder]="'HANDLOADING.FORM.NAME_PLACEHOLDER' | translate"
+        [value]="name()"
+        (input)="name.set(nameInput.value)"
+      />
+    </div>
+    <div class="col-5">
+      <label for="load-series-started" class="form-label fw-semibold">{{ 'HANDLOADING.FORM.STARTED_AT' | translate }}</label>
+      <input
+        id="load-series-started"
+        type="date"
+        class="form-control"
+        #startedInput
+        [value]="startedAt()"
+        (input)="startedAt.set(startedInput.value)"
+      />
+    </div>
+  </div>
+
+  <!-- The components are kept the same throughout the series -->
+  <fieldset class="mb-3">
+    <legend class="form-label fs-6 fw-semibold mb-1">{{ 'HANDLOADING.FORM.COMPONENTS' | translate }}</legend>
+    <p class="form-text mt-0">{{ 'HANDLOADING.FORM.COMPONENTS_HINT' | translate }}</p>
+    <div class="row g-3">
+      <div class="col-7">
+        <label for="load-series-bullet-type" class="form-label">{{ 'AMMUNITION.FORM.BULLET_TYPE' | translate }}</label>
+        <input
+          id="load-series-bullet-type"
+          class="form-control"
+          autocomplete="off"
+          list="load-series-bullet-types"
+          #bulletTypeInput
+          [placeholder]="'HANDLOADING.FORM.BULLET_TYPE_PLACEHOLDER' | translate"
+          [value]="bulletType()"
+          (input)="bulletType.set(bulletTypeInput.value)"
+        />
+        <datalist id="load-series-bullet-types">
+          @for (option of 'AMMUNITION.BULLET_TYPES' | translate; track $index) {
+            <option [value]="option"></option>
+          }
+        </datalist>
+      </div>
+      <div class="col-5">
+        <label for="load-series-bullet-weight" class="form-label">{{ 'AMMUNITION.FORM.BULLET_WEIGHT' | translate }}</label>
+        <div class="input-group has-validation">
+          <input
+            id="load-series-bullet-weight"
+            class="form-control"
+            inputmode="decimal"
+            autocomplete="off"
+            aria-describedby="load-series-bullet-weight-error"
+            #weightInput
+            [placeholder]="'AMMUNITION.FORM.BULLET_WEIGHT_PLACEHOLDER' | translate"
+            [value]="bulletWeight()"
+            [class.is-invalid]="weightInvalid()"
+            [attr.aria-invalid]="weightInvalid()"
+            (input)="bulletWeight.set(weightInput.value)"
+          />
+          <span class="input-group-text">gr</span>
+          <div id="load-series-bullet-weight-error" class="invalid-feedback">
+            {{ 'AMMUNITION.FORM.RANGE_INVALID' | translate: weightRange }}
+          </div>
+        </div>
+      </div>
+      <div class="col-7">
+        <label for="load-series-powder" class="form-label">{{ 'AMMUNITION.FORM.POWDER' | translate }}</label>
+        <input
+          id="load-series-powder"
+          class="form-control"
+          autocomplete="off"
+          #powderInput
+          [placeholder]="'AMMUNITION.FORM.POWDER_PLACEHOLDER' | translate"
+          [value]="powder()"
+          (input)="powder.set(powderInput.value)"
+        />
+      </div>
+      <div class="col-5">
+        <label for="load-series-primer" class="form-label">{{ 'AMMUNITION.FORM.PRIMER' | translate }}</label>
+        <input
+          id="load-series-primer"
+          class="form-control"
+          autocomplete="off"
+          #primerInput
+          [placeholder]="'AMMUNITION.FORM.PRIMER_PLACEHOLDER' | translate"
+          [value]="primer()"
+          (input)="primer.set(primerInput.value)"
+        />
+      </div>
+      <div class="col-7">
+        <label for="load-series-brass" class="form-label">{{ 'AMMUNITION.FORM.BRASS' | translate }}</label>
+        <input
+          id="load-series-brass"
+          class="form-control"
+          autocomplete="off"
+          #brassInput
+          [placeholder]="'AMMUNITION.FORM.BRASS_PLACEHOLDER' | translate"
+          [value]="brass()"
+          (input)="brass.set(brassInput.value)"
+        />
+      </div>
+      <div class="col-5">
+        <label for="load-series-case-length" class="form-label">{{ 'HANDLOADING.FORM.CASE_LENGTH' | translate }}</label>
+        <div class="input-group has-validation">
+          <input
+            id="load-series-case-length"
+            class="form-control"
+            inputmode="decimal"
+            autocomplete="off"
+            aria-describedby="load-series-case-length-error"
+            #caseLengthInput
+            [placeholder]="'HANDLOADING.FORM.CASE_LENGTH_PLACEHOLDER' | translate"
+            [value]="caseLength()"
+            [class.is-invalid]="caseLengthInvalid()"
+            [attr.aria-invalid]="caseLengthInvalid()"
+            (input)="caseLength.set(caseLengthInput.value)"
+          />
+          <span class="input-group-text">mm</span>
+          <div id="load-series-case-length-error" class="invalid-feedback">
+            {{ 'AMMUNITION.FORM.RANGE_INVALID' | translate: caseLengthRange }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </fieldset>
+
+  <div>
+    <label for="load-series-firearm" class="form-label fw-semibold">{{ 'HANDLOADING.FORM.FIREARM' | translate }}</label>
+    <!-- Only saved firearms are offered; the chosen one is copied into the series as it is now -->
+    <select id="load-series-firearm" class="form-select" #firearmSelect (change)="firearmChoice.set(firearmSelect.value)">
+      <option value="" [selected]="firearmChoice() === ''">{{ 'ADD_ITEM.NOT_GIVEN' | translate }}</option>
+      @if (series()?.firearm; as recordedFirearm) {
+        <option [value]="recorded" [selected]="firearmChoice() === recorded">
+          {{ 'ADD_ITEM.AS_RECORDED' | translate: { label: firearmLabel(recordedFirearm) } }}
+        </option>
+      }
+      @for (firearm of firearms(); track firearm.id) {
+        <option [value]="firearm.id" [selected]="firearmChoice() === firearm.id">{{ firearmLabel(firearm) }}</option>
+      }
+    </select>
   </div>
 
   @if (error()) {

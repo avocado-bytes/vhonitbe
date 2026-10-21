@@ -1,3 +1,5 @@
+@use '../shared/item-list';
+
 :host {
   display: block;
 }
@@ -5,4 +7,20 @@
 // Keep the last series clear of the floating add button
 .handloading {
   padding-bottom: 6rem !important;
+}
+
+// The whole text of a series opens it, looking like the other lists rather than like a link
+.series-link {
+  color: inherit;
+  text-decoration: none;
+
+  &:hover .fw-semibold,
+  &:focus-visible .fw-semibold {
+    text-decoration: underline;
+  }
+}
+
+// The details of a series on one line, separated by dots
+.series-details > span + span::before {
+  content: ' · ';
 }

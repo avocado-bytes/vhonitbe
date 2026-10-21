@@ -1,5 +1,6 @@
 import { Ammunition } from '../../model/ammunition';
 import { FirearmsActions } from '../firearms/firearms.actions';
+import { HandloadingActions } from '../handloading/handloading.actions';
 import { AmmunitionActions } from './ammunition.actions';
 import { ammunitionFeature, initialState, selectSorted } from './ammunition.reducer';
 
@@ -80,5 +81,13 @@ describe('ammunition reducer', () => {
       ...state,
       deleteError: 'boom',
     });
+  });
+
+  it('should add a test load added to the ammunition from its load development series', () => {
+    const ammunition = cartridge('a', '.308 Win', 168);
+
+    expect(
+      reducer(initialState, HandloadingActions.promoteLoadSuccess({ series: { id: 's1', caliber: '.308 Win' }, ammunition })),
+    ).toEqual({ ...initialState, ammunition: [ammunition] });
   });
 });

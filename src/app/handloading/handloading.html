@@ -1,6 +1,11 @@
 <section class="container py-3 handloading">
   <h1 class="h4 mb-3">{{ 'HANDLOADING.TITLE' | translate }}</h1>
 
+  @if (actionsFor()) {
+    <!-- Closes the phone action menu on a tap outside of it -->
+    <div class="event-actions-backdrop" (click)="closeActions()"></div>
+  }
+
   <section class="card" aria-labelledby="load-series-list">
     <div class="card-body">
       <h2 id="load-series-list" class="h5 card-title mb-3">{{ 'HANDLOADING.SERIES' | translate }}</h2>
@@ -13,10 +18,99 @@
           <p class="text-body-secondary mb-0">{{ 'HANDLOADING.EMPTY' | translate }}</p>
         }
       } @else {
+        @if (deleteError()) {
+          <p class="text-danger" role="alert">{{ 'HANDLOADING.DELETE_FAILED' | translate }}</p>
+        }
         <ul class="list-unstyled mb-0" [attr.aria-busy]="loading()">
           @for (item of series(); track item.id) {
             <li class="load-series p-3 mb-2 border rounded bg-body-tertiary">
-              <div class="fw-semibold">{{ item.caliber }}</div>
+              <div class="d-flex align-items-center gap-2">
+                <!-- The series opens on its own page, with its test loads -->
+                <a class="me-auto series-link" [routerLink]="['/handloading', item.id]">
+                  <span class="d-block fw-semibold">{{ item.name || item.caliber }}</span>
+                  @let details = summary(item);
+                  @if (details.length) {
+                    <span class="series-details d-block small text-body-secondary">
+                      @for (detail of details; track $index) {
+                        <span>{{ detail }}</span>
+                      }
+                    </span>
+                  }
+                  <span class="d-block small text-body-secondary">
+                    {{ 'HANDLOADING.LOAD_COUNT' | translate: { count: item.loads?.length ?? 0 } }}
+                  </span>
+                </a>
+                <!-- Wider screens show every action as an icon button -->
+                <div class="d-none d-md-flex align-items-center gap-2">
+                  <button
+                    type="button"
+                    class="item-action"
+                    [attr.aria-label]="'HANDLOADING.EDIT' | translate"
+                    [disabled]="isDeleting(item.id)"
+                    (click)="edit(item)"
+                  >
+                    <ng-container [ngTemplateOutlet]="editIcon" />
+                  </button>
+                  <button
+                    type="button"
+                    class="item-action item-action-danger"
+                    [attr.aria-label]="'HANDLOADING.DELETE' | translate"
+                    [disabled]="isDeleting(item.id)"
+                    (click)="delete(item.id)"
+                  >
+                    <ng-container [ngTemplateOutlet]="deleteIcon" />
+                  </button>
+                </div>
+
+                <!-- Phones collect the actions in a menu behind a single button -->
+                <div class="d-md-none position-relative">
+                  <button
+                    type="button"
+                    class="item-action"
+                    aria-haspopup="menu"
+                    [attr.aria-controls]="'series-actions-' + item.id"
+                    [attr.aria-expanded]="actionsFor() === item.id"
+                    [attr.aria-label]="'HANDLOADING.ACTIONS' | translate"
+                    (click)="toggleActions(item.id)"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+                      <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0" />
+                    </svg>
+                  </button>
+                  @if (actionsFor() === item.id) {
+                    <ul
+                      [id]="'series-actions-' + item.id"
+                      class="dropdown-menu dropdown-menu-end show shadow event-actions"
+                      role="menu"
+                      [attr.aria-label]="'HANDLOADING.ACTIONS' | translate"
+                      appFocusTrap
+                    >
+                      <li role="none">
+                        <button
+                          type="button"
+                          class="dropdown-item d-flex align-items-center gap-2"
+                          role="menuitem"
+                          [disabled]="isDeleting(item.id)"
+                          (click)="closeActions(); edit(item)"
+                        >
+                          <ng-container [ngTemplateOutlet]="editIcon" />{{ 'HANDLOADING.EDIT' | translate }}
+                        </button>
+                      </li>
+                      <li role="none">
+                        <button
+                          type="button"
+                          class="dropdown-item d-flex align-items-center gap-2 text-danger"
+                          role="menuitem"
+                          [disabled]="isDeleting(item.id)"
+                          (click)="closeActions(); delete(item.id)"
+                        >
+                          <ng-container [ngTemplateOutlet]="deleteIcon" />{{ 'HANDLOADING.DELETE' | translate }}
+                        </button>
+                      </li>
+                    </ul>
+                  }
+                </div>
+              </div>
             </li>
           }
         </ul>
@@ -37,14 +131,22 @@
   </svg>
 </button>
 
-<dialog #formDialog class="form-dialog" aria-labelledby="load-series-form-title" (close)="onFormClosed()">
-  @if (formOpen()) {
-    <div class="d-flex align-items-center justify-content-between p-3 border-bottom">
-      <h2 id="load-series-form-title" class="h5 mb-0">{{ 'HANDLOADING.FORM.ADD_TITLE' | translate }}</h2>
-      <button type="button" class="btn-close" [attr.aria-label]="'HANDLOADING.FORM.CLOSE' | translate" (click)="closeForm()"></button>
-    </div>
-    <div class="p-3">
-      <app-load-series-form />
-    </div>
-  }
-</dialog>
+<app-handloading-dialog />
+
+<ng-template #editIcon>
+  <svg class="flex-shrink-0" xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+    <path
+      d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"
+    />
+  </svg>
+</ng-template>
+<ng-template #deleteIcon>
+  <svg class="flex-shrink-0" xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+    <path
+      d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"
+    />
+    <path
+      d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"
+    />
+  </svg>
+</ng-template>

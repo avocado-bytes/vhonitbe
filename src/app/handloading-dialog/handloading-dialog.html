@@ -1,0 +1,17 @@
+<dialog #dialog class="form-dialog" aria-labelledby="handloading-form-title" (close)="onClosed()">
+  @if (form()) {
+    <div class="d-flex align-items-center justify-content-between p-3 border-bottom">
+      <h2 id="handloading-form-title" class="h5 mb-0">{{ title() | translate }}</h2>
+      <button type="button" class="btn-close" [attr.aria-label]="'HANDLOADING.FORM.CLOSE' | translate" (click)="close()"></button>
+    </div>
+    <div class="p-3">
+      @if (form() === 'load') {
+        @if (loadSeries(); as series) {
+          <app-test-load-form [series]="series" [load]="editingLoad()" />
+        }
+      } @else {
+        <app-load-series-form [series]="editingSeries()" />
+      }
+    </div>
+  }
+</dialog>

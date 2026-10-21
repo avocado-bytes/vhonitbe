@@ -22,6 +22,18 @@ describe('LoadSeriesStorage', () => {
     expect(await storage.getAll()).toEqual([stored]);
   });
 
+  it('should update a series with its test loads and delete it', async () => {
+    const stored = await storage.add({ caliber: '.308 Win', loads: [] });
+    const load = { id: 'l1', powderCharge: 44.5, overallLength: null, shots: null, groupSize: null, velocities: [815], notes: '' };
+
+    const updated = await storage.update({ ...stored, name: 'Varget', loads: [load] });
+    expect(await storage.getAll()).toEqual([updated]);
+    await expect(storage.update({ ...stored, id: 'missing' })).rejects.toThrow('does not exist');
+
+    await storage.delete(stored.id);
+    expect(await storage.getAll()).toEqual([]);
+  });
+
   it('should add the load series store to a database of the previous version, keeping the ammunition', async () => {
     const old = await openDB('vhonitbe', 5, {
       upgrade(db) {
