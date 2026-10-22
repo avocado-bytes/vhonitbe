@@ -3,6 +3,8 @@ import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { provideTranslateService, TranslateService } from '@ngx-translate/core';
 import * as L from 'leaflet';
 import { HuntingEvent } from '../model/event';
+import { HuntingGround } from '../model/hunting-ground';
+import { initialState as huntingGroundInitialState } from '../state/hunting-ground/hunting-ground.reducer';
 import { EventsActions } from '../state/events/events.actions';
 import { initialState as eventsInitialState } from '../state/events/events.reducer';
 import { LocationActions } from '../state/location/location.actions';
@@ -216,6 +218,65 @@ describe('MapView', () => {
 
       expect(dispatch).toHaveBeenCalledWith(MapOptionsActions.setPanelOpen({ open: false }));
       expect(menu()).toBeNull();
+    });
+  });
+
+  describe('hunting ground', () => {
+    const ground: HuntingGround = {
+      code: 'CZ2120404111',
+      name: 'BRDY',
+      area: 25665,
+      outline: [[[
+        { latitude: 50.07, longitude: 14.41 },
+        { latitude: 50.07, longitude: 14.43 },
+        { latitude: 50.09, longitude: 14.43 },
+        { latitude: 50.09, longitude: 14.41 },
+      ]]],
+      searchedAt: { latitude: 50.08, longitude: 14.42 },
+      fetchedAt: '2026-10-01T10:00:00.000Z',
+    };
+    const setState = async (enabled: boolean, kept: HuntingGround | null) => {
+      store.setState({
+        location: { status: 'located', position: { latitude: 50.08, longitude: 14.42, accuracy: 20 }, error: null, manual: false },
+        events: eventsInitialState,
+        mapOptions: { ...mapOptionsInitialState, huntingGround: enabled },
+        huntingGround: { ...huntingGroundInitialState, ground: kept },
+        settings: { theme: 'light', language: 'en' },
+      });
+      await fixture.whenStable();
+    };
+    /** Leaflet draws the boundary with its dashes; the location marks have none */
+    const outline = () => element().querySelector('path[stroke-dasharray="10 6"]');
+
+    it('should draw the boundary of the kept hunting ground and name it in the panel', async () => {
+      await setState(true, ground);
+
+      expect(outline()).not.toBeNull();
+      expect(element().querySelector('.leaflet-control-attribution')?.textContent).toContain('NLI');
+      expect(element().querySelector('#map-panel')?.textContent).toContain('BRDY (CZ2120404111)');
+    });
+
+    it('should hide the boundary when the option is off', async () => {
+      await setState(false, ground);
+
+      expect(outline()).toBeNull();
+      expect(element().querySelector('#map-panel')?.textContent).not.toContain('BRDY');
+    });
+
+    it('should point to the settings while no hunting ground is kept', async () => {
+      await setState(true, null);
+
+      expect(outline()).toBeNull();
+      expect(element().querySelector('#map-panel')?.textContent).toContain('MAP.HUNTING_GROUND_NONE');
+    });
+
+    it('should turn the boundary on and off with its checkbox', async () => {
+      await setState(true, ground);
+      dispatch.mockClear();
+
+      (element().querySelector('#hunting-ground') as HTMLInputElement).click();
+
+      expect(dispatch).toHaveBeenCalledWith(MapOptionsActions.setHuntingGround({ enabled: false }));
     });
   });
 });

@@ -32,5 +32,76 @@
     </select>
   </div>
 
+  <section class="mb-4" aria-labelledby="hunting-ground-title">
+    <h3 id="hunting-ground-title" class="form-label fs-6 fw-semibold">{{ 'HUNTING_GROUND.TITLE' | translate }}</h3>
+    @if (ground(); as current) {
+      <p class="mb-0 hunting-ground-name">
+        {{ current.name }} <span class="small text-body-secondary">({{ current.code }})</span>
+      </p>
+      <p class="small text-body-secondary mb-2">
+        @if (area(current); as hectares) {
+          {{ 'HUNTING_GROUND.AREA' | translate: { area: hectares } }} ·
+        }
+        {{ 'HUNTING_GROUND.FETCHED_AT' | translate: { date: fetchedAt(current) } }}
+      </p>
+    } @else if (candidates() === null) {
+      <p class="small text-body-secondary mb-2">{{ 'HUNTING_GROUND.NONE' | translate }}</p>
+    }
+
+    @if (candidates(); as found) {
+      @if (found.length) {
+        <p class="small mb-1">{{ 'HUNTING_GROUND.CHOOSE' | translate }}</p>
+        <div class="d-grid gap-2 mb-2">
+          @for (candidate of found; track candidate.code) {
+            <button
+              type="button"
+              class="btn btn-outline-secondary text-start hunting-ground-candidate"
+              [disabled]="busy()"
+              (click)="chooseHuntingGround(candidate)"
+            >
+              <span class="d-block fw-semibold">{{ candidate.name }}</span>
+              <span class="d-block small text-body-secondary">
+                {{ candidate.code }}
+                @if (area(candidate); as hectares) {
+                  · {{ 'HUNTING_GROUND.AREA' | translate: { area: hectares } }}
+                }
+              </span>
+            </button>
+          }
+        </div>
+      } @else {
+        <p class="small text-warning-emphasis mb-2" role="status">{{ 'HUNTING_GROUND.NOT_FOUND' | translate }}</p>
+      }
+      <button type="button" class="btn btn-sm btn-outline-secondary" (click)="cancelSearch()">
+        {{ 'HUNTING_GROUND.CANCEL' | translate }}
+      </button>
+    } @else {
+      <div class="d-flex flex-wrap gap-2">
+        <button type="button" class="btn btn-sm btn-primary" [disabled]="busy()" (click)="searchHuntingGround()">
+          {{ (ground() ? 'HUNTING_GROUND.SEARCH_AGAIN' : 'HUNTING_GROUND.SEARCH') | translate }}
+        </button>
+        @if (ground()) {
+          <button type="button" class="btn btn-sm btn-outline-secondary" [disabled]="busy()" (click)="refreshHuntingGround()">
+            {{ 'HUNTING_GROUND.REFRESH' | translate }}
+          </button>
+          <button type="button" class="btn btn-sm btn-outline-danger" [disabled]="busy()" (click)="removeHuntingGround()">
+            {{ 'HUNTING_GROUND.REMOVE' | translate }}
+          </button>
+        }
+      </div>
+    }
+
+    @if (busy()) {
+      <p class="small d-flex align-items-center gap-2 mt-2 mb-0" role="status">
+        <span class="spinner-border spinner-border-sm text-primary flex-shrink-0" aria-hidden="true"></span>
+        {{ 'HUNTING_GROUND.LOADING' | translate }}
+      </p>
+    }
+    @if (error(); as failure) {
+      <p class="small text-danger mt-2 mb-0" role="alert">{{ 'HUNTING_GROUND.ERRORS.' + failure | translate }}</p>
+    }
+    <p class="small text-body-secondary fst-italic mt-2 mb-0">{{ 'HUNTING_GROUND.DISCLAIMER' | translate }}</p>
+  </section>
+
   <p class="small text-body-secondary mb-0">{{ 'SETTINGS.VERSION' | translate: { version } }}</p>
 </section>

@@ -55,8 +55,20 @@
       "Distance circles show 100, 150 and 200 m around you.",
       "Wind cone shows where the wind carries your scent; it gets longer as the wind gets stronger.",
       "Shooting safety colours the terrain around you: green where the ground stops a bullet, orange where it stops it only further away, red where there is no backstop or a building is close. It is only an estimate – always check the backstop yourself.",
+      "Hunting ground boundary shows or hides the boundary of your hunting ground (see Hunting ground boundary).",
       "Tap an event pin to see what it is. Press and hold a pin to share, edit or delete the event.",
       "Press and hold anywhere on the map to add an event right there, or to set your position by hand when your phone cannot find it."
+    ]
+  },
+  "hunting-ground": {
+    "TITLE": "Hunting ground boundary",
+    "TEXT": "The app can show the boundary of your hunting ground on its maps. Find it once in the settings; the boundary is saved on your phone, so it shows without a signal too.",
+    "STEPS": [
+      "Open the settings with the gear button and, under Hunting ground, tap Find by my position. If you are not in your hunting ground, first set your position by hand by pressing and holding on the map.",
+      "If you are near a boundary and more than one hunting ground is found, choose yours.",
+      "For the chosen hunting ground you see its code, area and when the boundary was downloaded. Download again fetches the current boundary, Find another replaces the hunting ground and Remove deletes it from your phone.",
+      "The boundary is drawn as a dashed magenta line on the map, on the small maps of events and feeding places, and on the feeding map. On the map, show or hide it with Hunting ground boundary in the map options.",
+      "The boundary comes from the hunting grounds map of the National Forestry Institute (NLI). It is for orientation only and not legally binding; the hunting authority of your municipality has the binding boundary."
     ]
   },
   "feeding": {
@@ -107,6 +119,7 @@
     "STEPS": [
       "Appearance: light, or dark for dusk and night.",
       "Language: Czech or English.",
+      "Hunting ground: finds your hunting ground, so its boundary is shown on the maps.",
       "The version of the app is shown at the bottom."
     ]
   },
@@ -116,6 +129,8 @@
     "event-actions": "The actions of an event",
     "map": "The map with its options and the wind cone",
     "map-menu": "Press and hold on the map to add an event",
+    "hunting-ground-settings": "The chosen hunting ground in the settings",
+    "hunting-ground-map": "The hunting ground boundary on the map",
     "feeding": "The feeding season, the replenishment interval and the map of feeding places",
     "feeding-list": "A feeding place that needs replenishing, with its actions",
     "navigation": "Red dots tell you that a feeding place needs attention",

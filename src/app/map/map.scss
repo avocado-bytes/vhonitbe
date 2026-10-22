@@ -100,6 +100,15 @@
   opacity: 1;
 }
 
+.hunting-ground-swatch {
+  flex-shrink: 0;
+  width: 1rem;
+  height: 1rem;
+  // Matches the dashed boundary line, see HUNTING_GROUND_COLOR
+  border: 2px dashed #c2185b;
+  border-radius: var(--bs-border-radius-sm);
+}
+
 .wind-swatch {
   flex-shrink: 0;
   width: 1rem;

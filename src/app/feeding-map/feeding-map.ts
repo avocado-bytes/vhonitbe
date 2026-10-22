@@ -1,10 +1,14 @@
 import { afterNextRender, Component, DestroyRef, effect, ElementRef, inject, input, signal, viewChild } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { Store } from '@ngrx/store';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import type * as Leaflet from 'leaflet';
 import { FEEDING_PLACE_TYPES, FeedingPlace, FeedingPlaceType } from '../model/feeding-place';
 import { eventPinOptions } from '../shared/event-pin';
+import { huntingGroundOutline } from '../shared/hunting-ground-outline';
 import { OPEN_TOPO_MAP_OPTIONS, OPEN_TOPO_MAP_URL } from '../shared/map-tiles';
+import { selectGround } from '../state/hunting-ground/hunting-ground.reducer';
+import { selectHuntingGround } from '../state/map-options/map-options.reducer';
 
 /** Pin colors telling the types of feeding places apart; also used by the legend */
 export const FEEDING_PIN_COLORS: Record<FeedingPlaceType, string> = {
@@ -25,6 +29,7 @@ async function loadLeaflet(): Promise<typeof Leaflet> {
 
 /**
  * A small map showing all feeders and salt licks, zoomed to fit them; a marker's popup names its type.
+ * The boundary of the hunting ground is shown too when the map options show it.
  * Leaflet is loaded on demand, so it stays out of the initial bundle.
  */
 @Component({
@@ -35,6 +40,7 @@ async function loadLeaflet(): Promise<typeof Leaflet> {
 })
 export class FeedingMap {
   private readonly translate = inject(TranslateService);
+  private readonly store = inject(Store);
   /** Places with a location */
   readonly places = input.required<readonly FeedingPlace[]>();
 
@@ -43,6 +49,9 @@ export class FeedingMap {
 
   private readonly container = viewChild.required<ElementRef<HTMLElement>>('map');
   private readonly leaflet = signal<{ L: typeof Leaflet; map: Leaflet.Map } | null>(null);
+
+  private readonly huntingGroundEnabled = this.store.selectSignal(selectHuntingGround);
+  private readonly huntingGround = this.store.selectSignal(selectGround);
 
   /** Changes once the translations of a newly selected language are loaded */
   private readonly translationsChanged = toSignal(this.translate.onLangChange);
@@ -94,6 +103,20 @@ export class FeedingMap {
 
       const bounds = L.latLngBounds(places.flatMap((place) => (place.location ? [[place.location.latitude, place.location.longitude] as Leaflet.LatLngTuple] : [])));
       map.fitBounds(bounds, { padding: [32, 32], maxZoom: MAX_FIT_ZOOM });
+    });
+
+    // Doesn't change the zoom, which stays fitted to the places
+    let outline: Leaflet.Polygon | undefined;
+    effect(() => {
+      const leaflet = this.leaflet();
+      const ground = this.huntingGround();
+      const enabled = this.huntingGroundEnabled();
+      if (!leaflet) {
+        return;
+      }
+
+      outline?.remove();
+      outline = enabled && ground ? huntingGroundOutline(leaflet.L, ground).addTo(leaflet.map) : undefined;
     });
 
     inject(DestroyRef).onDestroy(() => {

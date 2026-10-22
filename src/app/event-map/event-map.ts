@@ -1,9 +1,13 @@
-import { afterNextRender, Component, DestroyRef, ElementRef, inject, input, viewChild } from '@angular/core';
+import { afterNextRender, Component, DestroyRef, effect, ElementRef, inject, input, signal, viewChild } from '@angular/core';
+import { Store } from '@ngrx/store';
 import { TranslatePipe } from '@ngx-translate/core';
 import type * as Leaflet from 'leaflet';
 import { GeoPoint } from '../model/event';
 import { EVENT_PIN_OPTIONS } from '../shared/event-pin';
+import { huntingGroundOutline } from '../shared/hunting-ground-outline';
 import { OPEN_TOPO_MAP_OPTIONS, OPEN_TOPO_MAP_URL } from '../shared/map-tiles';
+import { selectGround } from '../state/hunting-ground/hunting-ground.reducer';
+import { selectHuntingGround } from '../state/map-options/map-options.reducer';
 
 const ZOOM = 15;
 
@@ -14,7 +18,7 @@ async function loadLeaflet(): Promise<typeof Leaflet> {
 }
 
 /**
- * A map centered on an event's location, marked with the event pin.
+ * A map centered on an event's location, marked with the event pin, with the boundary of the hunting ground when the map options show it.
  * Leaflet is loaded on demand, so it stays out of the initial bundle.
  */
 @Component({
@@ -24,10 +28,13 @@ async function loadLeaflet(): Promise<typeof Leaflet> {
   templateUrl: './event-map.html',
 })
 export class EventMap {
+  private readonly store = inject(Store);
   readonly location = input.required<GeoPoint>();
 
   private readonly container = viewChild.required<ElementRef<HTMLElement>>('map');
-  private map?: Leaflet.Map;
+  private readonly leaflet = signal<{ L: typeof Leaflet; map: Leaflet.Map } | null>(null);
+  private readonly huntingGroundEnabled = this.store.selectSignal(selectHuntingGround);
+  private readonly huntingGround = this.store.selectSignal(selectGround);
 
   constructor() {
     let destroyed = false;
@@ -43,7 +50,7 @@ export class EventMap {
       const map = L.map(this.container().nativeElement, { center: [latitude, longitude], zoom: ZOOM });
       L.tileLayer(OPEN_TOPO_MAP_URL, OPEN_TOPO_MAP_OPTIONS).addTo(map);
       L.marker([latitude, longitude], { icon: L.divIcon(EVENT_PIN_OPTIONS), interactive: false }).addTo(map);
-      this.map = map;
+      this.leaflet.set({ L, map });
 
       // The map may be created while its dialog is still opening; re-measure once it has its size
       if (typeof ResizeObserver !== 'undefined') {
@@ -52,10 +59,23 @@ export class EventMap {
       }
     });
 
+    let outline: Leaflet.Polygon | undefined;
+    effect(() => {
+      const leaflet = this.leaflet();
+      const ground = this.huntingGround();
+      const enabled = this.huntingGroundEnabled();
+      if (!leaflet) {
+        return;
+      }
+
+      outline?.remove();
+      outline = enabled && ground ? huntingGroundOutline(leaflet.L, ground).addTo(leaflet.map) : undefined;
+    });
+
     inject(DestroyRef).onDestroy(() => {
       destroyed = true;
       resizeObserver?.disconnect();
-      this.map?.remove();
+      this.leaflet()?.map.remove();
     });
   }
 }

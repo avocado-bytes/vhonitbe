@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.57.1
+
+- The user guide has a new "Hunting ground boundary" section, after the map: how to find the hunting ground by position in the settings, choose it when more than one is found, download its boundary again or remove it, where the boundary is shown and how to hide it on the map, and that it is not legally binding. It comes with two new phone screenshots in Czech and English: the chosen hunting ground in the settings and its boundary on the map.
+- The guide's map section mentions the new "Hunting ground boundary" option, and its settings section the new Hunting ground part.
+
+## 0.57.0
+
+- Settings have a new Hunting ground section. "Find by my position" looks up the hunting ground at the current position (or at a position set by hand on the map) on the hunting grounds map of the National Forestry Institute (NLI); when the position is near a boundary and more than one is found, the user chooses one. The chosen hunting ground is shown with its name, code, area and download date, and can be downloaded again, replaced by another or removed.
+- The boundary of the hunting ground is saved on the device (new IndexedDB store, database version 7), so it is shown offline too. Only the code, name, area and boundary are kept; the holders' names and contacts that the service also lists are dropped.
+- The boundary is drawn as a dashed magenta line on the main map, on the small maps of events and feeding places, and on the feeding map. The new "Hunting ground boundary" checkbox in the map options shows or hides it (on by default); the options panel names the hunting ground, or points to Settings while none is chosen.
+- A note in Settings and the map options says the boundary is only for orientation and not legally binding.
+
 ## 0.56.0
 
 - The event list no longer shows the note, the firearm and the ammunition of an event; they are shown in its full view.

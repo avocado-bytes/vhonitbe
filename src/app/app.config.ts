@@ -26,6 +26,8 @@ import * as firearmsEffects from './state/firearms/firearms.effects';
 import * as handloadingEffects from './state/handloading/handloading.effects';
 import { handloadingFeature } from './state/handloading/handloading.reducer';
 import { firearmsFeature } from './state/firearms/firearms.reducer';
+import * as huntingGroundEffects from './state/hunting-ground/hunting-ground.effects';
+import { huntingGroundFeature } from './state/hunting-ground/hunting-ground.reducer';
 import { provideServiceWorker } from '@angular/service-worker';
 
 export const appConfig: ApplicationConfig = {
@@ -44,6 +46,7 @@ export const appConfig: ApplicationConfig = {
     provideState(firearmsFeature),
     provideState(ammunitionFeature),
     provideState(handloadingFeature),
+    provideState(huntingGroundFeature),
     provideEffects(
       settingsEffects,
       locationEffects,
@@ -54,6 +57,7 @@ export const appConfig: ApplicationConfig = {
       firearmsEffects,
       ammunitionEffects,
       handloadingEffects,
+      huntingGroundEffects,
     ),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
     provideTranslateService({

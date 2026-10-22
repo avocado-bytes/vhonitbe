@@ -22,6 +22,28 @@
     },
     "VERSION": "Verze {{version}}"
   },
+  "HUNTING_GROUND": {
+    "TITLE": "Honitba",
+    "NONE": "Najděte honitbu, ve které právě stojíte, aby se její hranice zobrazovala na mapách.",
+    "SEARCH": "Najít podle mé polohy",
+    "SEARCH_AGAIN": "Najít jinou",
+    "REFRESH": "Stáhnout znovu",
+    "REMOVE": "Odebrat",
+    "REMOVE_CONFIRM": "Odebrat honitbu a její hranici z tohoto zařízení?",
+    "CHOOSE": "Vyberte svou honitbu:",
+    "NOT_FOUND": "Ve vaší poloze nebyla nalezena žádná honitba.",
+    "CANCEL": "Zrušit",
+    "LOADING": "Hledám honitbu…",
+    "AREA": "{{area}} ha",
+    "FETCHED_AT": "staženo {{date}}",
+    "DISCLAIMER": "Hranice z mapy honiteb Národního lesnického institutu (NLI). Slouží jen pro orientaci a není právně závazná; závaznou hranici má orgán státní správy myslivosti vaší obce s rozšířenou působností.",
+    "ERRORS": {
+      "location": "Vaše poloha není známa. Povolte přístup k poloze, nebo ji nastavte ručně na mapě.",
+      "service": "Mapu honiteb se nepodařilo načíst. Zkuste to prosím později.",
+      "missing": "Honitba už na místě, kde byla hledána, není. Vyhledejte ji znovu.",
+      "storage": "Honitbu se nepodařilo uložit do tohoto zařízení."
+    }
+  },
   "NAV": {
     "HOME": "Domů",
     "MAP": "Mapa",
@@ -51,7 +73,9 @@
     "WIND_TERRAIN_NOTE": "Vítr měřený 10 m nad zemí; terén, les a údolí mohou v okolí změnit jeho směr i sílu.",
     "MANUAL_POSITION": "Ruční poloha. Pro návrat k poloze zařízení zapněte sledování.",
     "SHOW_PANEL": "Zobrazit možnosti mapy a legendu",
-    "HIDE_PANEL": "Skrýt možnosti mapy a legendu"
+    "HIDE_PANEL": "Skrýt možnosti mapy a legendu",
+    "HUNTING_GROUND": "Hranice honitby",
+    "HUNTING_GROUND_NONE": "Zatím nemáte vybranou honitbu. Najdete ji v Nastavení."
   },
   "ADD_ITEM": {
     "TITLE": "Přidat položku",

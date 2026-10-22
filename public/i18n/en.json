@@ -22,6 +22,28 @@
     },
     "VERSION": "Version {{version}}"
   },
+  "HUNTING_GROUND": {
+    "TITLE": "Hunting ground",
+    "NONE": "Find the hunting ground you are standing in, so its boundary is shown on the maps.",
+    "SEARCH": "Find by my position",
+    "SEARCH_AGAIN": "Find another",
+    "REFRESH": "Download again",
+    "REMOVE": "Remove",
+    "REMOVE_CONFIRM": "Remove the hunting ground and its boundary from this device?",
+    "CHOOSE": "Choose your hunting ground:",
+    "NOT_FOUND": "No hunting ground was found at your position.",
+    "CANCEL": "Cancel",
+    "LOADING": "Looking up the hunting ground…",
+    "AREA": "{{area}} ha",
+    "FETCHED_AT": "downloaded {{date}}",
+    "DISCLAIMER": "Boundary from the hunting grounds map of the National Forestry Institute (NLI). For orientation only; it is not legally binding, the hunting authority of your municipality has the binding boundary.",
+    "ERRORS": {
+      "location": "Your position is not known. Allow location access, or set your position by hand on the map.",
+      "service": "The hunting grounds map could not be reached. Try again later.",
+      "missing": "The hunting ground is no longer found where it was looked up. Find it again.",
+      "storage": "The hunting ground could not be saved on this device."
+    }
+  },
   "NAV": {
     "HOME": "Home",
     "MAP": "Map",
@@ -51,7 +73,9 @@
     "WIND_TERRAIN_NOTE": "Wind measured 10 m above the ground; terrain, forest and valleys can change its direction and strength near you.",
     "MANUAL_POSITION": "Manual position. Turn on tracking to use your device location again.",
     "SHOW_PANEL": "Show map options and legend",
-    "HIDE_PANEL": "Hide map options and legend"
+    "HIDE_PANEL": "Hide map options and legend",
+    "HUNTING_GROUND": "Hunting ground boundary",
+    "HUNTING_GROUND_NONE": "No hunting ground chosen yet. Find yours in Settings."
   },
   "ADD_ITEM": {
     "TITLE": "Add item",

@@ -7,6 +7,7 @@ export const MapOptionsActions = createActionGroup({
     'Set Tracking': props<{ enabled: boolean }>(),
     'Set Follow Me': props<{ enabled: boolean }>(),
     'Set Wind Cone': props<{ enabled: boolean }>(),
+    'Set Hunting Ground': props<{ enabled: boolean }>(),
     'Set Panel Open': props<{ open: boolean }>(),
   },
 });

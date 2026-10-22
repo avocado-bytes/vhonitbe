@@ -9,13 +9,22 @@ import { GeoPoint, HuntingEvent } from '../model/event';
 import { ELEVATION_ATTRIBUTION } from '../shooting-safety/elevation';
 import { offset } from '../shooting-safety/geo';
 import { EVENT_PIN_OPTIONS } from '../shared/event-pin';
+import { huntingGroundOutline } from '../shared/hunting-ground-outline';
 import { OPEN_TOPO_MAP_OPTIONS, OPEN_TOPO_MAP_URL } from '../shared/map-tiles';
 import { EventsActions } from '../state/events/events.actions';
 import { selectLatest } from '../state/events/events.reducer';
+import { selectGround } from '../state/hunting-ground/hunting-ground.reducer';
 import { LocationActions } from '../state/location/location.actions';
 import { selectError, selectManual, selectPosition, selectStatus } from '../state/location/location.reducer';
 import { MapOptionsActions } from '../state/map-options/map-options.actions';
-import { selectDistanceRings, selectFollowMe, selectPanelOpen, selectTracking, selectWindCone } from '../state/map-options/map-options.reducer';
+import {
+  selectDistanceRings,
+  selectFollowMe,
+  selectHuntingGround,
+  selectPanelOpen,
+  selectTracking,
+  selectWindCone,
+} from '../state/map-options/map-options.reducer';
 import { selectLanguage } from '../state/settings/settings.reducer';
 import { ShootingSafetyActions } from '../state/shooting-safety/shooting-safety.actions';
 import {
@@ -107,6 +116,8 @@ export class MapView {
   protected readonly followMe = this.store.selectSignal(selectFollowMe);
   protected readonly windCone = this.store.selectSignal(selectWindCone);
   protected readonly panelOpen = this.store.selectSignal(selectPanelOpen);
+  protected readonly huntingGroundEnabled = this.store.selectSignal(selectHuntingGround);
+  protected readonly huntingGround = this.store.selectSignal(selectGround);
   protected readonly weather = this.store.selectSignal(selectCurrentWeather);
   protected readonly weatherStatus = this.store.selectSignal(selectWeatherStatus);
   protected readonly windConeLength = computed(() => {
@@ -187,6 +198,22 @@ export class MapView {
         }
       }
       eventsLayer.addTo(map);
+    });
+
+    // A line only, without fill, so it never covers the other overlays
+    const huntingGroundLayer = L.layerGroup();
+    effect(() => {
+      const map = this.map();
+      const ground = this.huntingGround();
+      if (!map) {
+        return;
+      }
+
+      huntingGroundLayer.clearLayers();
+      if (this.huntingGroundEnabled() && ground) {
+        huntingGroundOutline(L, ground).addTo(huntingGroundLayer);
+      }
+      huntingGroundLayer.addTo(map);
     });
 
     // Below the markers, so they stay visible and clickable
@@ -359,6 +386,10 @@ export class MapView {
 
   protected setWindCone(enabled: boolean): void {
     this.store.dispatch(MapOptionsActions.setWindCone({ enabled }));
+  }
+
+  protected setHuntingGround(enabled: boolean): void {
+    this.store.dispatch(MapOptionsActions.setHuntingGround({ enabled }));
   }
 
   protected togglePanel(): void {

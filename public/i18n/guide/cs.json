@@ -55,8 +55,20 @@
       "Vzdálenostní kruhy ukazují 100, 150 a 200 m kolem vás.",
       "Kužel větru ukazuje, kam vítr nese váš pach; se silnějším větrem se prodlužuje.",
       "Bezpečnost střelby obarví terén kolem vás: zeleně tam, kde terén kulku zastaví, oranžově tam, kde ji zastaví až dál, červeně tam, kde žádný záchyt není nebo je blízko budova. Je to jen odhad – záchyt si vždy ověřte sami.",
+      "Hranice honitby zobrazí nebo skryje hranici vaší honitby (viz Hranice honitby).",
       "Klepnutím na špendlík události zjistíte, o co jde. Podržením prstu na špendlíku událost sdílíte, upravíte nebo smažete.",
       "Podržením prstu kdekoli na mapě přidáte událost přímo tam, nebo nastavíte svou polohu ručně, když ji telefon nemůže najít."
+    ]
+  },
+  "hunting-ground": {
+    "TITLE": "Hranice honitby",
+    "TEXT": "Aplikace umí na mapách zobrazit hranici vaší honitby. Stačí ji jednou najít v nastavení; hranice se uloží do telefonu, takže je vidět i bez signálu.",
+    "STEPS": [
+      "Otevřete nastavení tlačítkem s ozubeným kolem a v části Honitba klepněte na Najít podle mé polohy. Nejste-li v honitbě, nastavte nejdřív svou polohu ručně podržením prstu na mapě.",
+      "Pokud stojíte blízko hranice a najde se víc honiteb, vyberte tu svou.",
+      "U vybrané honitby vidíte její kód, výměru a kdy byla hranice stažena. Stáhnout znovu načte aktuální hranici, Najít jinou honitbu vymění a Odebrat ji smaže z telefonu.",
+      "Hranice se zobrazí jako přerušovaná purpurová čára na mapě, na malých mapách událostí a míst přikrmování a na mapě přikrmování. Na mapě ji skryjete nebo zobrazíte volbou Hranice honitby v možnostech mapy.",
+      "Hranice pochází z mapy honiteb Národního lesnického institutu (NLI). Slouží jen pro orientaci a není právně závazná; závaznou hranici má orgán státní správy myslivosti vaší obce s rozšířenou působností."
     ]
   },
   "feeding": {
@@ -107,6 +119,7 @@
     "STEPS": [
       "Vzhled: světlý, nebo tmavý pro šero a noc.",
       "Jazyk: čeština nebo angličtina.",
+      "Honitba: najde vaši honitbu, aby se její hranice zobrazovala na mapách.",
       "Dole je uvedená verze aplikace."
     ]
   },
@@ -116,6 +129,8 @@
     "event-actions": "Akce události",
     "map": "Mapa s možnostmi a kuželem větru",
     "map-menu": "Podržením prstu na mapě přidáte událost",
+    "hunting-ground-settings": "Vybraná honitba v nastavení",
+    "hunting-ground-map": "Hranice honitby na mapě",
     "feeding": "Doba přikrmování, interval doplňování a mapa míst přikrmování",
     "feeding-list": "Místo přikrmování, které potřebuje doplnit, s jeho akcemi",
     "navigation": "Červené tečky upozorňují, že místo přikrmování potřebuje pozornost",
