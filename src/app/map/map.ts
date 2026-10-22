@@ -265,17 +265,13 @@ export class MapView {
   private createMap(container: HTMLElement): L.Map {
     const map = L.map(container);
     L.tileLayer(OPEN_TOPO_MAP_URL, OPEN_TOPO_MAP_OPTIONS).addTo(map);
-    // Leaflet also fires contextmenu on a long press on touch devices
+    // A right click opens the menu, and Leaflet fires contextmenu for a long press on touch devices too;
+    // a plain tap does not, so panning and tapping markers don't open it by accident
     map.on('contextmenu', (event: L.LeafletMouseEvent) => this.openMenu(event));
-    // Touch devices have no right click, so a plain tap opens the menu as well
-    map.on('click', (event: L.LeafletMouseEvent) => {
+    map.on('click', () => {
       // On phones the open panel covers the map, so a tap on the map only closes it
       if (this.panelOpen() && typeof matchMedia !== 'undefined' && matchMedia(PHONE_MEDIA_QUERY).matches) {
         this.store.dispatch(MapOptionsActions.setPanelOpen({ open: false }));
-        return;
-      }
-      if (typeof matchMedia !== 'undefined' && matchMedia('(pointer: coarse)').matches) {
-        this.openMenu(event);
       }
     });
     // The menu belongs to a point, so it would be misplaced once the map moves

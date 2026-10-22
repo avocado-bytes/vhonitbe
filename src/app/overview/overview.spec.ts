@@ -105,7 +105,8 @@ describe('Overview', () => {
     expect(items[0].textContent).toContain('Harvest');
     expect(items[0].textContent).toContain('Roe deer');
     expect(items[0].textContent).toContain('49.00000, 13.50000');
-    expect(items[0].textContent).toContain('Clean shot');
+    // The note is left for the full view
+    expect(items[0].textContent).not.toContain('Clean shot');
     expect(items[0].querySelector('time')?.getAttribute('datetime')).toBe('2026-10-01T06:30:00.000Z');
     expect(items[0].querySelector('time')?.textContent?.trim()).toBe(
       new Intl.DateTimeFormat('en', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date('2026-10-01T06:30:00.000Z')),
@@ -113,7 +114,7 @@ describe('Overview', () => {
     expect(items[1].textContent).not.toContain('Roe deer');
   });
 
-  it('should show the firearm and ammunition copied into a harvest', async () => {
+  it('should leave the firearm and ammunition of a harvest for its full view', async () => {
     await setState({
       events: [
         event('a', {
@@ -132,15 +133,42 @@ describe('Overview', () => {
             brassFirings: null,
           },
         }),
-        event('b'),
       ],
-      total: 2,
+      total: 1,
     });
 
-    const items = Array.from(element().querySelectorAll('li.event'));
-    expect(items[0].textContent).toContain('Firearm: Blaser R8 (.308 Win)');
-    expect(items[0].textContent).toContain('Ammunition: .308 Win · Soft point (SP) · 165 gr');
-    expect(items[1].textContent).not.toContain('Firearm');
+    expect(element().querySelector('li.event')?.textContent).not.toContain('Blaser R8');
+    expect(element().querySelector('li.event')?.textContent).not.toContain('Soft point');
+  });
+
+  it('should show an event in full when it is tapped, but not when one of its actions is', async () => {
+    HTMLDialogElement.prototype.showModal ??= function (this: HTMLDialogElement) {
+      this.setAttribute('open', '');
+    };
+    await setState({ events: [event('a', { type: 'harvest', note: 'Clean shot' })], total: 1 });
+    const viewDialog = () => element().querySelector('dialog[aria-labelledby="event-view-title"]') as HTMLDialogElement;
+    const item = element().querySelector('li.event') as HTMLElement;
+
+    (item.querySelector('button[aria-label="Edit event"]') as HTMLButtonElement).click();
+    await fixture.whenStable();
+    expect(viewDialog().querySelector('app-event-view')).toBeNull();
+
+    (item.querySelector('.event-details') as HTMLElement | null)?.click();
+    await fixture.whenStable();
+    await vi.waitFor(() => expect(viewDialog().open).toBe(true));
+    expect(viewDialog().querySelector('#event-view-title')?.textContent).toContain('Harvest');
+    expect(viewDialog().querySelector('app-event-view')?.textContent).toContain('Clean shot');
+  });
+
+  it('should open the full view from the keyboard, with the item\'s title button', async () => {
+    await setState({ events: [event('a', { type: 'harvest' })], total: 1 });
+
+    const open = element().querySelector('li.event button.item-open') as HTMLButtonElement;
+    expect(open.getAttribute('aria-haspopup')).toBe('dialog');
+    open.click();
+    await fixture.whenStable();
+
+    expect(element().querySelector('dialog[aria-labelledby="event-view-title"] app-event-view')).not.toBeNull();
   });
 
   it('should show the animal, sex and herd of an event on one line', async () => {

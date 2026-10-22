@@ -1,0 +1,65 @@
+<div class="event-view">
+  <p class="text-body-secondary mb-3">
+    <time [attr.datetime]="event().occurredAt">{{ occurredAt() }}</time>
+  </p>
+
+  @if (animal().length) {
+    <section class="view-section" aria-labelledby="event-view-animal">
+      <h3 id="event-view-animal" class="view-heading">{{ 'EVENT_VIEW.GAME' | translate }}</h3>
+      <dl class="row mb-0">
+        @for (detail of animal(); track detail.label) {
+          <dt class="col-5 fw-normal text-body-secondary">{{ detail.label | translate }}</dt>
+          <dd class="col-7" [class.font-monospace]="detail.label === 'ADD_ITEM.TAG_NUMBER'">{{ detail.value }}</dd>
+        }
+      </dl>
+    </section>
+  }
+
+  @if (firearm(); as recorded) {
+    <section class="view-section" aria-labelledby="event-view-firearm">
+      <h3 id="event-view-firearm" class="view-heading">{{ 'ADD_ITEM.FIREARM' | translate }}</h3>
+      <p class="fw-semibold mb-1">{{ recorded.title }}</p>
+      <dl class="row mb-0">
+        @for (detail of recorded.details; track detail.label) {
+          <dt class="col-5 fw-normal text-body-secondary">{{ detail.label | translate }}</dt>
+          <dd class="col-7">{{ detail.value }}</dd>
+        }
+      </dl>
+    </section>
+  }
+
+  @if (ammunition(); as recorded) {
+    <section class="view-section" aria-labelledby="event-view-ammunition">
+      <h3 id="event-view-ammunition" class="view-heading">{{ 'ADD_ITEM.AMMUNITION' | translate }}</h3>
+      <p class="fw-semibold mb-1">{{ recorded.title }}</p>
+      <dl class="row mb-0">
+        @for (detail of recorded.details; track detail.label) {
+          <dt class="col-5 fw-normal text-body-secondary">{{ detail.label | translate }}</dt>
+          <dd class="col-7">{{ detail.value }}</dd>
+        }
+      </dl>
+    </section>
+  }
+
+  @if (event().location; as location) {
+    <section class="view-section" aria-labelledby="event-view-location">
+      <h3 id="event-view-location" class="view-heading">{{ 'ADD_ITEM.LOCATION' | translate }}</h3>
+      <app-event-map [location]="location" />
+      <p class="small text-body-secondary mt-1 mb-0">{{ formatCoordinate(location.latitude) }}, {{ formatCoordinate(location.longitude) }}</p>
+    </section>
+  }
+
+  @if (event().note) {
+    <section class="view-section" aria-labelledby="event-view-note">
+      <h3 id="event-view-note" class="view-heading">{{ 'ADD_ITEM.NOTE' | translate }}</h3>
+      <p class="view-note mb-0">{{ event().note }}</p>
+    </section>
+  }
+
+  @if (event().photoId; as photoId) {
+    <section class="view-section" aria-labelledby="event-view-photo">
+      <h3 id="event-view-photo" class="view-heading">{{ 'ADD_ITEM.PHOTO' | translate }}</h3>
+      <app-event-photo [photoId]="photoId" />
+    </section>
+  }
+</div>

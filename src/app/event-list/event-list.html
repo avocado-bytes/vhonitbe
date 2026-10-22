@@ -4,15 +4,16 @@
 }
 <ul class="list-unstyled mb-3 event-list" [attr.aria-busy]="busy()">
   @for (event of events(); track event.id) {
-    <li class="event p-3 mb-2 border rounded bg-body-tertiary">
+    <!-- A tap anywhere on the event but on its actions shows it in full -->
+    <li class="event item-openable p-3 mb-2 border rounded bg-body-tertiary" (click)="openView(event, $event)">
       <div class="d-flex align-items-center gap-2">
-        <!-- The date sits below the type, leaving room for the action buttons on phones -->
-        <div class="me-auto">
-          <div class="fw-semibold">{{ 'ITEMS.' + event.type | translate }}</div>
+        <!-- The date sits below the type, leaving room for the action buttons on phones; a button for the keyboard -->
+        <button type="button" class="item-open me-auto" aria-haspopup="dialog" [attr.aria-label]="'EVENT_VIEW.OPEN' | translate: { item: ('ITEMS.' + event.type | translate) }">
+          <span class="d-block fw-semibold">{{ 'ITEMS.' + event.type | translate }}</span>
           <time class="small text-body-secondary" [attr.datetime]="event.occurredAt">
             {{ formatDate(event.occurredAt) }}
           </time>
-        </div>
+        </button>
         <!-- Wider screens show every action as an icon button -->
         <div class="d-none d-md-flex align-items-center gap-2">
           @if (event.photoId) {
@@ -146,23 +147,26 @@
           {{ 'OVERVIEW.TAG_NUMBER' | translate }} <span class="font-monospace">{{ formatTagNumber(event.tagNumber) }}</span>
         </div>
       }
-      @if (event.firearm; as firearm) {
-        <div class="small">{{ 'OVERVIEW.FIREARM' | translate: { value: firearmLabel(firearm) } }}</div>
-      }
-      @if (event.ammunition; as ammunition) {
-        <div class="small">{{ 'OVERVIEW.AMMUNITION' | translate: { value: ammunitionLabel(ammunition) } }}</div>
-      }
       @if (event.location) {
         <div class="small text-body-secondary">
           {{ event.location.latitude | number: '1.5-5' }}, {{ event.location.longitude | number: '1.5-5' }}
         </div>
       }
-      @if (event.note) {
-        <p class="mb-0 mt-1">{{ event.note }}</p>
-      }
     </li>
   }
 </ul>
+
+<dialog #viewDialog class="map-dialog" aria-labelledby="event-view-title" (close)="viewEvent.set(null)">
+  @if (viewEvent(); as shown) {
+    <div class="d-flex align-items-center justify-content-between gap-2 p-3 border-bottom">
+      <h2 id="event-view-title" class="h5 mb-0">{{ 'ITEMS.' + shown.type | translate }}</h2>
+      <button type="button" class="btn-close" [attr.aria-label]="'EVENT_VIEW.CLOSE' | translate" (click)="closeView()"></button>
+    </div>
+    <div class="p-3">
+      <app-event-view [event]="shown" />
+    </div>
+  }
+</dialog>
 
 <dialog #mapDialog class="map-dialog" aria-labelledby="event-map-title" (close)="mapEvent.set(null)">
   @if (mapEvent(); as shown) {

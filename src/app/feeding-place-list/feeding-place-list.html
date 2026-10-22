@@ -4,12 +4,22 @@
 }
 <ul class="list-unstyled mb-3" [attr.aria-busy]="busy()">
   @for (place of places(); track place.id) {
-    <li class="place p-3 mb-2 border rounded bg-body-tertiary" [class.needs-replenishing]="needsReplenishing(place)">
+    <!-- A tap anywhere on the place but on its actions shows it in full -->
+    <li
+      class="place item-openable p-3 mb-2 border rounded bg-body-tertiary"
+      [class.needs-replenishing]="needsReplenishing(place)"
+      (click)="openView(place, $event)"
+    >
       <div class="d-flex align-items-center gap-2">
-        <!-- When it was last replenished sits below the type, leaving room for the action buttons on phones -->
-        <div class="me-auto">
-          <div class="fw-semibold">{{ 'FEEDING.TYPES.' + place.type | translate }}</div>
-          <div class="small" [class.text-danger]="needsReplenishing(place)" [class.text-body-secondary]="!needsReplenishing(place)">
+        <!-- When it was last replenished sits below the type, leaving room for the action buttons on phones; a button for the keyboard -->
+        <button
+          type="button"
+          class="item-open me-auto"
+          aria-haspopup="dialog"
+          [attr.aria-label]="'EVENT_VIEW.OPEN' | translate: { item: ('FEEDING.TYPES.' + place.type | translate) }"
+        >
+          <span class="d-block fw-semibold">{{ 'FEEDING.TYPES.' + place.type | translate }}</span>
+          <span class="d-block small" [class.text-danger]="needsReplenishing(place)" [class.text-body-secondary]="!needsReplenishing(place)">
             @if (place.lastReplenishedAt; as replenishedAt) {
               {{ 'FEEDING.LAST_REPLENISHED' | translate }}
               <time [attr.datetime]="replenishedAt">{{ formatDate(replenishedAt) }}</time>
@@ -19,8 +29,8 @@
             @if (needsReplenishing(place)) {
               · <span class="fw-semibold">{{ 'FEEDING.NEEDS_REPLENISHING' | translate }}</span>
             }
-          </div>
-        </div>
+          </span>
+        </button>
         <!-- Wider screens show every action as an icon button -->
         <div class="d-none d-md-flex align-items-center gap-2">
           <button
@@ -168,6 +178,18 @@
     </li>
   }
 </ul>
+
+<dialog #viewDialog class="map-dialog" aria-labelledby="place-view-title" (close)="viewPlace.set(null)">
+  @if (viewPlace(); as shown) {
+    <div class="d-flex align-items-center justify-content-between gap-2 p-3 border-bottom">
+      <h2 id="place-view-title" class="h5 mb-0">{{ 'FEEDING.TYPES.' + shown.type | translate }}</h2>
+      <button type="button" class="btn-close" [attr.aria-label]="'EVENT_VIEW.CLOSE' | translate" (click)="closeView()"></button>
+    </div>
+    <div class="p-3">
+      <app-feeding-place-view [place]="shown" />
+    </div>
+  }
+</dialog>
 
 <dialog #mapDialog class="map-dialog" aria-labelledby="place-map-title" (close)="mapPlace.set(null)">
   @if (mapPlace(); as shown) {

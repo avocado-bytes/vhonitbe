@@ -1,0 +1,37 @@
+<div class="event-view">
+  <section class="view-section" aria-labelledby="place-view-replenishment">
+    <h3 id="place-view-replenishment" class="view-heading">{{ 'FEEDING.REPLENISH' | translate }}</h3>
+    <p class="mb-0" [class.text-danger]="needsReplenishing()">
+      @if (place().lastReplenishedAt; as replenishedAt) {
+        {{ 'FEEDING.LAST_REPLENISHED' | translate }} <time [attr.datetime]="replenishedAt">{{ lastReplenished() }}</time>
+      } @else {
+        {{ 'FEEDING.NEVER_REPLENISHED' | translate }}
+      }
+    </p>
+    @if (needsReplenishing()) {
+      <p class="fw-semibold text-danger mb-0 mt-1">{{ 'FEEDING.NEEDS_REPLENISHING' | translate }}</p>
+    }
+  </section>
+
+  @if (place().location; as location) {
+    <section class="view-section" aria-labelledby="place-view-location">
+      <h3 id="place-view-location" class="view-heading">{{ 'ADD_ITEM.LOCATION' | translate }}</h3>
+      <app-event-map [location]="location" />
+      <p class="small text-body-secondary mt-1 mb-0">{{ formatCoordinate(location.latitude) }}, {{ formatCoordinate(location.longitude) }}</p>
+    </section>
+  }
+
+  @if (place().note) {
+    <section class="view-section" aria-labelledby="place-view-note">
+      <h3 id="place-view-note" class="view-heading">{{ 'ADD_ITEM.NOTE' | translate }}</h3>
+      <p class="view-note mb-0">{{ place().note }}</p>
+    </section>
+  }
+
+  @if (place().photoId; as photoId) {
+    <section class="view-section" aria-labelledby="place-view-photo">
+      <h3 id="place-view-photo" class="view-heading">{{ 'ADD_ITEM.PHOTO' | translate }}</h3>
+      <app-event-photo [photoId]="photoId" />
+    </section>
+  }
+</div>

@@ -100,4 +100,21 @@ describe('FeedingPlaceList', () => {
     expect(dispatch).toHaveBeenCalledWith(FeedingActions.deletePlace({ id: 'a' }));
     confirm.mockRestore();
   });
+
+  it('should show a place in full when it is tapped, but not when one of its actions is', async () => {
+    HTMLDialogElement.prototype.showModal ??= function (this: HTMLDialogElement) {
+      this.setAttribute('open', '');
+    };
+    const viewDialog = () => element().querySelector('dialog[aria-labelledby="place-view-title"]') as HTMLDialogElement;
+
+    action(rows()[0], 'Share').click();
+    await fixture.whenStable();
+    expect(viewDialog().querySelector('app-feeding-place-view')).toBeNull();
+
+    (rows()[0].querySelector('button.item-open') as HTMLButtonElement).click();
+    await fixture.whenStable();
+    await vi.waitFor(() => expect(viewDialog().open).toBe(true));
+    expect(viewDialog().querySelector('#place-view-title')?.textContent).toContain('Feeding');
+    expect(viewDialog().querySelector('app-feeding-place-view')?.textContent).toContain('Hay rack');
+  });
 });

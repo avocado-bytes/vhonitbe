@@ -185,9 +185,7 @@
     "ACTIONS": "Event actions",
     "HERD": "Herd",
     "HERD_OF": "Herd of {{count}}",
-    "TAG_NUMBER": "Tag number",
-    "FIREARM": "Firearm: {{value}}",
-    "AMMUNITION": "Ammunition: {{value}}"
+    "TAG_NUMBER": "Tag number"
   },
   "LOCATION_PICKER": {
     "MAP": "Map for choosing the location",
@@ -513,5 +511,15 @@
       "NOTES": "Notes",
       "NOTES_PLACEHOLDER": "e.g. pressure signs, flattened primers, stiff bolt lift"
     }
+  },
+  "EVENT_VIEW": {
+    "OPEN": "Show {{item}} in full",
+    "CLOSE": "Close",
+    "GAME": "Game",
+    "HERD": "Herd",
+    "SUPPRESSOR": "Suppressor",
+    "YES": "Yes",
+    "NO": "No",
+    "SOURCE": "Origin"
   }
 }

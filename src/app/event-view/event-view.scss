@@ -1,0 +1,28 @@
+:host {
+  display: block;
+}
+
+// Sections separated by a thin line, each with a small uppercase heading
+.view-section + .view-section {
+  padding-top: 1rem;
+  margin-top: 1rem;
+  border-top: var(--bs-border-width) solid var(--bs-border-color);
+}
+
+.view-heading {
+  margin-bottom: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--bs-secondary-color);
+}
+
+.row > dd {
+  margin-bottom: 0.25rem;
+}
+
+// Keeps the line breaks of a note
+.view-note {
+  white-space: pre-wrap;
+}

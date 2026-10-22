@@ -60,3 +60,23 @@
   color: var(--bs-danger);
   background-color: rgba(var(--bs-danger-rgb), 0.1);
 }
+
+// A list item that shows its full view when tapped anywhere but on its actions
+.item-openable {
+  cursor: pointer;
+}
+
+// The title of such an item: a button for the keyboard that looks like the rest of the item
+.item-open {
+  padding: 0;
+  color: inherit;
+  text-align: start;
+  background: none;
+  border: 0;
+  border-radius: var(--bs-border-radius-sm);
+
+  &:focus-visible {
+    outline: 2px solid var(--bs-focus-ring-color);
+    outline-offset: 2px;
+  }
+}

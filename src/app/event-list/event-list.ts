@@ -4,9 +4,8 @@ import { Store } from '@ngrx/store';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { EventMap } from '../event-map/event-map';
 import { EventPhoto } from '../event-photo/event-photo';
-import { ammunitionLabel } from '../model/ammunition';
-import { AmmunitionSnapshot, FirearmSnapshot, HuntingEvent } from '../model/event';
-import { firearmLabel } from '../model/firearm';
+import { EventView } from '../event-view/event-view';
+import { HuntingEvent } from '../model/event';
 import { FocusTrap } from '../shared/focus-trap';
 import { formatTagNumber } from '../shared/tag-number';
 import { EventsActions } from '../state/events/events.actions';
@@ -15,10 +14,11 @@ import { selectLanguage } from '../state/settings/settings.reducer';
 
 /**
  * A list of events with their details and actions: show the photo or the location in a dialog, share, edit and delete.
+ * A tap on an event shows it in full, read only.
  * On phones the actions are collected in a menu behind a single button.
  */
 @Component({
-  imports: [TranslatePipe, DecimalPipe, NgTemplateOutlet, EventMap, EventPhoto, FocusTrap],
+  imports: [TranslatePipe, DecimalPipe, NgTemplateOutlet, EventMap, EventPhoto, EventView, FocusTrap],
   selector: 'app-event-list',
   styleUrl: './event-list.scss',
   templateUrl: './event-list.html',
@@ -42,25 +42,19 @@ export class EventList {
     () => new Intl.DateTimeFormat(this.language(), { dateStyle: 'medium', timeStyle: 'short' }),
   );
   protected readonly formatTagNumber = formatTagNumber;
-  private readonly numberFormat = computed(() => new Intl.NumberFormat(this.language(), { maximumFractionDigits: 3 }));
 
   /** Id of the event whose action menu is open on phones, if any */
   protected readonly actionsFor = signal<string | null>(null);
 
+  /** The event shown in full in the view dialog, if any */
+  protected readonly viewEvent = signal<HuntingEvent | null>(null);
+  private readonly viewDialog = viewChild.required<ElementRef<HTMLDialogElement>>('viewDialog');
   /** The event shown in the map dialog, if any */
   protected readonly mapEvent = signal<HuntingEvent | null>(null);
   private readonly mapDialog = viewChild.required<ElementRef<HTMLDialogElement>>('mapDialog');
   /** The event shown in the photo dialog, if any */
   protected readonly photoEvent = signal<HuntingEvent | null>(null);
   private readonly photoDialog = viewChild.required<ElementRef<HTMLDialogElement>>('photoDialog');
-
-  protected firearmLabel(firearm: FirearmSnapshot): string {
-    return firearmLabel(firearm);
-  }
-
-  protected ammunitionLabel(ammunition: AmmunitionSnapshot): string {
-    return ammunitionLabel(ammunition, this.numberFormat());
-  }
 
   protected formatDate(iso: string): string {
     return this.dateFormat().format(new Date(iso));
@@ -80,6 +74,21 @@ export class EventList {
 
   protected edit(event: HuntingEvent): void {
     this.store.dispatch(EventsActions.startEdit({ event }));
+  }
+
+  /** Shows the event in full, unless the tap was on one of its actions or in its action menu */
+  protected openView(event: HuntingEvent, domEvent: MouseEvent): void {
+    const target = domEvent.target as HTMLElement;
+    if (target.closest('button:not(.item-open), a, [role="menu"]')) {
+      return;
+    }
+    this.viewEvent.set(event);
+    // Open once the content is rendered, so focus moves to its close button
+    afterNextRender(() => this.viewDialog().nativeElement.showModal(), { injector: this.injector });
+  }
+
+  protected closeView(): void {
+    this.viewDialog().nativeElement.close();
   }
 
   protected showOnMap(event: HuntingEvent): void {

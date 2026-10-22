@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.56.0
+
+- The event list no longer shows the note, the firearm and the ammunition of an event; they are shown in its full view.
+
+## 0.55.0
+
+- Tapping or clicking an event in the event list opens it in full, read only, in a dialog: when it happened, the animal with its sex, herd and tag number, the firearm and ammunition of a harvest with all the details recorded with it, the location on a small map with its coordinates, the note with its line breaks, and the photo. Only what was given is shown, in sections with small headings.
+- Tapping or clicking a feeding place in its list opens it in full the same way: when it was last replenished and whether it needs replenishing, the location, the note and the photo.
+- The actions of an event or a place keep working as before; a tap on them, or in their menu, does not open the full view. The title of each item is a button, so the full view can be opened from the keyboard too.
+
+## 0.54.3
+
+- On phones and other touch screens, the map's menu (add an event here, set the position by hand, or share, edit and delete an event) opens only on a long press, no longer on a plain tap, so moving the map or tapping a pin does not open it by accident. A right click still opens it with a mouse, and a tap still closes the open options panel on phones.
+
 ## 0.54.2
 
 - The group size field of a test load is called "Velikost soustřelu" in Czech instead of "Velikost skupiny", also in the user guide and its screenshot of the form.

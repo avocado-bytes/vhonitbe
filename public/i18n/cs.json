@@ -185,9 +185,7 @@
     "ACTIONS": "Akce události",
     "HERD": "Stádo",
     "HERD_OF": "Stádo ({{count}} ks)",
-    "TAG_NUMBER": "Číslo plomby",
-    "FIREARM": "Zbraň: {{value}}",
-    "AMMUNITION": "Střelivo: {{value}}"
+    "TAG_NUMBER": "Číslo plomby"
   },
   "LOCATION_PICKER": {
     "MAP": "Mapa pro výběr polohy",
@@ -513,5 +511,15 @@
       "NOTES": "Poznámky",
       "NOTES_PLACEHOLDER": "např. známky tlaku, zploštělé zápalky, těžké otevírání závěru"
     }
+  },
+  "EVENT_VIEW": {
+    "OPEN": "Zobrazit celé: {{item}}",
+    "CLOSE": "Zavřít",
+    "GAME": "Zvěř",
+    "HERD": "Stádo",
+    "SUPPRESSOR": "Tlumič",
+    "YES": "Ano",
+    "NO": "Ne",
+    "SOURCE": "Původ"
   }
 }

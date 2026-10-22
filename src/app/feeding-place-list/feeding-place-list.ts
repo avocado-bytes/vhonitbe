@@ -4,6 +4,7 @@ import { Store } from '@ngrx/store';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { EventMap } from '../event-map/event-map';
 import { EventPhoto } from '../event-photo/event-photo';
+import { FeedingPlaceView } from '../feeding-place-view/feeding-place-view';
 import { FeedingPlace, needsReplenishing } from '../model/feeding-place';
 import { FocusTrap } from '../shared/focus-trap';
 import { FeedingActions } from '../state/feeding/feeding.actions';
@@ -16,10 +17,10 @@ const NOW_REFRESH_MS = 60_000;
 /**
  * A list of feeding places with their details and actions: mark as replenished, show the photo or the location
  * in a dialog, share, edit and delete. During the feeding season places due for replenishing are marked with a red band.
- * On phones the actions are collected in a menu behind a single button.
+ * On phones the actions are collected in a menu behind a single button. A tap on a place shows it in full, read only.
  */
 @Component({
-  imports: [TranslatePipe, DecimalPipe, NgTemplateOutlet, EventMap, EventPhoto, FocusTrap],
+  imports: [TranslatePipe, DecimalPipe, NgTemplateOutlet, EventMap, EventPhoto, FeedingPlaceView, FocusTrap],
   selector: 'app-feeding-place-list',
   styleUrl: './feeding-place-list.scss',
   templateUrl: './feeding-place-list.html',
@@ -50,6 +51,9 @@ export class FeedingPlaceList {
   /** Id of the place whose action menu is open on phones, if any */
   protected readonly actionsFor = signal<string | null>(null);
 
+  /** The place shown in full in the view dialog, if any */
+  protected readonly viewPlace = signal<FeedingPlace | null>(null);
+  private readonly viewDialog = viewChild.required<ElementRef<HTMLDialogElement>>('viewDialog');
   /** The place shown in the map dialog, if any */
   protected readonly mapPlace = signal<FeedingPlace | null>(null);
   private readonly mapDialog = viewChild.required<ElementRef<HTMLDialogElement>>('mapDialog');
@@ -92,6 +96,21 @@ export class FeedingPlaceList {
 
   protected edit(place: FeedingPlace): void {
     this.store.dispatch(FeedingActions.startEdit({ place }));
+  }
+
+  /** Shows the place in full, unless the tap was on one of its actions or in its action menu */
+  protected openView(place: FeedingPlace, domEvent: MouseEvent): void {
+    const target = domEvent.target as HTMLElement;
+    if (target.closest('button:not(.item-open), a, [role="menu"]')) {
+      return;
+    }
+    this.viewPlace.set(place);
+    // Open once the content is rendered, so focus moves to its close button
+    afterNextRender(() => this.viewDialog().nativeElement.showModal(), { injector: this.injector });
+  }
+
+  protected closeView(): void {
+    this.viewDialog().nativeElement.close();
   }
 
   protected showOnMap(place: FeedingPlace): void {
