@@ -1,0 +1,142 @@
+<section class="container py-3 zeroing">
+  <h1 class="h4 mb-3">{{ 'ZEROING.TITLE' | translate }}</h1>
+  <p class="text-body-secondary">{{ 'ZEROING.INTRO' | translate }}</p>
+
+  <section class="card mb-3" aria-labelledby="zeroing-inputs">
+    <div class="card-body">
+      <h2 id="zeroing-inputs" class="h5 card-title mb-3">{{ 'ZEROING.INPUTS' | translate }}</h2>
+
+      <div class="mb-3">
+        <label for="zeroing-firearm" class="form-label fw-semibold">{{ 'ZEROING.FIREARM' | translate }}</label>
+        <select id="zeroing-firearm" class="form-select" #firearmSelect (change)="firearmId.set(firearmSelect.value)">
+          <option value="" [selected]="!firearmId()">{{ 'ZEROING.FIREARM_PLACEHOLDER' | translate }}</option>
+          @for (option of firearms(); track option.id) {
+            <option [value]="option.id" [selected]="firearmId() === option.id">{{ firearmLabel(option) }}</option>
+          }
+        </select>
+        @if (!firearms().length) {
+          <div class="form-text">
+            {{ 'ZEROING.NO_FIREARMS' | translate }} <a routerLink="/firearms">{{ 'NAV.FIREARMS' | translate }}</a>
+          </div>
+        }
+      </div>
+
+      <div class="mb-3">
+        <label for="zeroing-ammunition" class="form-label fw-semibold">{{ 'ZEROING.AMMUNITION' | translate }}</label>
+        <select id="zeroing-ammunition" class="form-select" #ammunitionSelect (change)="ammunitionId.set(ammunitionSelect.value)">
+          <option value="" [selected]="!ammunitionId()">{{ 'ZEROING.AMMUNITION_PLACEHOLDER' | translate }}</option>
+          @for (option of ammunition(); track option.id) {
+            <option [value]="option.id" [selected]="ammunitionId() === option.id">{{ ammunitionLabel(option) }}</option>
+          }
+        </select>
+        @if (!ammunition().length) {
+          <div class="form-text">
+            {{ 'ZEROING.NO_AMMUNITION' | translate }} <a routerLink="/firearms">{{ 'NAV.FIREARMS' | translate }}</a>
+          </div>
+        }
+        @if (caliberMismatch()) {
+          <div class="form-text text-warning-emphasis" role="status">{{ 'ZEROING.CALIBER_MISMATCH' | translate }}</div>
+        }
+      </div>
+
+      <div class="row g-3">
+        <div class="col-6">
+          <label for="zeroing-vital-zone" class="form-label fw-semibold">{{ 'ZEROING.VITAL_ZONE' | translate }}</label>
+          <div class="input-group has-validation">
+            <input
+              id="zeroing-vital-zone"
+              class="form-control"
+              inputmode="decimal"
+              autocomplete="off"
+              aria-describedby="zeroing-vital-zone-hint zeroing-vital-zone-error"
+              #vitalZoneInput
+              [value]="vitalZone()"
+              [class.is-invalid]="vitalZoneInvalid()"
+              [attr.aria-invalid]="vitalZoneInvalid()"
+              (input)="vitalZone.set(vitalZoneInput.value)"
+            />
+            <span class="input-group-text">cm</span>
+            <div id="zeroing-vital-zone-error" class="invalid-feedback">
+              {{ 'ZEROING.RANGE_INVALID' | translate: { min: vitalZoneRange.min, max: vitalZoneRange.max, unit: 'cm' } }}
+            </div>
+          </div>
+          <div id="zeroing-vital-zone-hint" class="form-text">{{ 'ZEROING.VITAL_ZONE_HINT' | translate }}</div>
+        </div>
+        <div class="col-6">
+          <label for="zeroing-distance" class="form-label fw-semibold">{{ 'ZEROING.DISTANCE' | translate }}</label>
+          <div class="input-group has-validation">
+            <input
+              id="zeroing-distance"
+              class="form-control"
+              inputmode="decimal"
+              autocomplete="off"
+              aria-describedby="zeroing-distance-hint zeroing-distance-error"
+              #distanceInput
+              [value]="zeroingDistance()"
+              [class.is-invalid]="zeroingDistanceInvalid()"
+              [attr.aria-invalid]="zeroingDistanceInvalid()"
+              (input)="zeroingDistance.set(distanceInput.value)"
+            />
+            <span class="input-group-text">m</span>
+            <div id="zeroing-distance-error" class="invalid-feedback">
+              {{ 'ZEROING.RANGE_INVALID' | translate: { min: zeroingDistanceRange.min, max: zeroingDistanceRange.max, unit: 'm' } }}
+            </div>
+          </div>
+          <div id="zeroing-distance-hint" class="form-text">{{ 'ZEROING.DISTANCE_HINT' | translate }}</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="card mb-3" aria-labelledby="zeroing-result" aria-live="polite">
+    <div class="card-body">
+      <h2 id="zeroing-result" class="h5 card-title mb-3">{{ 'ZEROING.RESULT' | translate }}</h2>
+      @if (missing().length) {
+        @for (reason of missing(); track reason) {
+          <p class="text-warning-emphasis mb-2" role="alert">
+            {{ 'ZEROING.MISSING.' + reason | translate }} <a routerLink="/firearms">{{ 'NAV.FIREARMS' | translate }}</a>
+          </p>
+        }
+      } @else if (!firearm() || !chosenAmmunition()) {
+        <p class="text-body-secondary mb-0">{{ 'ZEROING.CHOOSE' | translate }}</p>
+      } @else if (result.isLoading()) {
+        <p class="text-body-secondary d-flex align-items-center gap-2 mb-0" role="status">
+          <span class="spinner-border spinner-border-sm text-primary" aria-hidden="true"></span>
+          {{ 'ZEROING.CALCULATING' | translate }}
+        </p>
+      } @else if (result.error()) {
+        <p class="text-danger mb-0" role="alert">{{ 'ZEROING.FAILED' | translate }}</p>
+      } @else if (result.hasValue() && result.value(); as mpbr) {
+        <div class="mpbr-headline mb-3">
+          <div class="small text-body-secondary">{{ 'ZEROING.MPBR' | translate }}</div>
+          <div class="mpbr-range">
+            @if (mpbr.start > 0) {
+              {{ 'ZEROING.MPBR_FROM_TO' | translate: { start: formatNumber(mpbr.start), end: formatNumber(mpbr.end) } }}
+            } @else {
+              {{ 'ZEROING.MPBR_UP_TO' | translate: { end: formatNumber(mpbr.end) } }}
+            }
+          </div>
+        </div>
+
+        <div class="zeroing-impact p-3 mb-3 rounded">
+          <div class="small fw-semibold">{{ 'ZEROING.IMPACT_AT' | translate: { distance: formatNumber(mpbr.zeroingDistance) } }}</div>
+          <div class="impact-value">{{ formatHeight(mpbr.impactAtZeroing) }} cm</div>
+          <div class="small">{{ 'ZEROING.' + direction(mpbr.impactAtZeroing) | translate }}</div>
+        </div>
+
+        <dl class="zeroing-details mb-3">
+          <dt>{{ 'ZEROING.NEAR_ZERO' | translate }}</dt>
+          <dd>{{ formatNumber(mpbr.nearZero) }} m</dd>
+          <dt>{{ 'ZEROING.APEX' | translate }}</dt>
+          <dd>{{ 'ZEROING.APEX_VALUE' | translate: { height: formatHeight(mpbr.apexHeight), distance: formatNumber(mpbr.apex) } }}</dd>
+          <dt>{{ 'ZEROING.AT_100' | translate }}</dt>
+          <dd>{{ formatHeight(mpbr.impactAt100) }} cm</dd>
+        </dl>
+      } @else if (result.hasValue()) {
+        <p class="text-danger mb-0" role="alert">{{ 'ZEROING.NO_RANGE' | translate }}</p>
+      }
+
+      <p class="small text-body-secondary fst-italic mt-3 mb-0">{{ 'ZEROING.DISCLAIMER' | translate }}</p>
+    </div>
+  </section>
+</section>

@@ -30,8 +30,9 @@ export const GUIDE_SECTIONS: readonly GuideSection[] = [
   { id: 'hunting-ground', screenshots: ['hunting-ground-settings', 'hunting-ground-map'] },
   { id: 'feeding', screenshots: ['feeding'] },
   { id: 'replenishing', screenshots: ['feeding-list', 'navigation'] },
-  { id: 'firearms', screenshots: ['firearms', 'add-ammunition'] },
+  { id: 'firearms', screenshots: ['firearms', 'add-ammunition', 'sight-height'] },
   { id: 'load-development', screenshots: ['load-series', 'test-load'] },
+  { id: 'zeroing', screenshots: ['zeroing'] },
   { id: 'settings', screenshots: ['settings'] },
 ];
 

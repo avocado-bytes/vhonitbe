@@ -1,0 +1,38 @@
+:host {
+  display: block;
+}
+
+.mpbr-range {
+  font-size: 2rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+// The number to take to the range, highlighted
+.zeroing-impact {
+  background-color: var(--bs-primary-bg-subtle);
+  color: var(--bs-primary-text-emphasis);
+}
+
+.impact-value {
+  font-size: 1.75rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.zeroing-details {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.35rem 1rem;
+
+  dt {
+    font-weight: normal;
+    color: var(--bs-secondary-color);
+  }
+
+  dd {
+    margin: 0;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+}

@@ -10,6 +10,7 @@ export const routes: Routes = [
     path: 'handloading/:id',
     loadComponent: () => import('./load-series-detail/load-series-detail').then((m) => m.LoadSeriesDetail),
   },
+  { path: 'zeroing', loadComponent: () => import('./zeroing/zeroing').then((m) => m.Zeroing) },
   { path: 'guide', loadComponent: () => import('./guide/guide').then((m) => m.Guide) },
   { path: '**', redirectTo: '' },
 ];

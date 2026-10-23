@@ -52,7 +52,8 @@
     "FEEDING_ATTENTION": "Feeding places need replenishing",
     "GUIDE": "User guide",
     "FIREARMS": "Firearms and ammunition",
-    "HANDLOADING": "Handloading"
+    "HANDLOADING": "Handloading",
+    "ZEROING": "Zeroing"
   },
   "MAP": {
     "LOCATING": "Finding your location…",
@@ -390,7 +391,12 @@
       "THREAD_PITCH": "Thread pitch",
       "THREAD_NUMERATOR": "Thread pitch, number before the colon",
       "THREAD_DENOMINATOR": "Thread pitch, number after the colon",
-      "THREAD_PITCH_INVALID": "Enter both numbers, each from {{min}} to {{max}}."
+      "THREAD_PITCH_INVALID": "Enter both numbers, each from {{min}} to {{max}}.",
+      "SIGHT_HEIGHT": "Sight height",
+      "SIGHT_HEIGHT_INFO": "How to measure the sight height",
+      "SIGHT_HEIGHT_PLACEHOLDER": "e.g. 45",
+      "SIGHT_HEIGHT_HINT": "Height of the sight’s axis above the bore axis; needed for ballistics.",
+      "SIGHT_HEIGHT_INVALID": "Enter a height from {{min}} to {{max}} mm."
     },
     "EDIT": "Edit firearm",
     "ACTIONS": "Firearm actions",
@@ -401,7 +407,54 @@
     "PAGE_TITLE": "Firearms and ammunition",
     "ADD_ANY": "Add firearm or ammunition",
     "BARREL_LENGTH": "barrel {{value}} mm",
-    "THREAD_PITCH": "thread pitch {{value}}"
+    "THREAD_PITCH": "thread pitch {{value}}",
+    "SIGHT_HEIGHT_HELP": {
+      "DIAGRAM": "Sketch of a rifle with a riflescope: the sight height H between the bore axis and the scope axis, and the measurable distance A from the top of the scope tube to the bottom of the barrel",
+      "SCOPE_AXIS": "scope axis",
+      "BORE_AXIS": "bore axis",
+      "WHAT": "The sight height H is the distance between the bore axis and the axis of the sight.",
+      "HOW": "The axes cannot be measured directly. With calipers, measure the distance A from the top of the scope tube to the bottom of the barrel where the tube is above the barrel, and the barrel diameter at the same spot.",
+      "FORMULA": "H = A − ½ tube diameter − ½ barrel diameter",
+      "EXAMPLE": "Example: A = 70 mm, 30 mm tube, 18 mm barrel → H = 70 − 15 − 9 = 46 mm."
+    }
+  },
+  "ZEROING": {
+    "TITLE": "Zeroing",
+    "INTRO": "Calculates the maximum point blank range (MPBR) of the chosen ammunition from the chosen firearm: how far the bullet stays within the vital zone when aiming at its centre, and where it should hit when zeroing.",
+    "INPUTS": "Firearm and ammunition",
+    "FIREARM": "Firearm",
+    "FIREARM_PLACEHOLDER": "Select a firearm",
+    "AMMUNITION": "Ammunition",
+    "AMMUNITION_PLACEHOLDER": "Select ammunition",
+    "NO_FIREARMS": "You have no firearms yet. Add them on the page",
+    "NO_AMMUNITION": "You have no ammunition yet. Add it on the page",
+    "CALIBER_MISMATCH": "The caliber of the ammunition does not match the firearm.",
+    "VITAL_ZONE": "Vital zone",
+    "VITAL_ZONE_HINT": "Diameter of the area the bullet must hit.",
+    "DISTANCE": "Zeroing distance",
+    "DISTANCE_HINT": "Where you zero the rifle, often 35 m.",
+    "RANGE_INVALID": "Enter {{min}} to {{max}} {{unit}}.",
+    "RESULT": "Result",
+    "CHOOSE": "Select a firearm and ammunition.",
+    "CALCULATING": "Calculating…",
+    "FAILED": "The calculation failed.",
+    "NO_RANGE": "The range cannot be calculated for these values.",
+    "MISSING": {
+      "sight-height": "The firearm has no sight height. Add it on the page",
+      "ballistic-coefficient": "The ammunition has no G1 ballistic coefficient. Add it on the page"
+    },
+    "MPBR": "Maximum point blank range (MPBR)",
+    "MPBR_UP_TO": "up to {{end}} m",
+    "MPBR_FROM_TO": "{{start}}–{{end}} m",
+    "IMPACT_AT": "Impact when zeroing at {{distance}} m",
+    "ABOVE": "above the point of aim",
+    "BELOW": "below the point of aim",
+    "AT": "at the point of aim",
+    "NEAR_ZERO": "Near zero",
+    "APEX": "Highest point",
+    "APEX_VALUE": "{{height}} cm at {{distance}} m",
+    "AT_100": "Impact at 100 m",
+    "DISCLAIMER": "An estimate for the standard atmosphere (sea level, 15 °C), without wind or spin drift. Factory velocity is measured on a test barrel and is often lower from a shorter one. Always confirm the impacts at the range."
   },
   "AMMUNITION": {
     "TITLE": "Ammunition",

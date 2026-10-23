@@ -1,0 +1,46 @@
+// Everything is drawn in the text color, so the sketch works in both themes
+:host {
+  display: block;
+  color: var(--bs-body-color);
+}
+
+.diagram {
+  display: block;
+  width: 100%;
+  max-width: 28rem;
+  height: auto;
+}
+
+.outline {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+}
+
+.axis {
+  stroke: currentColor;
+  stroke-width: 1;
+  stroke-dasharray: 10 3 2 3;
+  opacity: 0.7;
+}
+
+.dimension {
+  stroke: currentColor;
+  stroke-width: 1.2;
+}
+
+.extension {
+  stroke: currentColor;
+  stroke-width: 0.8;
+}
+
+.label {
+  fill: currentColor;
+  font-size: 11px;
+}
+
+.label-strong {
+  font-size: 14px;
+  font-weight: 600;
+}

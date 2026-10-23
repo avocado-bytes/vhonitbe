@@ -24,6 +24,7 @@ describe('App', () => {
           { path: 'firearms', children: [] },
           { path: 'handloading', children: [] },
           { path: 'guide', children: [] },
+          { path: 'zeroing', children: [] },
         ]),
         provideTranslateService({ lang: 'en' }),
         provideMockStore({
@@ -43,7 +44,16 @@ describe('App', () => {
     TestBed.inject(TranslateService).setTranslation('en', {
       APP: { TITLE: 'vHonitbě', ADD: 'Add' },
       HEADER: { MENU: 'Open menu', MENU_ATTENTION: 'Open menu, {{count}} feeding places need replenishing', SETTINGS: 'Settings' },
-      NAV: { HOME: 'Home', MAP: 'Map', FEEDING: 'Feeding', GUIDE: 'User guide', FIREARMS: 'Firearms', HANDLOADING: 'Handloading', CLOSE: 'Close navigation' },
+      NAV: {
+        HOME: 'Home',
+        MAP: 'Map',
+        FEEDING: 'Feeding',
+        GUIDE: 'User guide',
+        FIREARMS: 'Firearms',
+        HANDLOADING: 'Handloading',
+        ZEROING: 'Zeroing',
+        CLOSE: 'Close navigation',
+      },
       ADD_ITEM: { TITLE: 'Add item', EDIT_TITLE: 'Edit event', CLOSE: 'Close' },
     });
   });
@@ -162,12 +172,12 @@ describe('App', () => {
       fixture.nativeElement.remove();
     });
 
-    it('should link to the home, map, feeding, firearms, handloading and guide routes', async () => {
+    it('should link to the home, map, feeding, firearms, handloading, zeroing and guide routes', async () => {
       const { sideNav } = await createAppWithSideNav();
       const links = Array.from(sideNav.querySelectorAll('a.nav-link'));
 
-      expect(links.map((link) => link.textContent?.trim())).toEqual(['Home', 'Map', 'Feeding', 'Firearms', 'Handloading', 'User guide']);
-      expect(links.map((link) => link.getAttribute('href'))).toEqual(['/', '/map', '/feeding', '/firearms', '/handloading', '/guide']);
+      expect(links.map((link) => link.textContent?.trim())).toEqual(['Home', 'Map', 'Feeding', 'Firearms', 'Handloading', 'Zeroing', 'User guide']);
+      expect(links.map((link) => link.getAttribute('href'))).toEqual(['/', '/map', '/feeding', '/firearms', '/handloading', '/zeroing', '/guide']);
     });
 
     it('should close when a link is clicked', async () => {
@@ -244,6 +254,16 @@ describe('App', () => {
       expect(link.textContent).toContain('User guide');
 
       await TestBed.inject(Router).navigateByUrl('/guide');
+      await fixture.whenStable();
+
+      expect(element.querySelector('button.fab')).toBeNull();
+    });
+
+    it('should link to zeroing in the side navigation and hide the add button there', async () => {
+      const { fixture, element } = await createAppWithDialog();
+      expect(element.querySelector('a[routerLink="/zeroing"]')?.textContent).toContain('Zeroing');
+
+      await TestBed.inject(Router).navigateByUrl('/zeroing');
       await fixture.whenStable();
 
       expect(element.querySelector('button.fab')).toBeNull();

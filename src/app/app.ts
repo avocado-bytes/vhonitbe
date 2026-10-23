@@ -82,6 +82,13 @@ export class App {
     fragment: 'ignored',
     matrixParams: 'ignored',
   });
+  /** The zeroing page only calculates, it has nothing to add */
+  protected readonly isZeroingActive = isActive('/zeroing', this.router, {
+    paths: 'exact',
+    queryParams: 'ignored',
+    fragment: 'ignored',
+    matrixParams: 'ignored',
+  });
   /** The map adds items from its context menu instead of the fab button */
   protected readonly isMapActive = isActive('/map', this.router, {
     paths: 'exact',

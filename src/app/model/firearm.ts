@@ -54,6 +54,8 @@ export interface Firearm {
   barrelLength?: number | null;
   /** Thread pitch as a ratio, e.g. 1:10; null when not given, missing in older firearms */
   threadPitch?: ThreadPitch | null;
+  /** Height of the sight's axis above the bore axis in mm, for ballistics; null when not given, missing in older firearms */
+  sightHeight?: number | null;
 }
 
 /** The two numbers of a ratio written with a colon, e.g. 1:10 */
@@ -69,6 +71,9 @@ export const THREAD_PITCH_RANGE = { min: 0.1, max: 100 } as const;
 export function formatThreadPitch({ numerator, denominator }: ThreadPitch, numberFormat: Intl.NumberFormat): string {
   return `${numberFormat.format(numerator)}:${numberFormat.format(denominator)}`;
 }
+
+/** From iron sights close to the barrel to a scope on very high rings */
+export const SIGHT_HEIGHT_RANGE_MM = { min: 10, max: 150 } as const;
 
 /** Barrel lengths can be entered in either unit, but are stored in mm */
 export const LENGTH_UNITS = ['mm', 'in'] as const;

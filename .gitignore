@@ -42,3 +42,6 @@ __screenshots__/
 # System files
 .DS_Store
 Thumbs.db
+
+# Local browser tooling for screenshots and visual checks (Playwright, Chromium), not part of the app
+/.tools

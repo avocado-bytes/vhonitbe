@@ -20,3 +20,16 @@
 .ratio-separator {
   color: var(--bs-secondary-color);
 }
+
+.sight-height-field {
+  max-width: 12rem;
+}
+
+// A plain icon next to the label, in the color of the label
+.info-toggle {
+  color: var(--bs-secondary-color);
+
+  &[aria-expanded='true'] {
+    color: var(--bs-primary);
+  }
+}

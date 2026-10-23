@@ -8,7 +8,7 @@
     "STEPS": [
       "Allow access to your location when asked. The app needs it for sunrise and sunset, the weather, the map and to place new records where you stand.",
       "Your records and photos are stored only on this phone. Nothing is sent anywhere unless you share it yourself.",
-      "Open the menu with the ☰ button in the top left corner to switch between the overview, the map, feeding, firearms and ammunition, handloading and this guide."
+      "Open the menu with the ☰ button in the top left corner to switch between the overview, the map, feeding, firearms and ammunition, handloading, zeroing and this guide."
     ]
   },
   "overview": {
@@ -97,6 +97,7 @@
     "STEPS": [
       "Tap the + button and choose whether you are adding a firearm or ammunition.",
       "A firearm has a name and a caliber – pick a common cartridge or type in any other. You can add the barrel length in mm or inches, the thread pitch, a sight with its make and model, and whether it is suppressed.",
+      "For the zeroing calculation, enter the firearm’s sight height in mm: the distance between the bore axis and the axis of the sight. The ⓘ button next to it shows a sketch of how to measure it: with calipers, measure from the top of the scope tube to the bottom of the barrel and subtract half the tube diameter and half the barrel diameter.",
       "Ammunition has a caliber, factory or handload, bullet weight, muzzle velocity, bullet type and G1 ballistic coefficient. Factory ammunition can have its make and product name.",
       "For a handload you can also record the primer, the powder and its charge, the brass, how many times the brass has been fired and the overall cartridge length.",
       "Edit or delete a firearm or ammunition with the ⋮ button next to it. Harvests keep the firearm and ammunition as they were recorded."
@@ -111,6 +112,18 @@
       "The average velocity, the extreme spread (ES) and the standard deviation (SD) are worked out as you type the velocities. Note pressure signs, such as flattened primers or a stiff bolt lift, in the notes.",
       "When a test load proves itself, choose Add to ammunition in its actions. It is copied into your ammunition as a handload, with its average velocity as the muzzle velocity, and marked as added. It needs the bullet weight of the series and at least one velocity.",
       "Edit or delete a series or a test load with the ⋮ button next to it. Ammunition added from a series stays when the series is deleted."
+    ]
+  },
+  "zeroing": {
+    "TITLE": "Zeroing",
+    "TEXT": "The Zeroing page calculates the maximum point blank range (MPBR): how far the bullet stays within the vital zone when aiming at its centre, and where it should hit when you zero the rifle.",
+    "STEPS": [
+      "Choose a firearm and ammunition. The firearm needs its sight height and the ammunition its muzzle velocity and G1 ballistic coefficient; if anything is missing, the page points you to Firearms and ammunition.",
+      "The vital zone is the diameter of the area the bullet must hit, 8 cm by default. The zeroing distance is 35 m by default, as many shooting ranges are that long; you can change both.",
+      "The MPBR is the range of distances over which the bullet stays within the zone. It starts further out than the muzzle when the sight is higher above the bore than half the zone.",
+      "The impact when zeroing tells how many centimetres above or below the point of aim the rifle should hit at the chosen distance. Zero it like that at the range.",
+      "Below you see the near zero, where the bullet first crosses the line of sight, the highest point of the trajectory and the impact at 100 m.",
+      "The calculation is an estimate for the standard atmosphere without wind. Factory velocity is often lower from a shorter barrel, so always confirm the impacts at the range."
     ]
   },
   "settings": {
@@ -137,7 +150,9 @@
     "settings": "The settings",
     "firearms": "Your firearms and ammunition",
     "add-ammunition": "Adding a handload",
+    "sight-height": "The sight height with the sketch of how to measure it",
     "load-series": "A load development series with its test loads",
-    "test-load": "Adding a test load, with its velocity statistics"
+    "test-load": "Adding a test load, with its velocity statistics",
+    "zeroing": "The zeroing result for the chosen firearm and ammunition"
   }
 }

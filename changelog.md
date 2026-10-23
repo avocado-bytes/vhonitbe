@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.59.1
+
+- The user guide's firearms section explains the new sight height: what it is, the ⓘ button with the sketch, and how to measure it with calipers, with a new screenshot of the form and its sketch.
+- The user guide has a new "Zeroing" section after load development: choosing the firearm and ammunition and what they need, the vital zone and zeroing distance with their defaults, and what the MPBR, the impact when zeroing, the near zero, the highest point and the impact at 100 m mean, with a screenshot of a result. Both new screenshots are in Czech and English.
+- The guide's getting started section lists zeroing among the pages in the menu.
+
+## 0.59.0
+
+- New "Zeroing" page in the side navigation (Nastřelování). Choose a firearm and ammunition, set the vital zone in cm (8 cm by default) and the distance the rifle is zeroed at in m (35 m by default, as many shooting ranges are only that long), and the page calculates the maximum point blank range (MPBR): over which distances the bullet stays within the vital zone when aiming at its centre.
+- The results: the MPBR (from–to when the sight is higher above the bore than half the zone), where the bullet hits at the zeroing distance above or below the point of aim, the near zero, the highest point of the trajectory and the impact at 100 m.
+- It uses the muzzle velocity and G1 ballistic coefficient of the ammunition and the sight height of the firearm, in the standard atmosphere without wind or spin drift. The page asks for a missing sight height or ballistic coefficient and warns when the calibers of the firearm and ammunition differ.
+- The calculation uses the js-ballistics library (ISC licence), loaded only when the page calculates.
+- The add button for events is hidden on the zeroing page, as there is nothing to add there.
+
+## 0.58.0
+
+- Firearms have a new optional Sight height field in mm (10–150 mm): the height of the sight's axis above the bore axis, needed for the coming ballistics calculations. It is kept with the firearm, and copied into a harvest with the rest of the firearm.
+- An information button next to the field shows a monochrome outline sketch of a rifle with a riflescope: the sight height H between the bore axis and the scope axis, and the distance A that can be measured with calipers, with the formula H = A − ½ tube diameter − ½ barrel diameter and a worked example.
+- Development: Playwright and Chromium for visual checks and guide screenshots are kept in the gitignored `.tools/` folder.
+
 ## 0.57.1
 
 - The user guide has a new "Hunting ground boundary" section, after the map: how to find the hunting ground by position in the settings, choose it when more than one is found, download its boundary again or remove it, where the boundary is shown and how to hide it on the map, and that it is not legally binding. It comes with two new phone screenshots in Czech and English: the chosen hunting ground in the settings and its boundary on the map.

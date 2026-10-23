@@ -52,7 +52,8 @@
     "FEEDING_ATTENTION": "Místa přikrmování potřebují doplnit",
     "GUIDE": "Návod",
     "FIREARMS": "Zbraně a střelivo",
-    "HANDLOADING": "Přebíjení"
+    "HANDLOADING": "Přebíjení",
+    "ZEROING": "Nastřelování"
   },
   "MAP": {
     "LOCATING": "Zjišťuji vaši polohu…",
@@ -390,7 +391,12 @@
       "THREAD_PITCH": "Stoupání závitu",
       "THREAD_NUMERATOR": "Stoupání závitu, číslo před dvojtečkou",
       "THREAD_DENOMINATOR": "Stoupání závitu, číslo za dvojtečkou",
-      "THREAD_PITCH_INVALID": "Zadejte obě čísla, každé od {{min}} do {{max}}."
+      "THREAD_PITCH_INVALID": "Zadejte obě čísla, každé od {{min}} do {{max}}.",
+      "SIGHT_HEIGHT": "Výška zaměřovače",
+      "SIGHT_HEIGHT_INFO": "Jak změřit výšku zaměřovače",
+      "SIGHT_HEIGHT_PLACEHOLDER": "např. 45",
+      "SIGHT_HEIGHT_HINT": "Výška osy optiky nad osou hlavně; potřebná pro výpočty balistiky.",
+      "SIGHT_HEIGHT_INVALID": "Zadejte výšku od {{min}} do {{max}} mm."
     },
     "EDIT": "Upravit zbraň",
     "ACTIONS": "Akce zbraně",
@@ -401,7 +407,54 @@
     "PAGE_TITLE": "Zbraně a střelivo",
     "ADD_ANY": "Přidat zbraň nebo střelivo",
     "BARREL_LENGTH": "hlaveň {{value}} mm",
-    "THREAD_PITCH": "stoupání závitu {{value}}"
+    "THREAD_PITCH": "stoupání závitu {{value}}",
+    "SIGHT_HEIGHT_HELP": {
+      "DIAGRAM": "Náčrt pušky s puškohledem: výška zaměřovače H mezi osou hlavně a osou optiky a měřitelná vzdálenost A od horní hrany tubusu k dolní hraně hlavně",
+      "SCOPE_AXIS": "osa optiky",
+      "BORE_AXIS": "osa hlavně",
+      "WHAT": "Výška zaměřovače H je vzdálenost mezi osou hlavně a osou optiky.",
+      "HOW": "Osy změřit nejdou. Posuvným měřítkem proto změřte vzdálenost A od horní hrany tubusu optiky k dolní hraně hlavně tam, kde je tubus nad hlavní, a na stejném místě průměr hlavně.",
+      "FORMULA": "H = A − ½ průměru tubusu − ½ průměru hlavně",
+      "EXAMPLE": "Příklad: A = 70 mm, tubus 30 mm, hlaveň 18 mm → H = 70 − 15 − 9 = 46 mm."
+    }
+  },
+  "ZEROING": {
+    "TITLE": "Nastřelování",
+    "INTRO": "Spočítá maximální dostřel na bodový cíl (MPBR) pro vybrané střelivo ze zvolené zbraně: do jaké vzdálenosti střela při míření na střed nevyjde z životně důležité zóny, a kam má zasáhnout při nastřelování.",
+    "INPUTS": "Zbraň a střelivo",
+    "FIREARM": "Zbraň",
+    "FIREARM_PLACEHOLDER": "Vyberte zbraň",
+    "AMMUNITION": "Střelivo",
+    "AMMUNITION_PLACEHOLDER": "Vyberte střelivo",
+    "NO_FIREARMS": "Zatím nemáte žádné zbraně. Přidejte je na stránce",
+    "NO_AMMUNITION": "Zatím nemáte žádné střelivo. Přidejte ho na stránce",
+    "CALIBER_MISMATCH": "Ráže střeliva neodpovídá ráži zbraně.",
+    "VITAL_ZONE": "Životně důležitá zóna",
+    "VITAL_ZONE_HINT": "Průměr oblasti, kterou má střela zasáhnout.",
+    "DISTANCE": "Vzdálenost nastřelení",
+    "DISTANCE_HINT": "Kde zbraň nastřelujete, často 35 m.",
+    "RANGE_INVALID": "Zadejte {{min}} až {{max}} {{unit}}.",
+    "RESULT": "Výsledek",
+    "CHOOSE": "Vyberte zbraň a střelivo.",
+    "CALCULATING": "Počítám…",
+    "FAILED": "Výpočet se nezdařil.",
+    "NO_RANGE": "Pro tyto hodnoty nelze dostřel spočítat.",
+    "MISSING": {
+      "sight-height": "U zbraně chybí výška zaměřovače. Doplňte ji na stránce",
+      "ballistic-coefficient": "U střeliva chybí balistický koeficient G1. Doplňte ho na stránce"
+    },
+    "MPBR": "Maximální dostřel na bodový cíl (MPBR)",
+    "MPBR_UP_TO": "do {{end}} m",
+    "MPBR_FROM_TO": "{{start}}–{{end}} m",
+    "IMPACT_AT": "Zásah při nastřelování na {{distance}} m",
+    "ABOVE": "nad záměrným bodem",
+    "BELOW": "pod záměrným bodem",
+    "AT": "v záměrném bodě",
+    "NEAR_ZERO": "Bližší průsečík",
+    "APEX": "Vrchol dráhy",
+    "APEX_VALUE": "{{height}} cm na {{distance}} m",
+    "AT_100": "Zásah na 100 m",
+    "DISCLAIMER": "Odhad pro standardní atmosféru (hladina moře, 15 °C), bez vlivu větru a stáčení střely. Tovární rychlost je měřena na zkušební hlavni a z kratší hlavně bývá nižší. Zásahy vždy ověřte na střelnici."
   },
   "AMMUNITION": {
     "TITLE": "Střelivo",

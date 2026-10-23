@@ -94,7 +94,7 @@ describe('FirearmForm', () => {
 
     expect(dispatch).toHaveBeenCalledWith(
       FirearmsActions.addFirearm({
-        firearm: { name: 'Blaser R8', caliber: '.308 Win', optics: 'riflescope', opticsModel: 'Zeiss Victory V8', suppressed: false, barrelLength: null, threadPitch: null },
+        firearm: { name: 'Blaser R8', caliber: '.308 Win', optics: 'riflescope', opticsModel: 'Zeiss Victory V8', suppressed: false, barrelLength: null, threadPitch: null, sightHeight: null },
       }),
     );
   });
@@ -108,14 +108,14 @@ describe('FirearmForm', () => {
 
     submitButton().click();
     expect(dispatch).toHaveBeenLastCalledWith(
-      FirearmsActions.addFirearm({ firearm: { name: 'CZ 527', caliber: '.222 Rem', optics: 'none', opticsModel: null, suppressed: false, barrelLength: null, threadPitch: null } }),
+      FirearmsActions.addFirearm({ firearm: { name: 'CZ 527', caliber: '.222 Rem', optics: 'none', opticsModel: null, suppressed: false, barrelLength: null, threadPitch: null, sightHeight: null } }),
     );
 
     await chooseOptics('red-dot');
     await enter('firearm-optics-model', '   ');
     submitButton().click();
     expect(dispatch).toHaveBeenLastCalledWith(
-      FirearmsActions.addFirearm({ firearm: { name: 'CZ 527', caliber: '.222 Rem', optics: 'red-dot', opticsModel: null, suppressed: false, barrelLength: null, threadPitch: null } }),
+      FirearmsActions.addFirearm({ firearm: { name: 'CZ 527', caliber: '.222 Rem', optics: 'red-dot', opticsModel: null, suppressed: false, barrelLength: null, threadPitch: null, sightHeight: null } }),
     );
   });
 
@@ -140,7 +140,7 @@ describe('FirearmForm', () => {
 
     expect(dispatch).toHaveBeenCalledWith(
       FirearmsActions.addFirearm({
-        firearm: { name: 'Sauer 404', caliber: '.308 Win', optics: 'none', opticsModel: null, suppressed: true, barrelLength: null, threadPitch: null },
+        firearm: { name: 'Sauer 404', caliber: '.308 Win', optics: 'none', opticsModel: null, suppressed: true, barrelLength: null, threadPitch: null, sightHeight: null },
       }),
     );
   });
@@ -155,6 +155,7 @@ describe('FirearmForm', () => {
       suppressed: true,
       barrelLength: null,
       threadPitch: null,
+      sightHeight: null,
     };
 
     beforeEach(async () => {
@@ -196,6 +197,65 @@ describe('FirearmForm', () => {
 
       expect(input('firearm-suppressed').checked).toBe(false);
       expect(element().querySelector('#firearm-optics-model')).toBeNull();
+    });
+  });
+
+  describe('sight height', () => {
+    const lastFirearm = () => (dispatch.mock.calls.at(-1)![0] as ReturnType<typeof FirearmsActions.addFirearm>).firearm;
+    const help = () => element().querySelector('#firearm-sight-height-help');
+    const infoButton = () => element().querySelector('button[aria-controls="firearm-sight-height-help"]') as HTMLButtonElement;
+
+    beforeEach(async () => {
+      await enter('firearm-name', 'Blaser R8');
+      await enter('firearm-caliber', '.308 Win');
+    });
+
+    it('should store the sight height in mm, accepting a decimal comma', async () => {
+      await enter('firearm-sight-height', '42,5');
+
+      submitButton().click();
+
+      expect(lastFirearm().sightHeight).toBe(42.5);
+    });
+
+    it('should not need a sight height', () => {
+      submitButton().click();
+
+      expect(lastFirearm().sightHeight).toBeNull();
+    });
+
+    it('should refuse a sight height out of range or not a number', async () => {
+      for (const value of ['5', '151', 'abc']) {
+        await enter('firearm-sight-height', value);
+        expect(input('firearm-sight-height').classList).toContain('is-invalid');
+        expect(submitButton().disabled).toBe(true);
+      }
+
+      await enter('firearm-sight-height', '150');
+      expect(submitButton().disabled).toBe(false);
+    });
+
+    it('should prefill the stored sight height', async () => {
+      fixture.componentRef.setInput('firearm', { id: 'a', name: 'Blaser R8', caliber: '.308 Win', optics: 'riflescope', sightHeight: 46 });
+      await fixture.whenStable();
+
+      expect(input('firearm-sight-height').value).toBe('46');
+    });
+
+    it('should show and hide the diagram of how to measure it', async () => {
+      expect(help()).toBeNull();
+      expect(infoButton().getAttribute('aria-expanded')).toBe('false');
+
+      infoButton().click();
+      await fixture.whenStable();
+
+      expect(help()?.querySelector('svg[role="img"] title')).not.toBeNull();
+      expect(infoButton().getAttribute('aria-expanded')).toBe('true');
+
+      infoButton().click();
+      await fixture.whenStable();
+
+      expect(help()).toBeNull();
     });
   });
 

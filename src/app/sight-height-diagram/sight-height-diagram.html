@@ -1,0 +1,53 @@
+<figure class="mb-0">
+  <svg class="diagram" viewBox="0 0 360 150" role="img" aria-labelledby="sight-height-diagram-title">
+    <title id="sight-height-diagram-title">{{ 'FIREARMS.SIGHT_HEIGHT_HELP.DIAGRAM' | translate }}</title>
+    <defs>
+      <marker id="sight-height-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M0 0 8 4 0 8" fill="none" stroke="currentColor" stroke-width="1.2" />
+      </marker>
+    </defs>
+
+    <!-- The rifle: stock, receiver with the bolt handle, and the tapering barrel -->
+    <g class="outline">
+      <path d="M8 96 L40 96 L40 124 L8 140 Z" />
+      <rect x="40" y="92" width="110" height="28" rx="3" />
+      <path d="M118 120 l6 14" />
+      <circle cx="125" cy="136" r="3" />
+      <path d="M150 99 L318 102 L318 110 L150 113" />
+      <!-- The rings holding the scope -->
+      <rect x="78" y="60" width="12" height="32" />
+      <rect x="128" y="60" width="12" height="32" />
+      <!-- The scope: eyepiece, main tube with the turret, and objective bell -->
+      <path d="M62 41 L48 36 L30 36 L30 64 L48 64 L62 59" />
+      <rect x="62" y="40" width="138" height="20" />
+      <rect x="102" y="30" width="16" height="10" />
+      <path d="M200 41 L222 31 L252 31 L252 69 L222 69 L200 59" />
+    </g>
+
+    <!-- The two axes -->
+    <g class="axis">
+      <line x1="20" y1="50" x2="352" y2="50" />
+      <line x1="20" y1="106" x2="352" y2="106" />
+    </g>
+    <text class="label" x="352" y="45" text-anchor="end">{{ 'FIREARMS.SIGHT_HEIGHT_HELP.SCOPE_AXIS' | translate }}</text>
+    <text class="label" x="352" y="122" text-anchor="end">{{ 'FIREARMS.SIGHT_HEIGHT_HELP.BORE_AXIS' | translate }}</text>
+
+    <!-- H: the sight height between the axes -->
+    <line class="dimension" x1="272" y1="52" x2="272" y2="104" marker-start="url(#sight-height-arrow)" marker-end="url(#sight-height-arrow)" />
+    <text class="label label-strong" x="278" y="82">H</text>
+
+    <!-- A: what can be measured, from the top of the scope tube to the bottom of the barrel -->
+    <g class="extension">
+      <line x1="160" y1="40" x2="186" y2="40" />
+      <line x1="160" y1="113" x2="186" y2="113" />
+    </g>
+    <line class="dimension" x1="180" y1="42" x2="180" y2="111" marker-start="url(#sight-height-arrow)" marker-end="url(#sight-height-arrow)" />
+    <text class="label label-strong" x="166" y="82">A</text>
+  </svg>
+  <figcaption class="small mt-2">
+    <p class="mb-1">{{ 'FIREARMS.SIGHT_HEIGHT_HELP.WHAT' | translate }}</p>
+    <p class="mb-1">{{ 'FIREARMS.SIGHT_HEIGHT_HELP.HOW' | translate }}</p>
+    <p class="mb-1 font-monospace">{{ 'FIREARMS.SIGHT_HEIGHT_HELP.FORMULA' | translate }}</p>
+    <p class="mb-0 text-body-secondary">{{ 'FIREARMS.SIGHT_HEIGHT_HELP.EXAMPLE' | translate }}</p>
+  </figcaption>
+</figure>
