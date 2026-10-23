@@ -1,0 +1,25 @@
+<div class="coordinate-field">
+  <div class="coordinate-ghost" aria-hidden="true"><span class="coordinate-typed">{{ text() }}</span>{{ ghost() }}</div>
+  <input
+    type="text"
+    class="form-control coordinate-input"
+    inputmode="decimal"
+    autocomplete="off"
+    enterkeyhint="next"
+    spellcheck="false"
+    #coordinateInput
+    [id]="inputId()"
+    [value]="text()"
+    [class.is-invalid]="showInvalid()"
+    [attr.aria-invalid]="showInvalid()"
+    [attr.aria-describedby]="ariaDescribedBy()"
+    (input)="onInput(coordinateInput, $event)"
+    (change)="commit()"
+    (paste)="onPaste($event)"
+    (blur)="onBlur()"
+  />
+</div>
+@if (showInvalid()) {
+  <!-- The message the parent gives as content, e.g. the valid range -->
+  <div class="invalid-feedback d-block" [id]="errorId()"><ng-content /></div>
+}

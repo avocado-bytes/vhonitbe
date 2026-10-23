@@ -28,7 +28,7 @@ describe('eventShareText', () => {
       SEXES: { mixed: 'Mixed', female: 'Female' },
       OVERVIEW: { HERD: 'Herd', HERD_OF: 'Herd of {{count}}', TAG_NUMBER: 'Tag number' },
       FEEDING: { TYPES: { 'salt-lick': 'Salt lick' } },
-      SHARE: { MAPY_CZ: 'Mapy.cz' },
+      SHARE: { MAPY_CZ: 'Mapy.cz', SHOT_DISTANCE: 'Shooting distance' },
     });
     translate.use('en');
   });
@@ -55,6 +55,12 @@ describe('eventShareText', () => {
     const lines = eventShareText(event({ tagNumber: '12345678' }), translate, dateFormat).split('\n');
 
     expect(lines[2]).toBe('🏷️ Tag number 12 345678');
+  });
+
+  it('should add the shooting distance of a harvest', () => {
+    const lines = eventShareText(event({ tagNumber: '12345678', shotDistance: 1112 }), translate, dateFormat).split('\n');
+
+    expect(lines[3]).toBe('🎯 Shooting distance 1,112 m');
   });
 
   it('should share a feeding place without a date or its note', () => {

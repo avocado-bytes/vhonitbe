@@ -54,6 +54,18 @@ export class EventView {
     return ammunition ? { title: ammunition.caliber, details: this.ammunitionDetails(ammunition) } : null;
   });
 
+  /** Where the shooter stood and how far the shot was, for a harvest */
+  protected readonly shot = computed<ViewDetail[]>(() => {
+    const { shooterLocation, shotDistance } = this.event();
+    return this.given([
+      [
+        'ADD_ITEM.SHOOTER_POSITION',
+        shooterLocation && `${this.formatCoordinate(shooterLocation.latitude)}, ${this.formatCoordinate(shooterLocation.longitude)}`,
+      ],
+      ['ADD_ITEM.SHOT_DISTANCE', shotDistance !== null && shotDistance !== undefined && `${this.format(shotDistance)} m`],
+    ]);
+  });
+
   private format(value: number): string {
     return this.numberFormat().format(value);
   }

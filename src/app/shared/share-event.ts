@@ -50,6 +50,11 @@ export function eventShareText(event: HuntingEvent, translate: TranslateService,
   if (event.tagNumber) {
     lines.push(`🏷️ ${translate.instant('OVERVIEW.TAG_NUMBER')} ${formatTagNumber(event.tagNumber)}`);
   }
+  if (event.shotDistance !== null && event.shotDistance !== undefined) {
+    // In the language of the date
+    const distance = new Intl.NumberFormat(dateFormat.resolvedOptions().locale).format(event.shotDistance);
+    lines.push(`🎯 ${translate.instant('SHARE.SHOT_DISTANCE')} ${distance} m`);
+  }
   return shareMessage(details.length ? `${type} – ${details.join(' · ')}` : type, lines, event.location, translate);
 }
 

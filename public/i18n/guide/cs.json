@@ -32,8 +32,21 @@
       "U úlovku vyberte zbraň a střelivo, které jste použili, z uložených na stránce Zbraně a střelivo. Jejich údaje se do úlovku zkopírují tak, jak jsou teď, takže pozdější změna zbraně úlovek nezmění.",
       "Datum a čas jsou nastavené na teď; změňte je, když událost zapisujete později.",
       "Poloha začíná tam, kde stojíte. Pokud se událost stala jinde, posuňte malou mapu tak, aby byl zaměřovač na správném místě. Tlačítko Zpět na moji polohu ho vrátí tam, kde jste.",
+      "U úlovku můžete přidat i místo, odkud jste stříleli; viz Stanoviště střelce a vzdálenost výstřelu.",
       "Přidejte poznámku a fotografii: vyfoťte novou nebo vyberte z galerie.",
       "Klepněte na Uložit."
+    ]
+  },
+  "shot": {
+    "TITLE": "Stanoviště střelce a vzdálenost výstřelu",
+    "TEXT": "U úlovku můžete zaznamenat, odkud jste stříleli, a aplikace spočítá, jak daleko byl výstřel.",
+    "STEPS": [
+      "Pod polohou úlovku klepněte na Přidat stanoviště střelce. Otevře se druhá mapa na stejném místě, s úlovkem označeným špendlíkem.",
+      "Posuňte mapu tak, aby byl zaměřovač tam, kde jste stáli. Přerušovaná oranžová čára ukazuje dráhu výstřelu.",
+      "Nebo zadejte zeměpisnou šířku a délku ve stupních s desetinnými místy. Desetinná tečka se doplní sama a funguje i čárka. Mapa se posune, jakmile zadáte všech šest desetinných míst nebo pole opustíte.",
+      "Do kteréhokoli pole můžete také vložit obě souřadnice najednou, jak je zkopírujete z Mapy.cz nebo Google Map.",
+      "Pod poli se zobrazí vzdálenost výstřelu v metrech, která se uloží s úlovkem. Tlačítko Odebrat stanoviště střelce ho zase odstraní.",
+      "Celé zobrazení úlovku ukazuje stanoviště střelce a vzdálenost a jeho mapa obě místa spojená čárou výstřelu. Vzdálenost je i ve zprávě, když událost sdílíte."
     ]
   },
   "event-actions": {
@@ -41,7 +54,7 @@
     "TEXT": "Každá událost v seznamu má své akce pod tlačítkem ⋮ vpravo.",
     "STEPS": [
       "Zobrazit fotografii a Zobrazit na mapě otevřou fotografii nebo mapu místa.",
-      "Sdílet událost pošle krátkou zprávu, například přes WhatsApp, s událostí, místem s odkazem na Mapy.cz a fotografií. Vaše poznámka se nikdy nesdílí.",
+      "Sdílet událost pošle krátkou zprávu, například přes WhatsApp, s událostí, vzdáleností výstřelu u úlovku, místem s odkazem na Mapy.cz a fotografií. Vaše poznámka se nikdy nesdílí.",
       "Upravit událost otevře formulář pro změny.",
       "Smazat událost ji po potvrzení odstraní i s fotografií."
     ]
@@ -153,6 +166,8 @@
     "sight-height": "Výška zaměřovače s náčrtem, jak ji změřit",
     "load-series": "Série vývoje náboje s testovanými náplněmi",
     "test-load": "Přidání testované náplně se statistikou rychlostí",
-    "zeroing": "Výsledek nastřelování pro zvolenou zbraň a střelivo"
+    "zeroing": "Výsledek nastřelování pro zvolenou zbraň a střelivo",
+    "shooter-position": "Určení stanoviště střelce se vzdáleností výstřelu",
+    "shot": "Úlovek se stanovištěm střelce a čárou výstřelu"
   }
 }

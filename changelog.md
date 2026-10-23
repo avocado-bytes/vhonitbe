@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.61.0
+
+- The map for the shooter's position marks the location of the harvest with its pin, and a dashed orange line joins it to the crosshair as the map moves.
+- The maps of a harvest with a shooter's position, in its full view and in "Show on map", show the shooter's position as a round orange marker, joined to the harvest by the line of the shot, zoomed so that both are in view.
+- A whole position can be pasted into either coordinate field of the shooter's position, as copied from a map app: e.g. "49.7215, 13.9512" from Google Maps, "49.7215067N, 13.9512006E" from Mapy.cz, or with decimal commas. It fills in both fields; a single number is pasted as before.
+- A shared harvest includes the shooting distance (🎯) after the date and tag number.
+- The user guide has a new "Shooter's position and shooting distance" section after recording an event, with two new screenshots in Czech and English: the shooter's position in the form, and a harvest with the line of the shot. The "Recording an event" section points to it, and "Working with events" mentions the shooting distance in a shared message.
+
+## 0.60.0
+
+- A harvest can record the shooter's position: the new "Add shooter's position" button below the location opens a second map with a crosshair, starting at the location of the harvest (or at the user's position), to place where the shot was taken from. It can be removed again.
+- The latitude and longitude of the shooter's position can also be typed, in fields styled like the tag number: monospace digits with the missing decimals shown as a faint mask, the decimal keyboard on phones, a comma taken as the decimal point and the point added on its own. A typed value moves the map once all six decimals are given or the field is left; an invalid value is pointed out and the event can't be saved until it is fixed.
+- When both positions are known, the form shows the shooting distance in meters, and it is saved with the event. The full view of a harvest shows the shooter's position and the shooting distance in a new "Shot" section.
+- The location map no longer nudges a location set from outside (e.g. "Back to my position") by up to about a meter as the map snaps to whole pixels.
+
 ## 0.59.1
 
 - The user guide's firearms section explains the new sight height: what it is, the ⓘ button with the sketch, and how to measure it with calipers, with a new screenshot of the form and its sketch.

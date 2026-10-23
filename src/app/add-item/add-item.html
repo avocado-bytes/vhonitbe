@@ -169,6 +169,67 @@
       }
     </div>
 
+    @if (hasWeapon()) {
+      <div class="mt-3" role="group" aria-labelledby="add-item-shooter-label">
+        <div id="add-item-shooter-label" class="form-label fw-semibold">{{ 'ADD_ITEM.SHOOTER_POSITION' | translate }}</div>
+        @if (shooterLocation(); as shooter) {
+          <app-location-picker
+            label="ADD_ITEM.SHOOTER_MAP"
+            hint="ADD_ITEM.SHOOTER_POSITION_HINT"
+            [showCoordinates]="false"
+            [target]="location()"
+            [location]="shooter"
+            (locationChange)="shooterLocation.set($event)"
+          />
+          <div class="row g-2">
+            <div class="col-sm">
+              <label for="add-item-shooter-latitude" class="form-label small mb-1">{{ 'LOCATION_PICKER.LATITUDE' | translate }}</label>
+              <app-coordinate-input
+                axis="latitude"
+                inputId="add-item-shooter-latitude"
+                describedBy="add-item-shooter-coordinates-hint"
+                [value]="shooter.latitude"
+                (valueChange)="setShooterLatitude($event)"
+                (pairPasted)="shooterLocation.set($event)"
+                [(invalid)]="shooterLatitudeInvalid"
+              >
+                {{ 'ADD_ITEM.LATITUDE_INVALID' | translate }}
+              </app-coordinate-input>
+            </div>
+            <div class="col-sm">
+              <label for="add-item-shooter-longitude" class="form-label small mb-1">{{ 'LOCATION_PICKER.LONGITUDE' | translate }}</label>
+              <app-coordinate-input
+                axis="longitude"
+                inputId="add-item-shooter-longitude"
+                describedBy="add-item-shooter-coordinates-hint"
+                [value]="shooter.longitude"
+                (valueChange)="setShooterLongitude($event)"
+                (pairPasted)="shooterLocation.set($event)"
+                [(invalid)]="shooterLongitudeInvalid"
+              >
+                {{ 'ADD_ITEM.LONGITUDE_INVALID' | translate }}
+              </app-coordinate-input>
+            </div>
+          </div>
+          <div id="add-item-shooter-coordinates-hint" class="form-text">{{ 'ADD_ITEM.COORDINATES_HINT' | translate }}</div>
+          @if (shotDistanceText(); as shotDistance) {
+            <p class="mt-2 mb-0" role="status">
+              {{ 'ADD_ITEM.SHOT_DISTANCE' | translate }}: <strong>{{ shotDistance }}</strong>
+            </p>
+          }
+          <button type="button" class="btn btn-outline-danger btn-sm mt-2" (click)="shooterLocation.set(null)">
+            {{ 'ADD_ITEM.REMOVE_SHOOTER_POSITION' | translate }}
+          </button>
+        } @else {
+          <div>
+            <button type="button" class="btn btn-outline-primary btn-sm" [disabled]="!shooterStart()" (click)="addShooterLocation()">
+              {{ 'ADD_ITEM.ADD_SHOOTER_POSITION' | translate }}
+            </button>
+          </div>
+        }
+      </div>
+    }
+
     <div class="mt-3">
       <label for="add-item-note" class="form-label fw-semibold">{{ 'ADD_ITEM.NOTE' | translate }}</label>
       <textarea

@@ -8,11 +8,13 @@ import { ammunitionLabel } from '../model/ammunition';
 import { AmmunitionSnapshot, FirearmSnapshot, GeoPoint, HuntingEvent, NewHuntingEvent, Sex, SEXES, snapshot } from '../model/event';
 import { firearmLabel } from '../model/firearm';
 import { Animal, ANIMAL_GROUPS, hasTagNumber, Item, itemHasAnimal, itemHasHerd, itemHasWeapon, ITEMS } from '../model/item';
+import { CoordinateInput } from '../coordinate-input/coordinate-input';
 import { LocationPicker } from '../location-picker/location-picker';
 import { compressImage } from '../shared/compress-image';
 import { TAG_DIGITS } from '../shared/tag-number';
 import { TagNumberInput } from '../tag-number-input/tag-number-input';
 import { fromDateTimeLocal, toDateTimeLocal } from '../shared/datetime-local';
+import { distance } from '../shooting-safety/geo';
 import { EventStorage } from '../storage/event-storage';
 import { AmmunitionActions } from '../state/ammunition/ammunition.actions';
 import { selectSorted as selectSortedAmmunition } from '../state/ammunition/ammunition.reducer';
@@ -34,7 +36,7 @@ const POSITION_TOLERANCE = 1e-6;
 const RECORDED = 'recorded';
 
 @Component({
-  imports: [TranslatePipe, KeyValuePipe, LocationPicker, TagNumberInput],
+  imports: [TranslatePipe, KeyValuePipe, LocationPicker, TagNumberInput, CoordinateInput],
   selector: 'app-add-item',
   styleUrl: './add-item.scss',
   templateUrl: './add-item.html',
@@ -119,6 +121,29 @@ export class AddItem implements OnInit {
       Math.abs(position.longitude - location.longitude) > POSITION_TOLERANCE
     );
   });
+  /** Where the shooter stood, for a harvest; null until the user adds it */
+  readonly shooterLocation = linkedSignal<GeoPoint | null>(() => this.event()?.shooterLocation ?? null);
+  /** Where the shooter's position starts: at the location of the harvest, or else at the user's position */
+  protected readonly shooterStart = computed<GeoPoint | null>(() => {
+    const start = this.location() ?? this.position();
+    return start && { latitude: start.latitude, longitude: start.longitude };
+  });
+  /** The typed latitude or longitude of the shooter isn't a valid coordinate */
+  readonly shooterLatitudeInvalid = signal(false);
+  readonly shooterLongitudeInvalid = signal(false);
+  protected readonly shooterInvalid = computed(
+    () => this.hasWeapon() && !!this.shooterLocation() && (this.shooterLatitudeInvalid() || this.shooterLongitudeInvalid()),
+  );
+  /** Meters from the shooter's position to the location of the harvest, once both are known */
+  protected readonly shotDistance = computed(() => {
+    const location = this.location();
+    const shooter = this.shooterLocation();
+    return this.hasWeapon() && location && shooter ? Math.round(distance(shooter, location)) : null;
+  });
+  protected readonly shotDistanceText = computed(() => {
+    const shotDistance = this.shotDistance();
+    return shotDistance === null ? null : `${this.numberFormat().format(shotDistance)} m`;
+  });
   /** Local "YYYY-MM-DDTHH:mm" value of the date input; now for a new event */
   readonly occurredAt = linkedSignal<string>(() => {
     const event = this.event();
@@ -153,6 +178,7 @@ export class AddItem implements OnInit {
       !this.isFuture() &&
       !this.herdSizeInvalid() &&
       !this.tagNumberInvalid() &&
+      !this.shooterInvalid() &&
       !this.saving() &&
       !this.photoBusy(),
   );
@@ -213,6 +239,24 @@ export class AddItem implements OnInit {
     const position = this.position();
     if (position) {
       this.location.set({ latitude: position.latitude, longitude: position.longitude });
+    }
+  }
+
+  protected addShooterLocation(): void {
+    this.shooterLocation.set(this.shooterStart());
+  }
+
+  protected setShooterLatitude(latitude: number | null): void {
+    const shooter = this.shooterLocation();
+    if (shooter && latitude !== null) {
+      this.shooterLocation.set({ ...shooter, latitude });
+    }
+  }
+
+  protected setShooterLongitude(longitude: number | null): void {
+    const shooter = this.shooterLocation();
+    if (shooter && longitude !== null) {
+      this.shooterLocation.set({ ...shooter, longitude });
     }
   }
 
@@ -284,7 +328,15 @@ export class AddItem implements OnInit {
     event.preventDefault();
     const type = this.type();
     const occurredAt = fromDateTimeLocal(this.occurredAt());
-    if (!type || !occurredAt || this.isFuture() || this.herdSizeInvalid() || this.tagNumberInvalid() || this.saving()) {
+    if (
+      !type ||
+      !occurredAt ||
+      this.isFuture() ||
+      this.herdSizeInvalid() ||
+      this.tagNumberInvalid() ||
+      this.shooterInvalid() ||
+      this.saving()
+    ) {
       return;
     }
 
@@ -299,6 +351,8 @@ export class AddItem implements OnInit {
       firearm: this.hasWeapon() ? this.chosenFirearm() : null,
       ammunition: this.hasWeapon() ? this.chosenAmmunition() : null,
       location: this.location(),
+      shooterLocation: this.hasWeapon() ? this.shooterLocation() : null,
+      shotDistance: this.shotDistance(),
       note: this.note().trim(),
       occurredAt,
     };

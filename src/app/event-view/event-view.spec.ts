@@ -60,7 +60,16 @@ describe('EventView', () => {
     TestBed.inject(TranslateService).setTranslation('en', {
       ANIMALS: { 'wild-boar': 'Wild boar' },
       SEXES: { male: 'Male' },
-      ADD_ITEM: { ANIMAL: 'Animal', SEX: 'Sex', TAG_NUMBER: 'Tag number', FIREARM: 'Firearm', AMMUNITION: 'Ammunition', NOTE: 'Note' },
+      ADD_ITEM: {
+        ANIMAL: 'Animal',
+        SEX: 'Sex',
+        TAG_NUMBER: 'Tag number',
+        FIREARM: 'Firearm',
+        AMMUNITION: 'Ammunition',
+        NOTE: 'Note',
+        SHOOTER_POSITION: "Shooter's position",
+        SHOT_DISTANCE: 'Shooting distance',
+      },
       FIREARMS: {
         OPTICS: { riflescope: 'Riflescope', none: 'No optic sight' },
         FORM: { CALIBER: 'Caliber', OPTICS: 'Optics', BARREL_LENGTH: 'Barrel length', THREAD_PITCH: 'Thread pitch' },
@@ -83,6 +92,14 @@ describe('EventView', () => {
 
   it('should show the animal with its tag number', () => {
     expect(details('animal')).toEqual(['Animal: Wild boar', 'Sex: Male', 'Tag number: 12 345678']);
+  });
+
+  it("should show the shooter's position and the shooting distance only when given", async () => {
+    expect(section('shot')).toBeNull();
+
+    await show({ ...event, shooterLocation: { latitude: 49.7225, longitude: 13.9512 }, shotDistance: 1112 });
+
+    expect(details('shot')).toEqual(["Shooter's position: 49.72250, 13.95120", 'Shooting distance: 1,112 m']);
   });
 
   it('should show the firearm and ammunition as recorded, in full', () => {

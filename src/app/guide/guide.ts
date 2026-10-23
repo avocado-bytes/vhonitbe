@@ -25,6 +25,7 @@ export const GUIDE_SECTIONS: readonly GuideSection[] = [
   { id: 'start', screenshots: [] },
   { id: 'overview', screenshots: ['overview'] },
   { id: 'add-event', screenshots: ['add-event'] },
+  { id: 'shot', screenshots: ['shooter-position', 'shot'] },
   { id: 'event-actions', screenshots: ['event-actions'] },
   { id: 'map', screenshots: ['map', 'map-menu'] },
   { id: 'hunting-ground', screenshots: ['hunting-ground-settings', 'hunting-ground-map'] },

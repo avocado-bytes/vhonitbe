@@ -44,8 +44,20 @@
   @if (event().location; as location) {
     <section class="view-section" aria-labelledby="event-view-location">
       <h3 id="event-view-location" class="view-heading">{{ 'ADD_ITEM.LOCATION' | translate }}</h3>
-      <app-event-map [location]="location" />
+      <app-event-map [location]="location" [shooterLocation]="event().shooterLocation ?? null" />
       <p class="small text-body-secondary mt-1 mb-0">{{ formatCoordinate(location.latitude) }}, {{ formatCoordinate(location.longitude) }}</p>
+    </section>
+  }
+
+  @if (shot().length) {
+    <section class="view-section" aria-labelledby="event-view-shot">
+      <h3 id="event-view-shot" class="view-heading">{{ 'EVENT_VIEW.SHOT' | translate }}</h3>
+      <dl class="row mb-0">
+        @for (detail of shot(); track detail.label) {
+          <dt class="col-5 fw-normal text-body-secondary">{{ detail.label | translate }}</dt>
+          <dd class="col-7">{{ detail.value }}</dd>
+        }
+      </dl>
     </section>
   }
 

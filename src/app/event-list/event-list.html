@@ -179,7 +179,7 @@
     </div>
     @if (shown.location; as location) {
       <div class="p-3">
-        <app-event-map [location]="location" />
+        <app-event-map [location]="location" [shooterLocation]="shown.shooterLocation ?? null" />
       </div>
     }
   }

@@ -47,6 +47,10 @@ export interface HuntingEvent {
   firearm?: FirearmSnapshot | null;
   ammunition?: AmmunitionSnapshot | null;
   location: GeoPoint | null;
+  /** Where the shooter stood when shooting a harvest; null when not given, missing in older events */
+  shooterLocation?: GeoPoint | null;
+  /** Meters from the shooter's position to the location, rounded; null unless both are known, missing in older events */
+  shotDistance?: number | null;
   note: string;
   /** Key of the event's photo in the photo store; missing or null without a photo */
   photoId?: string | null;

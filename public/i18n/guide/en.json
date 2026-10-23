@@ -32,8 +32,21 @@
       "For a harvest, choose the firearm and ammunition you used from those saved on the Firearms and ammunition page. Their details are copied into the harvest as they are now, so changing the firearm later does not alter it.",
       "The date and time are set to now; change them when you record the event later.",
       "The location starts where you stand. If the event happened elsewhere, move the small map until the crosshair is on the right spot. Back to my position puts it back where you are.",
+      "For a harvest, you can also add where you shot from; see Shooter's position and shooting distance.",
       "Add a note and a photo: take a new one with the camera or choose one from the gallery.",
       "Tap Save."
+    ]
+  },
+  "shot": {
+    "TITLE": "Shooter's position and shooting distance",
+    "TEXT": "For a harvest you can record where you shot from, and the app calculates how far the shot was.",
+    "STEPS": [
+      "Below the location of the harvest, tap Add shooter's position. A second map opens at the same place, with the harvest marked by its pin.",
+      "Move the map until the crosshair is where you stood. The dashed orange line shows the line of the shot.",
+      "Or type the latitude and longitude in decimal degrees. The decimal point is added for you, and a comma works too. The map moves once all six decimals are typed or you leave the field.",
+      "You can also paste both coordinates at once into either field, as copied from Mapy.cz or Google Maps.",
+      "The shooting distance in meters is shown below and saved with the harvest. Remove shooter's position takes it away again.",
+      "The full view of the harvest shows the shooter's position and the distance, and its map shows both places joined by the line of the shot. The distance is also in the message when you share the event."
     ]
   },
   "event-actions": {
@@ -41,7 +54,7 @@
     "TEXT": "Each event in the list has its actions behind the ⋮ button on the right.",
     "STEPS": [
       "Show photo and Show on map open the photo or a map of the place.",
-      "Share event sends a short message, for example in WhatsApp, with the event, its place with a link to Mapy.cz and its photo. Your note is never shared.",
+      "Share event sends a short message, for example in WhatsApp, with the event, the shooting distance of a harvest, its place with a link to Mapy.cz and its photo. Your note is never shared.",
       "Edit event opens the form to make changes.",
       "Delete event removes the event together with its photo once you confirm it."
     ]
@@ -153,6 +166,8 @@
     "sight-height": "The sight height with the sketch of how to measure it",
     "load-series": "A load development series with its test loads",
     "test-load": "Adding a test load, with its velocity statistics",
-    "zeroing": "The zeroing result for the chosen firearm and ammunition"
+    "zeroing": "The zeroing result for the chosen firearm and ammunition",
+    "shooter-position": "Placing the shooter's position, with the shooting distance",
+    "shot": "A harvest with the shooter's position and the line of the shot"
   }
 }

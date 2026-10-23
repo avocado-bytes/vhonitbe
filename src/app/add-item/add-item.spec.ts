@@ -111,6 +111,8 @@ describe('AddItem', () => {
         NOT_GIVEN: 'Not given',
         RETURN_TO_POSITION: 'Back to my position',
         AS_RECORDED: '{{label}} (as recorded)',
+        ADD_SHOOTER_POSITION: "Add shooter's position",
+        SHOT_DISTANCE: 'Shooting distance',
       },
       MAP: { LOCATING: 'Finding your location…' },
       ITEMS: { spotting: 'Sighting', tracks: 'Tracks' },
@@ -566,6 +568,8 @@ describe('AddItem', () => {
         firearm: null,
         ammunition: null,
         location: { latitude: 49.0, longitude: 13.5 },
+        shooterLocation: null,
+        shotDistance: null,
         note: 'Clean shot, 80 m',
         occurredAt: expect.any(String),
       });
@@ -615,6 +619,8 @@ describe('AddItem', () => {
     firearm: null,
     ammunition: null,
     location: { latitude: 49, longitude: 13.5 },
+    shooterLocation: null,
+    shotDistance: null,
     note: 'Clean shot',
     occurredAt: '2026-10-01T06:30:00.000Z',
     createdAt: '2026-10-01T06:31:00.000Z',
@@ -702,6 +708,99 @@ describe('AddItem', () => {
       actions$.next(EventsActions.updateEventSuccess({ event: updated }));
 
       expect(saved).toHaveBeenCalledWith(updated);
+    });
+  });
+
+  describe("shooter's position", () => {
+    const addButton = () =>
+      Array.from(element().querySelectorAll('button')).find((button) => button.textContent?.includes("Add shooter's position"));
+    const latitudeInput = () => element().querySelector('#add-item-shooter-latitude') as HTMLInputElement;
+    const longitudeInput = () => element().querySelector('#add-item-shooter-longitude') as HTMLInputElement;
+    const enterCoordinate = async (input: HTMLInputElement, value: string) => {
+      input.value = value;
+      input.dispatchEvent(new InputEvent('input', { inputType: 'insertText' }));
+      input.dispatchEvent(new Event('blur'));
+      await fixture.whenStable();
+    };
+    const submitted = () => {
+      dispatch.mockClear();
+      submitButton().click();
+      return (dispatch.mock.calls[0][0] as ReturnType<typeof EventsActions.addEvent>).event;
+    };
+
+    beforeEach(() => setState({ location: { status: 'located', position: { latitude: 49, longitude: 13.5, accuracy: 20 } } }));
+
+    it('should only be offered for a harvest', async () => {
+      await choose(typeSelect(), 'spotting');
+      expect(addButton()).toBeUndefined();
+
+      await choose(typeSelect(), 'harvest');
+      expect(addButton()).toBeDefined();
+      expect(latitudeInput()).toBeNull();
+    });
+
+    it('should start at the location of the harvest, with a second map and the coordinates to type', async () => {
+      await choose(typeSelect(), 'harvest');
+      addButton()!.click();
+      await fixture.whenStable();
+
+      expect(component.shooterLocation()).toEqual({ latitude: 49, longitude: 13.5 });
+      expect(element().querySelectorAll('app-location-picker').length).toBe(2);
+      expect(latitudeInput().value).toBe('49.000000');
+      expect(longitudeInput().value).toBe('13.500000');
+    });
+
+    it('should save the typed position and the shooting distance in meters', async () => {
+      await choose(typeSelect(), 'harvest');
+      addButton()!.click();
+      await fixture.whenStable();
+
+      await enterCoordinate(latitudeInput(), '49.001');
+
+      expect(component.shooterLocation()).toEqual({ latitude: 49.001, longitude: 13.5 });
+      expect(element().textContent).toContain('Shooting distance: 111 m');
+      const event = submitted();
+      expect(event.shooterLocation).toEqual({ latitude: 49.001, longitude: 13.5 });
+      expect(event.shotDistance).toBe(111);
+    });
+
+    it('should take both coordinates pasted into either field', async () => {
+      await choose(typeSelect(), 'harvest');
+      addButton()!.click();
+      await fixture.whenStable();
+
+      const paste = new Event('paste', { cancelable: true });
+      Object.defineProperty(paste, 'clipboardData', { value: { getData: () => '49.002, 13.5' } });
+      longitudeInput().dispatchEvent(paste);
+      await fixture.whenStable();
+
+      expect(component.shooterLocation()).toEqual({ latitude: 49.002, longitude: 13.5 });
+      expect(latitudeInput().value).toBe('49.002000');
+    });
+
+    it('should not save an invalid typed coordinate', async () => {
+      await choose(typeSelect(), 'harvest');
+      addButton()!.click();
+      await fixture.whenStable();
+
+      await enterCoordinate(longitudeInput(), '');
+
+      expect(submitButton().disabled).toBe(true);
+    });
+
+    it('should drop the position when removed or when the type no longer has one', async () => {
+      await choose(typeSelect(), 'harvest');
+      addButton()!.click();
+      await fixture.whenStable();
+
+      await choose(typeSelect(), 'wounded-game');
+      expect(submitted()).toEqual(expect.objectContaining({ shooterLocation: null, shotDistance: null }));
+
+      await choose(typeSelect(), 'harvest');
+      (element().querySelector('button.btn-outline-danger') as HTMLButtonElement).click();
+      await fixture.whenStable();
+      expect(addButton()).toBeDefined();
+      expect(submitted()).toEqual(expect.objectContaining({ shooterLocation: null, shotDistance: null }));
     });
   });
 

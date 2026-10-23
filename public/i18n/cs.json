@@ -116,7 +116,16 @@
     "NOT_GIVEN": "Neuvedeno",
     "AS_RECORDED": "{{label}} (jak bylo zaznamenáno)",
     "WEAPON_HINT": "Své zbraně a střelivo uložte na stránce „Zbraně a střelivo“, abyste je zde mohli vybrat.",
-    "RETURN_TO_POSITION": "Zpět na moji polohu"
+    "RETURN_TO_POSITION": "Zpět na moji polohu",
+    "SHOOTER_POSITION": "Stanoviště střelce",
+    "ADD_SHOOTER_POSITION": "Přidat stanoviště střelce",
+    "REMOVE_SHOOTER_POSITION": "Odebrat stanoviště střelce",
+    "SHOOTER_MAP": "Mapa pro výběr stanoviště střelce",
+    "SHOOTER_POSITION_HINT": "Posuňte mapu tak, aby byl zaměřovač na místě, odkud jste stříleli, nebo zadejte souřadnice níže.",
+    "COORDINATES_HINT": "Ve stupních s desetinnou tečkou, např. 49.123456 a 14.123456. Můžete také vložit obě najednou, jak je zkopírujete z mapové aplikace.",
+    "LATITUDE_INVALID": "Zadejte zeměpisnou šířku od −90 do 90.",
+    "LONGITUDE_INVALID": "Zadejte zeměpisnou délku od −180 do 180.",
+    "SHOT_DISTANCE": "Vzdálenost výstřelu"
   },
   "ITEMS": {
     "spotting": "Pozorování",
@@ -299,7 +308,8 @@
     "MAPY_CZ": "Mapy.cz",
     "COPIED": "Událost byla zkopírována do schránky. Vložte ji do zprávy.",
     "FAILED": "Událost se nepodařilo sdílet.",
-    "CLOSE": "Zavřít"
+    "CLOSE": "Zavřít",
+    "SHOT_DISTANCE": "Vzdálenost výstřelu"
   },
   "FEEDING": {
     "ADD": "Přidat krmelec nebo slanisko",
@@ -597,6 +607,7 @@
     "SUPPRESSOR": "Tlumič",
     "YES": "Ano",
     "NO": "Ne",
-    "SOURCE": "Původ"
+    "SOURCE": "Původ",
+    "SHOT": "Výstřel"
   }
 }

@@ -116,7 +116,16 @@
     "NOT_GIVEN": "Not given",
     "AS_RECORDED": "{{label}} (as recorded)",
     "WEAPON_HINT": "Save your firearms and ammunition on the \"Firearms and ammunition\" page to choose them here.",
-    "RETURN_TO_POSITION": "Back to my position"
+    "RETURN_TO_POSITION": "Back to my position",
+    "SHOOTER_POSITION": "Shooter's position",
+    "ADD_SHOOTER_POSITION": "Add shooter's position",
+    "REMOVE_SHOOTER_POSITION": "Remove shooter's position",
+    "SHOOTER_MAP": "Map for choosing the shooter's position",
+    "SHOOTER_POSITION_HINT": "Move the map to place the crosshair where you shot from, or enter the coordinates below.",
+    "COORDINATES_HINT": "In decimal degrees, e.g. 49.123456 and 14.123456. You can also paste both at once, as copied from a map app.",
+    "LATITUDE_INVALID": "Enter a latitude from −90 to 90.",
+    "LONGITUDE_INVALID": "Enter a longitude from −180 to 180.",
+    "SHOT_DISTANCE": "Shooting distance"
   },
   "ITEMS": {
     "spotting": "Sighting",
@@ -299,7 +308,8 @@
     "MAPY_CZ": "Mapy.cz",
     "COPIED": "The event was copied to the clipboard. Paste it into a message.",
     "FAILED": "The event could not be shared.",
-    "CLOSE": "Close"
+    "CLOSE": "Close",
+    "SHOT_DISTANCE": "Shooting distance"
   },
   "FEEDING": {
     "ADD": "Add feeder or salt lick",
@@ -597,6 +607,7 @@
     "SUPPRESSOR": "Suppressor",
     "YES": "Yes",
     "NO": "No",
-    "SOURCE": "Origin"
+    "SOURCE": "Origin",
+    "SHOT": "Shot"
   }
 }
